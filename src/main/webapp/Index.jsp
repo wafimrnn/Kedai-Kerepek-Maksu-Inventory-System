@@ -1,34 +1,24 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="ISO-8859-1">
-<title>Welcome</title>
-<style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kedai Kerepek Maksu</title>
+    <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
             text-align: center;
-            padding: 20px;
+            padding: 50px;
         }
         h1 {
-            color: #4CAF50;
+            color: #333;
         }
-        p {
-            font-size: 18px;
-        }
-        footer {
-            margin-top: 30px;
-            color: gray;
-            font-size: 14px;
-        }
-</style>
+    </style>
 </head>
 <body>
-    <h1>Kedai Kerepek Maksu</h1>
-    <p>Inventory management</p>
-    <footer>
-        &copy; 2024 Larva | Kedai Kerepek Maksu Inventory System
-    </footer>
+    <h1>Welcome to Kedai Kerepek Maksu</h1>
+    <p>Your inventory system is now live!</p>
 </body>
 </html>
