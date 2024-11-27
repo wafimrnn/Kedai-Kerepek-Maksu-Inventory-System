@@ -65,7 +65,7 @@
 </head>
 <body>
     <div class="navbar">
-        <h1>Welcome to the Dashboard</h1>
+        <h1>Welcome to the Kedai Kerepek Maksu</h1>
         <a href="logout.jsp" class="button logout">Logout</a>
     </div>
     <div class="container">

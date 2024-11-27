@@ -30,7 +30,7 @@
         <configuration>
           <appName>KedaiKerepekMaksu</appName>
           <resourceGroup>WebappResources</resourceGroup>
-          <region>Southeast-Asia</region>
+          <region>Southeast Asia</region>
           <deploymentMode>WAR</deploymentMode> 
         </configuration>
       </plugin>
