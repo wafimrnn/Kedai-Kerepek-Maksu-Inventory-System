@@ -66,7 +66,7 @@
 <body>
     <div class="navbar">
         <h1>Product Inventory</h1>
-        <a href="dashboard.jsp" class="button">Back to Dashboard</a>
+        <a href="Index.jsp" class="button">Back to Dashboard</a>
     </div>
     <div class="container">
         <h2>Available Products</h2>
