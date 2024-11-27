@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>View Products</title>
+    <title>Products</title>
     <style>
         body {
             font-family: Arial, sans-serif;
