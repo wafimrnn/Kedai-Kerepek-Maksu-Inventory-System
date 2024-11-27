@@ -1,24 +1,89 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kedai Kerepek Maksu</title>
+    <title>Dashboard</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            text-align: center;
-            padding: 50px;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
         }
-        h1 {
-            color: #333;
+        .navbar {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar h1 {
+            margin: 0;
+            font-size: 20px;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+        .container {
+            padding: 20px;
+        }
+        .card {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .card h3 {
+            margin: 0 0 10px 0;
+        }
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            margin: 5px 0;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .logout {
+            background-color: #dc3545;
+        }
+        .logout:hover {
+            background-color: #a71d2a;
         }
     </style>
 </head>
 <body>
-    <h1>Welcome to Kedai Kerepek Maksu</h1>
-    <p>Your inventory system is now live!</p>
+    <div class="navbar">
+        <h1>Welcome to the Dashboard</h1>
+        <a href="logout.jsp" class="button logout">Logout</a>
+    </div>
+    <div class="container">
+        <div class="card">
+            <h3>View Products</h3>
+            <p>Check and manage product inventory.</p>
+            <a href="viewProducts.jsp" class="button">Go to Products</a>
+        </div>
+        <div class="card">
+            <h3>Add Product</h3>
+            <p>Add new products to the inventory.</p>
+            <a href="addProduct.jsp" class="button">Add New Product</a>
+        </div>
+        <div class="card">
+            <h3>Generate Reports</h3>
+            <p>Create and view sales reports.</p>
+            <a href="generateReport.jsp" class="button">Generate Reports</a>
+        </div>
+    </div>
 </body>
 </html>
