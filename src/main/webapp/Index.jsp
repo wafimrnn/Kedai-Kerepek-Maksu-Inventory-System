@@ -70,19 +70,24 @@
     </div>
     <div class="container">
         <div class="card">
-            <h3>View Products</h3>
+            <h3>Create Products</h3>
             <p>Check and manage product inventory.</p>
-            <a href="viewProducts.jsp" class="button">Go to Products</a>
+            <a href="createProducts.jsp" class="button">Go to Products</a>
         </div>
         <div class="card">
-            <h3>Add Product</h3>
+            <h3>View Product</h3>
             <p>Add new products to the inventory.</p>
             <a href="addProduct.jsp" class="button">Add New Product</a>
         </div>
         <div class="card">
-            <h3>Generate Reports</h3>
-            <p>Create and view sales reports.</p>
-            <a href="generateReport.jsp" class="button">Generate Reports</a>
+            <h3>Update Products</h3>
+            <p>Update products inventory.</p>
+            <a href="updateProduct.jsp" class="button">Update Products</a>
+        </div>
+        <div class="card">
+            <h3>Delete Products</h3>
+            <p>Delete products inventory.</p>
+            <a href="deleteProduct.jsp" class="button">Delete Products</a>
         </div>
     </div>
 </body>
