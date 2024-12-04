@@ -77,6 +77,10 @@
                     <th>Product Name</th>
                     <th>Price (RM)</th>
                     <th>Stock</th>
+                    <th>Restock Level</th>
+                    <th>Expiry Date</th>
+                    <th>Product Status</th>
+                    <th>Product Type</th>
                 </tr>
             </thead>
             <tbody>
@@ -104,6 +108,10 @@
                     <td><%= rs.getString("product_name") %></td>
                     <td><%= rs.getDouble("price") %></td>
                     <td><%= rs.getInt("stock") %></td>
+                    <td><%= rs.getInt("restock_level") %></td>
+                    <td><%= rs.getString("expiry_date") %></td>
+                    <td><%= rs.getString("prod_status") %></td>
+                    <td><%= rs.getString("prod_type") %></td>
                 </tr>
                 <%
                         }
