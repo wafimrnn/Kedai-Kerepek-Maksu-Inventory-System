@@ -80,7 +80,7 @@
                     <th>Restock Level</th>
                     <th>Expiry Date</th>
                     <th>Product Status</th>
-                    <th>Product Type</th>
+                    <th>Product Types</th>
                 </tr>
             </thead>
             <tbody>
