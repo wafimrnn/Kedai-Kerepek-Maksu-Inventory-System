@@ -77,7 +77,7 @@
         <div class="card">
             <h3>View Product</h3>
             <p>Add new products to the inventory.</p>
-            <a href="addProduct.jsp" class="button">Add New Product</a>
+            <a href="viewProduct.jsp" class="button">Add New Product</a>
         </div>
         <div class="card">
             <h3>Update Products</h3>
