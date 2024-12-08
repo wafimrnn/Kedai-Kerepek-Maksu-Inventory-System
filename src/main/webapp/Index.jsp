@@ -89,6 +89,6 @@
             <p>Delete products inventory.</p>
             <a href="deleteProduct.jsp" class="button">Delete Products</a>
         </div>
-    </div>
+    </div>s
 </body>
 </html>
