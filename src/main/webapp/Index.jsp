@@ -72,12 +72,12 @@
         <div class="card">
             <h3>Create Products</h3>
             <p>Check and manage product inventory.</p>
-            <a href="createProducts.jsp" class="button">Go to Products</a>
+            <a href="createProduct.jsp" class="button">Go to Products</a>
         </div>
         <div class="card">
             <h3>View Product</h3>
             <p>Add new products to the inventory.</p>
-            <a href="viewProduct.jsp" class="button">Add New Product</a>
+            <a href="viewProducts.jsp" class="button">Add New Product</a>
         </div>
         <div class="card">
             <h3>Update Products</h3>
