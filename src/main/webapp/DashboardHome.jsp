@@ -1,9 +1,11 @@
+<%@ page import="java.sql.*, java.util.*" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventories - Kedai Kerepek Maksu</title>
+    <title>Dashboard - Kedai Kerepek Maksu</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -74,6 +76,26 @@
             background-color: #e0a800;
         }
 
+        .summary {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .summary-item {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 30%;
+            text-align: center;
+        }
+
+        .summary-item h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
         .inventory {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -98,58 +120,39 @@
             font-size: 1.1em;
         }
 
-        .inventory-item .buttons {
+        .buttons {
             display: flex;
             justify-content: space-around;
         }
 
-        .inventory-item .buttons button {
+        .buttons button {
             padding: 5px 10px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
-
-        .inventory-item .update {
-            background-color: #ffc107;
-            color: white;
-        }
-
-        .inventory-item .delete {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .inventory-item .update:hover {
+        
+        .black-button {
+            padding: 10px 20px;
             background-color: #e0a800;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
         }
 
-        .inventory-item .delete:hover {
-            background-color: #c82333;
+        .black-button:hover {
+            background-color: #444;
         }
-        
-        
-		        .black-button {
-		    padding: 10px 20px;
-		    background-color: #e0a800;
-		    color: white;
-		    border: none;
-		    border-radius: 5px;
-		    cursor: pointer;
-		    font-weight: bold;
-		    text-transform: uppercase;
-		}
-
-			.black-button:hover {
-			    background-color: #444;
-		}
     </style>
 </head>
 <body>
     <div class="sidebar">
         <h2>Kedai Kerepek Maksu</h2>
         <ul>
-            <li><a href="DashboardHome.jsp" class="active">Dashboard</a></li>
+            <li><a href="Dashboard.jsp" class="active">Dashboard</a></li>
             <li><a href="#">Inventories</a></li>
             <li><a href="#">Reports</a></li>
             <li><a href="#">Profile Account</a></li>
@@ -163,42 +166,19 @@
             <a href="#" class="black-button">Create Sale</a>
         </div>
 
-        <div class="inventory">
-            <div class="inventory-item">
-                <img src="images/kerepek pisang.jpg" alt="Ubi Masin">
-                <h3>UBI MASIN</h3>
-                 <div class="buttons">
-        <a href="UpdateProduct.html" class="button update">Update</a>
-        <a href="DeleteProduct.html" class="button delete">Delete</a>
-    	</div>
-            </div>
-           <div class="inventory-item">
-    	<img src="images/kerepek pisang.jpg" alt="Ubi Kuning">
-    	<h3>UBI KUNING</h3>
-      			<div class="buttons">
-                    <button class="update">Update</button>
-                    <button class="delete">Delete</button>
-                </div>
-		</div>
+        <!-- Sales and Inventory Summary -->
+        <div class="summary">
+            <div class="summary-item">
+                <h3>Total Sales</h3>
 
-            <div class="inventory-item">
-                <img src="images/kerepek pisang.jpg" alt="Pisang Tanduk">
-                <h3>PISANG TANDUK</h3>
-                <div class="buttons">
-                    <button class="update">Update</button>
-                    <button class="delete">Delete</button>
-                </div>
             </div>
-            <div class="inventory-item">
-                <img src="images/kerepek pisang.jpg" alt="Ubi Pedas Basah">
-                <h3>UBI PEDAS BASAH</h3>
-                <div class="buttons">
-                    <button class="update">Update</button>
-                    <button class="delete">Delete</button>
-                </div>
-          
+            <div class="summary-item">
+                <h3>Total Products in Stock</h3>
+                
             </div>
         </div>
+
+        
     </div>
 </body>
 </html>
