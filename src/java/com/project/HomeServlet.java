@@ -29,7 +29,7 @@ public class HomeServlet extends HttpServlet {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		
 		//request page
-		request.getRequestDispatcher("/index.jsp").forward(request, response);
+		request.getRequestDispatcher("/DashboardHome.jsp").forward(request, response);
 		
 	}
 
