@@ -1,45 +1,44 @@
 package com.project;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Properties;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class DBConnection {
-    private static Connection connection;
-
-    static {
-        try {
-            // Load properties from dbconfig.properties
-            Properties props = new Properties();
-            FileInputStream fis = new FileInputStream("src/main/resources/dbconfig.properties");
-            props.load(fis);
-
-            // Get database credentials from properties
-            String url = props.getProperty("db.url");
-            String username = props.getProperty("db.username");
-            String password = props.getProperty("db.password");
-
-            // Load the Oracle JDBC driver
-            Class.forName("oracle.jdbc.driver.OracleDriver");
-
-            // Establish the connection
-            connection = DriverManager.getConnection(url, username, password);
-            System.out.println("Database connection established successfully!");
-
-        } catch (IOException e) {
-            System.err.println("Error reading dbconfig.properties: " + e.getMessage());
-        } catch (ClassNotFoundException e) {
-            System.err.println("Oracle JDBC Driver not found: " + e.getMessage());
-        } catch (SQLException e) {
-            System.err.println("Error establishing database connection: " + e.getMessage());
+    
+    // Connection parameters
+    private static final String URL = "jdbc:sqlserver://kerepekmaksu.database.windows.net:1433;";
+    private static final String USER = "adminmaksu";
+    private static final String PASSWORD = "maksupass@";
+    private static final String DB_NAME = "KerepekMaksuDB";
+    
+    // Database connection method
+    public static Connection getConnection() throws Exception {
+        Connection conn = DriverManager.getConnection(
+            URL + ";database=" + DB_NAME, USER, PASSWORD);
+        return conn;
+    }
+    
+    // Example of executing a query
+    public static void queryDatabase() {
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement()) {
+             
+            String sql = "SELECT * FROM your_table";
+            ResultSet rs = statement.executeQuery(sql);
+            
+            while (rs.next()) {
+                System.out.println(rs.getString("your_column_name"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-
-    public static Connection getConnection() {
-        return connection;
+    
+    public static void main(String[] args) {
+        queryDatabase();
     }
     
 }
+
