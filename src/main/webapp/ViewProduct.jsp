@@ -1,5 +1,5 @@
-<%@ page import="com.controller.Product, com.dao.ProductDAO" %>
-<%@ page import="java.util.Optional" %>
+<%@ page import="com.model.Product" %>
+<%@ page import="com.dao.ProductDAO" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -152,19 +152,18 @@
                 String productIdStr = request.getParameter("id");
                 int productId = Integer.parseInt(productIdStr);
                 
-                // Assuming you have a ProductDAO to fetch product by ID
+                // Instantiate ProductDAO and fetch the product
                 ProductDAO productDAO = new ProductDAO();
-                Optional<Product> optionalProduct = productDAO.getProductById(productId);
+                Product product = productDAO.getProductById(productId);
 
-                if (optionalProduct.isPresent()) {
-                    Product product = optionalProduct.get();
+                if (product != null) {
             %>
                 <img src="<%= product.getImagePath() %>" alt="<%= product.getProductName() %>">
                 <h2><%= product.getProductName() %></h2>
                 <p><strong>Price:</strong> <%= product.getPrice() %> RM</p>
-                <p><strong>Category:</strong> <%= product.getCategory() %></p>
+                <p><strong>Category:</strong> <%= product.getCategory() %></p> <!-- Display category -->
                 <p><strong>Description:</strong> <%= product.getDescription() %></p>
-                <p><strong>Stock Quantity:</strong> <%= product.getStockQuantity() %></p>
+                <p><strong>Stock Quantity:</strong> <%= product.getQuantity() %></p> <!-- Display quantity -->
                 <p><strong>Expiry Date:</strong> <%= product.getExpiryDate() %></p>
                 <button class="back-button" onclick="window.history.back()">Back to Inventory</button>
                 <button class="delete-button" data-id="<%= product.getId() %>" onclick="openPopup(this)"> Delete Product </button>
@@ -181,45 +180,46 @@
     <!-- Overlay -->
 	<div id="overlay" style="display: none;"></div>
 
-<!-- Pop-Up -->
+    <!-- Pop-Up -->
 	<div id="popup" style="display: none;">
     	<h2>Delete Product Permanently?</h2>
     	<p>Are you sure you want to delete this product? This action cannot be undone.</p>
     	<button id="confirmDelete">Delete</button>
     	<button id="cancelPopup">Cancel</button>
 	</div>
+
 	<script>
-    function openPopup(button) {
-        const productId = button.getAttribute('data-id'); // Get product ID
+        function openPopup(button) {
+            const productId = button.getAttribute('data-id'); // Get product ID
 
-        // Store the product ID in the confirmDelete button's dataset
-        const confirmDelete = document.getElementById('confirmDelete');
-        confirmDelete.setAttribute('data-id', productId);
+            // Store the product ID in the confirmDelete button's dataset
+            const confirmDelete = document.getElementById('confirmDelete');
+            confirmDelete.setAttribute('data-id', productId);
 
-        // Show the pop-up
-        document.getElementById('popup').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
-    }
+            // Show the pop-up
+            document.getElementById('popup').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
 
-    document.getElementById('confirmDelete').addEventListener('click', () => {
-        const confirmDelete = document.getElementById('confirmDelete');
-        const productId = confirmDelete.getAttribute('data-id');
+        document.getElementById('confirmDelete').addEventListener('click', () => {
+            const confirmDelete = document.getElementById('confirmDelete');
+            const productId = confirmDelete.getAttribute('data-id');
 
-        // Redirect to the delete servlet with the product ID
-        window.location.href = `DeleteProductServlet?id=${productId}`;
-    });
+            // Redirect to the delete servlet with the product ID
+            window.location.href = `DeleteProductServlet?id=${productId}`;
+        });
 
-    document.getElementById('cancelPopup').addEventListener('click', () => {
-        // Hide the pop-up
-        document.getElementById('popup').style.display = 'none';
-        document.getElementById('overlay').style.display = 'none';
-    });
+        document.getElementById('cancelPopup').addEventListener('click', () => {
+            // Hide the pop-up
+            document.getElementById('popup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        });
 
-    document.getElementById('overlay').addEventListener('click', () => {
-        // Hide the pop-up
-        document.getElementById('popup').style.display = 'none';
-        document.getElementById('overlay').style.display = 'none';
-    });
+        document.getElementById('overlay').addEventListener('click', () => {
+            // Hide the pop-up
+            document.getElementById('popup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        });
 	</script>
 </body>
 </html>

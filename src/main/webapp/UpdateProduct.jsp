@@ -160,9 +160,8 @@
             <div class="form-group">
                 <label for="category">Category</label>
                 <select id="category" name="category">
-                    <option value="snacks" <c:if test="${product.category == 'snacks'}">selected</c:if>>Snacks</option>
+                    <option value="snacks" <c:if test="${product.category == 'snacks'}">selected</c:if>>Foods</option>
                     <option value="drinks" <c:if test="${product.category == 'drinks'}">selected</c:if>>Drinks</option>
-                    <option value="others" <c:if test="${product.category == 'others'}">selected</c:if>>Others</option>
                 </select>
             </div>
             <div class="form-group">

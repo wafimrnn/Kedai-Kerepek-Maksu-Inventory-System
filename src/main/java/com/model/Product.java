@@ -1,17 +1,21 @@
-package com.model; // Use your actual package here
+package com.model;
 
 public class Product {
     private int productId;
     private String productName;
     private String imagePath;
     private double price;
-    
-    // Constructor
-    public Product(int productId,String productName,String imagePath, int quantity,String category, double price) {
+    private int quantity;  // Added quantity
+    private String category;  // Added category
+
+    // Constructor with all attributes
+    public Product(int productId, String productName, String imagePath, int quantity, String category, double price) {
         this.productId = productId;
         this.productName = productName;
         this.imagePath = imagePath;
         this.price = price;
+        this.quantity = quantity;  // Initialize quantity
+        this.category = category;  // Initialize category
     }
 
     // Getter and Setter methods
@@ -46,6 +50,26 @@ public class Product {
     public void setPrice(double price) {
         this.price = price;
     }
-    
-    // You can also override toString(), equals(), hashCode() if needed
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    // Optional: Override toString(), equals(), hashCode() if needed
+    @Override
+    public String toString() {
+        return "Product{id=" + productId + ", name='" + productName + "', price=" + price + ", quantity=" + quantity + ", category='" + category + "'}";
+    }
 }
