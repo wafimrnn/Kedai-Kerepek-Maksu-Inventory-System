@@ -12,6 +12,10 @@
       <id>central</id>
       <url>https://repo.maven.apache.org/maven2</url>
     </repository>
+    <repository>
+        <id>apache</id>
+        <url>https://repository.apache.org/content/groups/public/</url>
+    </repository>
   </repositories>
 
   <dependencies>
