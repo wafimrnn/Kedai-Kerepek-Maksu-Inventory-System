@@ -31,16 +31,11 @@
     
     <!-- Azure Storage Blob -->
     <dependency>
-      <groupId>com.azure</groupId>
-      <artifactId>azure-storage-blob</artifactId>
-      <version>12.10.0</version>
-    </dependency>
-    
-    <dependency>
-    <groupId>javax.servlet.jsp.jstl</groupId>
-    <artifactId>javax.servlet.jsp.jstl-api</artifactId>
-    <version>1.2.1</version> <!-- Use the latest compatible version -->
-	</dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>javax.servlet-api</artifactId>
+    <version>4.0.1</version>
+    <scope>provided</scope>
+</dependency>
 
 	<dependency>
     <groupId>org.glassfish</groupId>
