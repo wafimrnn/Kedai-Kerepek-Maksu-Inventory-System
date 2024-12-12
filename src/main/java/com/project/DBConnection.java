@@ -8,9 +8,9 @@ import java.sql.Statement;
 public class DBConnection {
     
     // Connection parameters
-    private static final String URL = "jdbc:sqlserver://kerepekmaksu.database.windows.net:1433;";
-    private static final String USER = "adminmaksu";
-    private static final String PASSWORD = "maksupass@";
+    private static final String URL = "maksukerepek.database.windows.net";
+    private static final String USER = "maksuadmin";
+    private static final String PASSWORD = "Larvapass@";
     private static final String DB_NAME = "KerepekMaksuDB";
     
     // Database connection method
