@@ -152,7 +152,7 @@
    <div class="sidebar">
         <h2>Kedai Kerepek Maksu</h2>
         <ul>
-            <li><a href="#" class="active">Dashboard</a></li>
+            <li><a href="Index.jsp" class="active">Dashboard</a></li>
             <li><a href="#">Inventories</a></li>
             <li><a href="#">Reports</a></li>
             <li><a href="#">Profile Account</a></li>
