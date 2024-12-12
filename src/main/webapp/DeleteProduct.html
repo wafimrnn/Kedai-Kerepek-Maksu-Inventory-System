@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Pop-Up</title>
     <style>
-        
         body {
             font-family: Arial, sans-serif;
-            background-image: url('images/backgroundDeletePage.png');
             background-size: cover; 
             background-position: center; 
             background-repeat: no-repeat; 
@@ -18,9 +16,8 @@
             overflow: hidden;
         }
 
-       
         #popup {
-            display: block; 
+            display: none; /* Initially hidden */
             position: fixed;
             top: 50%;
             left: 50%;
@@ -53,7 +50,7 @@
 
         /* Overlay */
         #overlay {
-            display: block; 
+            display: none; /* Initially hidden */
             position: fixed;
             top: 0;
             left: 0;
@@ -65,7 +62,18 @@
     </style>
 </head>
 <body>
-    
+
+    <!-- Product Example -->
+    <div>
+        <h3>Sample Product</h3>
+        <button 
+            class="delete-button" 
+            data-id="101" 
+            data-type="food" 
+            onclick="openPopup(this)">Delete</button>
+    </div>
+
+    <!-- Overlay -->
     <div id="overlay"></div>
 
     <!-- Pop-Up -->
@@ -76,28 +84,42 @@
     </div>
 
     <script>
-        // JavaScript for pop-up functionality
-        const closePopupButton = document.getElementById('closePopup');
-        const deleteButton = document.getElementById('deleteButton');
-        const popup = document.getElementById('popup');
-        const overlay = document.getElementById('overlay');
+        function openPopup(button) {
+            const productId = button.getAttribute('data-id'); // Get product ID
+            const productType = button.getAttribute('data-type'); // Get product type
 
-        // Redirect to another page when "Delete" button is clicked
-        deleteButton.addEventListener('click', () => {
-            window.location.href = 'ViewProd.html'; 
+            // Store these details on the delete button in the pop-up
+            const deleteButton = document.getElementById('deleteButton');
+            deleteButton.setAttribute('data-id', productId);
+            deleteButton.setAttribute('data-type', productType);
+
+            // Show the pop-up and overlay
+            document.getElementById('popup').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        // Deleting the product when "Delete" button is clicked
+        document.getElementById('deleteButton').addEventListener('click', () => {
+            const deleteButton = document.getElementById('deleteButton');
+            const productId = deleteButton.getAttribute('data-id'); // Retrieve product ID
+            const productType = deleteButton.getAttribute('data-type'); // Retrieve product type
+
+            // Redirect to the deletion URL (update this to match your servlet or backend)
+            window.location.href = `DeleteProductServlet?id=${productId}&type=${productType}`;
         });
 
-        // Hide pop-up when "Cancel" button is clicked
-        closePopupButton.addEventListener('click', () => {
-            popup.style.display = 'none';
-            overlay.style.display = 'none';
+        // Close pop-up when "Cancel" is clicked
+        document.getElementById('closePopup').addEventListener('click', () => {
+            document.getElementById('popup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
         });
 
-        // Close pop-up when clicking outside of it
-        overlay.addEventListener('click', () => {
-            popup.style.display = 'none';
-            overlay.style.display = 'none';
+        // Close pop-up when clicking outside it
+        document.getElementById('overlay').addEventListener('click', () => {
+            document.getElementById('popup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
         });
     </script>
+
 </body>
 </html>

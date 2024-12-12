@@ -1,11 +1,13 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Product</title>
-    <style>
-        body {
+    <title>Update Product</title>
+    <style> 
+    	body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -144,61 +146,41 @@
 
 			.black-button:hover {
 			    background-color: #444;
-		}
-			        
-    </style>
+		} 
+		</style>
 </head>
 <body>
-    <div class="sidebar">
-        <h2>Kedai Kerepek Maksu</h2>
-        <ul>
-            <li><a href="DashboardHome.jsp" class="active">Dashboard</a></li>
-            <li><a href="#">Inventories</a></li>
-            <li><a href="#">Reports</a></li>
-            <li><a href="#">Profile Account</a></li>
-            <li><a href="#">Log Out</a></li>
-        </ul>
-    </div>
-
-    <div class="content">
-        <div class="top-bar">
-            <a href="CreateProduct.html" class="black-button">Add Product</a>
-            <a href="#" class="black-button">Create Sale</a>
-        </div>
-
-        <div class="form-container">
-            <h3>Update Product</h3>
-            <form action="#" method="post">
-                <div class="form-group">
-                    <label for="product-name">Product Name</label>
-                    <input type="text" id="product-name" name="product-name" placeholder="Kerepek Bawang">
-                </div>
-                <div class="form-group">
-                    <label for="category">Category</label>
-                    <select id="category" name="category">
-                        <option value="">--Select Category--</option>
-                        <option value="snacks">Snacks</option>
-                        <option value="drinks">Drinks</option>
-                        <option value="others">Others</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="product-id">Product ID</label>
-                    <input type="text" id="product-id" name="product-id" placeholder="0001">
-                </div>
-                <div class="form-group">
-                    <label for="quantity">Quantity Stock</label>
-                    <input type="number" id="quantity" name="quantity" placeholder="3">
-                </div>
-                <div class="form-group">
-                    <label for="price">Price</label>
-                    <input type="text" id="price" name="price" placeholder="RM12.00">
-                </div>
-                <div class="form-actions">
-                   <a href="ViewProduct.html" class="black-button">Update</a>
-                </div>
-            </form>
-        </div>
+    <div class="form-container">
+        <h3>Update Product</h3>
+        <form action="UpdateProductServlet" method="post">
+            <div class="form-group">
+                <label for="product-name">Product Name</label>
+                <input type="text" id="product-name" name="product-name" value="${product.productName}" placeholder="Kerepek Bawang">
+            </div>
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="category">
+                    <option value="snacks" <c:if test="${product.category == 'snacks'}">selected</c:if>>Snacks</option>
+                    <option value="drinks" <c:if test="${product.category == 'drinks'}">selected</c:if>>Drinks</option>
+                    <option value="others" <c:if test="${product.category == 'others'}">selected</c:if>>Others</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="product-id">Product ID</label>
+                <input type="text" id="product-id" name="product-id" value="${product.productId}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="quantity">Quantity Stock</label>
+                <input type="number" id="quantity" name="quantity" value="${product.quantity}" placeholder="3">
+            </div>
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="text" id="price" name="price" value="${product.price}" placeholder="RM12.00">
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="black-button">Update</button>
+            </div>
+        </form>
     </div>
 </body>
 </html>
