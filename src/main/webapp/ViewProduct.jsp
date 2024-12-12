@@ -92,45 +92,45 @@
             background-color: #e0a800;
         }
         #overlay {
-    		position: fixed;
-    		top: 0;
-    		left: 0;
-    		width: 100%;
-    		height: 100%;
-    		background: rgba(0, 0, 0, 0.5);
-    		z-index: 1000;
-		}
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
 
-		#popup {
-    		position: fixed;
-    		top: 50%;
-    		left: 50%;
-		    transform: translate(-50%, -50%);
-		    background: white;
-		    padding: 20px;
-		    border-radius: 10px;
-		    text-align: center;
-		    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-		    z-index: 1001;
-		}
+        #popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+        }
 
-		#popup button {
-		    margin: 10px;
-		    padding: 10px 20px;
-		    border: none;
-		    border-radius: 5px;
-		    cursor: pointer;
-		}
+        #popup button {
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-		#confirmDelete {
-		    background-color: #e74c3c;
-		    color: white;
-		}
+        #confirmDelete {
+            background-color: #e74c3c;
+            color: white;
+        }
 
-		#cancelPopup {
-		    background-color: #95a5a6;
-		    color: white;
-		}
+        #cancelPopup {
+            background-color: #95a5a6;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -162,11 +162,10 @@
                 <h2><%= product.getProductName() %></h2>
                 <p><strong>Price:</strong> <%= product.getPrice() %> RM</p>
                 <p><strong>Category:</strong> <%= product.getCategory() %></p> <!-- Display category -->
-                <p><strong>Description:</strong> <%= product.getDescription() %></p>
                 <p><strong>Stock Quantity:</strong> <%= product.getQuantity() %></p> <!-- Display quantity -->
                 <p><strong>Expiry Date:</strong> <%= product.getExpiryDate() %></p>
                 <button class="back-button" onclick="window.history.back()">Back to Inventory</button>
-                <button class="delete-button" data-id="<%= product.getId() %>" onclick="openPopup(this)"> Delete Product </button>
+                <button class="delete-button" data-id="<%= product.getProductId() %>" onclick="openPopup(this)"> Delete Product </button>
                 
             <% 
                 } else {
@@ -178,17 +177,17 @@
         </div>
     </div>
     <!-- Overlay -->
-	<div id="overlay" style="display: none;"></div>
+    <div id="overlay" style="display: none;"></div>
 
     <!-- Pop-Up -->
-	<div id="popup" style="display: none;">
-    	<h2>Delete Product Permanently?</h2>
-    	<p>Are you sure you want to delete this product? This action cannot be undone.</p>
-    	<button id="confirmDelete">Delete</button>
-    	<button id="cancelPopup">Cancel</button>
-	</div>
+    <div id="popup" style="display: none;">
+        <h2>Delete Product Permanently?</h2>
+        <p>Are you sure you want to delete this product? This action cannot be undone.</p>
+        <button id="confirmDelete">Delete</button>
+        <button id="cancelPopup">Cancel</button>
+    </div>
 
-	<script>
+    <script>
         function openPopup(button) {
             const productId = button.getAttribute('data-id'); // Get product ID
 
@@ -220,6 +219,6 @@
             document.getElementById('popup').style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
         });
-	</script>
+    </script>
 </body>
 </html>

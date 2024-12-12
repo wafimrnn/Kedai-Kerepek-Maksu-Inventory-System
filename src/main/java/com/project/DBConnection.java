@@ -2,8 +2,7 @@ package com.project;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.SQLException;
 
 public class DBConnection {
     
@@ -14,31 +13,8 @@ public class DBConnection {
     private static final String DB_NAME = "KerepekMaksuDB";
     
     // Database connection method
-    public static Connection getConnection() throws Exception {
-        Connection conn = DriverManager.getConnection(
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(
             URL + ";database=" + DB_NAME, USER, PASSWORD);
-        return conn;
     }
-    
-    // Example of executing a query
-    public static void queryDatabase() {
-        try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
-             
-            String sql = "SELECT * FROM your_table";
-            ResultSet rs = statement.executeQuery(sql);
-            
-            while (rs.next()) {
-                System.out.println(rs.getString("your_column_name"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    
-    public static void main(String[] args) {
-        queryDatabase();
-    }
-    
 }
-
