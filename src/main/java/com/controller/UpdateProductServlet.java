@@ -36,7 +36,7 @@ public class UpdateProductServlet extends HttpServlet {
                     int quantity = resultSet.getInt("quantity");
                     double price = resultSet.getDouble("price");
                     
-                    product = new Product(Integer.parseInt(productId), productName, "", quantity, category, price);
+                    product = new Product(Integer.parseInt(productId), productName, "", quantity, category, price, null);
                 }
             }
         } catch (SQLException e) {

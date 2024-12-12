@@ -35,7 +35,7 @@ public class ViewProductServlet extends HttpServlet {
                     int quantity = resultSet.getInt("quantity");
                     double price = resultSet.getDouble("price");
 
-                    products.add(new Product(productId, productName, imagePath, quantity, category, price));
+                    products.add(new Product(productId, productName, imagePath, quantity, category, price, null));
                 }
             }
         } catch (SQLException e) {

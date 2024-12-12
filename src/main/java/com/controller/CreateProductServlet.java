@@ -1,8 +1,8 @@
 package com.controller;
 
 import com.azure.storage.blob.*;
-import com.azure.storage.blob.models.*;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,64 +15,58 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.UUID;
 
-import org.apache.tomcat.util.http.fileupload.FileItem;
-import org.apache.tomcat.util.http.fileupload.RequestContext;
-import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
-import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 @WebServlet("/CreateProductServlet")
 public class CreateProductServlet extends HttpServlet {
-    private static final String CONTAINER_NAME = "product-images"; // The name of your Blob container
-    private static final String CONNECTION_STRING = System.getenv("AZURE_CONNECTION_STRING"); // Use environment variable for connection string
+    private static final String CONTAINER_NAME = "product-images"; // Azure Blob Storage container name
+    private static final String CONNECTION_STRING = System.getenv("AZURE_CONNECTION_STRING"); // Azure connection string
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (ServletFileUpload.isMultipartContent(request)) {
-            DiskFileItemFactory factory = new DiskFileItemFactory();
-            ServletFileUpload upload = new ServletFileUpload(factory);
+        // Check if the form is a multipart request (i.e., contains files)
+        if (ServletFileUpload.isMultipartContent((javax.servlet.http.HttpServletRequest) request)) {
+            ServletFileUpload upload = new ServletFileUpload(new DiskFileItemFactory());
+
+            // Initialize product variables
             String productName = "", category = "", productId = "", imagePath = "";
             int quantity = 0;
             double price = 0.0;
 
             try {
-                // Corrected: parsing the request
-                List<FileItem> formItems = upload.parseRequest((RequestContext) request);
-
-                for (FileItem item : formItems) {
-                    if (item.isFormField()) {
-                        // Process form fields (product details)
-                        String fieldName = item.getFieldName();
-                        if ("product-name".equals(fieldName)) {
-                            productName = item.getString();
-                        } else if ("category".equals(fieldName)) {
-                            category = item.getString();
-                        } else if ("product-id".equals(fieldName)) {
-                            productId = item.getString();
-                        } else if ("quantity".equals(fieldName)) {
-                            quantity = Integer.parseInt(item.getString());
-                        } else if ("price".equals(fieldName)) {
-                            price = Double.parseDouble(item.getString());
+                // Parse the form data
+                List<org.apache.commons.fileupload.FileItem> formItems = upload.parseRequest((javax.servlet.http.HttpServletRequest) request);
+                for (org.apache.commons.fileupload.FileItem item : formItems) {
+                    if (((org.apache.commons.fileupload.FileItem) item).isFormField()) {
+                        // Extract form fields
+                        switch (item.getName()) {
+                            case "product-name" -> productName = item.toString();
+                            case "category" -> category = item.toString();
+                            case "product-id" -> productId = item.toString();
+                            case "quantity" -> quantity = Integer.parseInt(item.toString());
+                            case "price" -> price = Double.parseDouble(item.toString());
                         }
-                    } else {
-                        // Process the uploaded file (image)
-                        String fieldName = item.getFieldName();
-                        if ("product-image".equals(fieldName)) {
-                            // Get file name
-                            String fileName = new File(item.getName()).getName();
-                            InputStream fileInputStream = item.getInputStream();
-
-                            // Upload the image to Azure Blob Storage
-                            uploadToAzureBlob(fileName, fileInputStream);
-
-                            // Set the image path (URL to the uploaded image)
+                    } else if ("product-image".equals(item.getName())) {
+                        // Handle file upload (product image)
+                        String fileName = UUID.randomUUID() + "_" + new File(item.getName()).getName();
+                        try (InputStream fileInputStream = ((ServletRequest) item).getInputStream()) {
+                            // Upload to Azure Blob Storage
+                            uploadToAzureBlob(fileName, fileInputStream, ((org.apache.commons.fileupload.FileItem) item).getSize());
                             imagePath = "https://kerepekmaksustorage.blob.core.windows.net/" + CONTAINER_NAME + "/" + fileName;
                         }
                     }
                 }
 
-                // Save product information with image path in the database
-                try (Connection conn = DriverManager.getConnection("jdbc:sqlserver://maksukerepek.database.windows.net:1433;database=KedaiMaksuDB;", "maksuadmin", "Larvapass@")) {
+                // Database connection details
+                String dbUrl = System.getenv("DB_URL");
+                String dbUsername = System.getenv("DB_USERNAME");
+                String dbPassword = System.getenv("DB_PASSWORD");
+
+                // Insert product details into the database
+                try (Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword)) {
                     String sql = "INSERT INTO products (product_name, category, product_id, quantity, price, image_path) VALUES (?, ?, ?, ?, ?, ?)";
                     try (PreparedStatement statement = conn.prepareStatement(sql)) {
                         statement.setString(1, productName);
@@ -85,32 +79,33 @@ public class CreateProductServlet extends HttpServlet {
                     }
                 }
 
-                // Redirect to product view page
+                // Redirect to the product view page after successful insertion
                 response.sendRedirect("ViewProduct.jsp");
 
             } catch (Exception ex) {
+                // Handle exceptions and log the error
                 ex.printStackTrace();
-                response.getWriter().write("Error: " + ex.getMessage());
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to create product.");
             }
         } else {
-            response.getWriter().write("Error: Form is not multipart.");
+            // If the form is not multipart, send a bad request response
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Form is not multipart.");
         }
     }
 
-    // This is the method that handles uploading the image to Azure Blob Storage
-    private void uploadToAzureBlob(String fileName, InputStream fileInputStream) throws IOException {
-        // Create a BlobServiceClient object using the connection string
+    private void uploadToAzureBlob(String fileName, InputStream fileInputStream, long fileSize) throws IOException {
+        // Initialize Azure Blob Service Client using the connection string
         BlobServiceClient blobServiceClient = new BlobServiceClientBuilder()
                 .connectionString(CONNECTION_STRING)
                 .buildClient();
 
-        // Get a reference to the container where the file will be uploaded
+        // Get the Blob Container Client
         BlobContainerClient containerClient = blobServiceClient.getBlobContainerClient(CONTAINER_NAME);
 
-        // Get a reference to the blob (file) to be uploaded
+        // Get the Blob Client for the specific file
         BlobClient blobClient = containerClient.getBlobClient(fileName);
 
-        // Upload the file
-        blobClient.upload(fileInputStream, fileInputStream.available(), true); // true to overwrite if file exists
+        // Upload the file to Azure Blob Storage (overwriting if it already exists)
+        blobClient.upload(fileInputStream, fileSize, true);
     }
 }
