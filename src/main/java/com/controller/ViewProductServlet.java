@@ -18,31 +18,35 @@ import com.model.Product;
 
 @WebServlet("/ViewProductServlet")
 public class ViewProductServlet extends HttpServlet {
+    private static final String DB_URL = "jdbc:sqlserver://maksukerepek.database.windows.net:1433;database=KedaiMaksuDB;";
+    private static final String DB_USER = "maksuadmin";
+    private static final String DB_PASSWORD = "Larvapass@";
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Product> products = new ArrayList<>();
-        
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlserver://maksukerepek.database.windows.net:1433;database=KedaiMaksuDB;", "maksuadmin", "Larvapass@")) {
-            String sql = "SELECT id, product_name, image_path, price, description FROM products";
-            try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                ResultSet resultSet = statement.executeQuery();
-                
-                while (resultSet.next()) {
-                	int productId = resultSet.getInt("product_id");
-                    String productName = resultSet.getString("product_name");
-                    String imagePath = resultSet.getString("image_path");
-                    String category = resultSet.getString("category");
-                    int quantity = resultSet.getInt("quantity");
-                    double price = resultSet.getDouble("price");
 
-                    products.add(new Product(productId, productName, imagePath, quantity, category, price, null));
-                }
+        String query = "SELECT product_id, product_name, image_path, category, quantity, price FROM products";
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                products.add(new Product(
+                    rs.getInt("product_id"),
+                    rs.getString("product_name"),
+                    rs.getString("image_path"),
+                    rs.getInt("quantity"),
+                    rs.getString("category"),
+                    rs.getDouble("price"),
+                    null // Assuming expiry date is not fetched here
+                ));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Consider logging this instead
         }
-        
-        // Forward the list of products to the JSP
+
         request.setAttribute("products", products);
         request.getRequestDispatcher("ViewProduct.jsp").forward(request, response);
     }

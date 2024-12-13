@@ -23,27 +23,16 @@
             padding: 20px;
         }
 
-        .sidebar h2 {
-            margin: 0;
-            font-size: 1.5em;
-        }
-
         .sidebar ul {
             list-style-type: none;
             padding: 0;
-            margin-top: 20px;
-        }
-
-        .sidebar ul li {
-            margin: 10px 0;
         }
 
         .sidebar ul li a {
             text-decoration: none;
             color: white;
-            font-size: 1em;
-            display: block;
             padding: 10px;
+            display: block;
             border-radius: 5px;
         }
 
@@ -72,63 +61,27 @@
 
         .product-details h2 {
             margin: 20px 0;
-            font-size: 2em;
         }
 
         .product-details p {
-            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        .button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
         .back-button {
-            padding: 10px 20px;
             background-color: #ffc107;
             color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
         }
 
-        .back-button:hover {
-            background-color: #e0a800;
-        }
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-        }
-
-        #popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            z-index: 1001;
-        }
-
-        #popup button {
-            margin: 10px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        #confirmDelete {
+        .delete-button {
             background-color: #e74c3c;
-            color: white;
-        }
-
-        #cancelPopup {
-            background-color: #95a5a6;
             color: white;
         }
     </style>
@@ -148,77 +101,52 @@
     <div class="content">
         <div class="product-details">
             <% 
-                // Get product ID from the request
                 String productIdStr = request.getParameter("id");
-                int productId = Integer.parseInt(productIdStr);
-                
-                // Instantiate ProductDAO and fetch the product
-                ProductDAO productDAO = new ProductDAO();
-                Product product = productDAO.getProductById(productId);
+                if (productIdStr != null) {
+                    try {
+                        int productId = Integer.parseInt(productIdStr);
+                        ProductDAO productDAO = new ProductDAO();
+                        Product product = productDAO.getProductById(productId);
 
-                if (product != null) {
+                        if (product != null) {
             %>
-                <img src="<%= product.getImagePath() %>" alt="<%= product.getProductName() %>">
-                <h2><%= product.getProductName() %></h2>
-                <p><strong>Price:</strong> <%= product.getPrice() %> RM</p>
-                <p><strong>Category:</strong> <%= product.getCategory() %></p> <!-- Display category -->
-                <p><strong>Stock Quantity:</strong> <%= product.getQuantity() %></p> <!-- Display quantity -->
-                <p><strong>Expiry Date:</strong> <%= product.getExpiryDate() %></p>
-                <button class="back-button" onclick="window.history.back()">Back to Inventory</button>
-                <button class="delete-button" data-id="<%= product.getProductId() %>" onclick="openPopup(this)"> Delete Product </button>
-                
+                            <img src="<%= product.getImagePath() %>" alt="<%= product.getProductName() %>">
+                            <h2><%= product.getProductName() %></h2>
+                            <p><strong>Price:</strong> RM <%= product.getPrice() %></p>
+                            <p><strong>Category:</strong> <%= product.getCategory() %></p>
+                            <p><strong>Stock Quantity:</strong> <%= product.getQuantity() %></p>
+                            <p><strong>Expiry Date:</strong> <%= product.getExpiryDate() %></p>
+                            <button class="button back-button" onclick="window.history.back()">Back to Inventory</button>
+                            <button class="button delete-button" onclick="confirmDelete(<%= product.getProductId() %>)">Delete Product</button>
             <% 
+                        } else {
+            %>
+                            <p>Product not found.</p>
+                            <button class="button back-button" onclick="window.history.back()">Back</button>
+            <% 
+                        }
+                    } catch (NumberFormatException e) {
+            %>
+                        <p>Invalid product ID.</p>
+                        <button class="button back-button" onclick="window.history.back()">Back</button>
+            <% 
+                    }
                 } else {
             %>
-                <p>Product not found.</p>
+                    <p>No product ID provided.</p>
+                    <button class="button back-button" onclick="window.history.back()">Back</button>
             <% 
                 }
             %>
         </div>
     </div>
-    <!-- Overlay -->
-    <div id="overlay" style="display: none;"></div>
-
-    <!-- Pop-Up -->
-    <div id="popup" style="display: none;">
-        <h2>Delete Product Permanently?</h2>
-        <p>Are you sure you want to delete this product? This action cannot be undone.</p>
-        <button id="confirmDelete">Delete</button>
-        <button id="cancelPopup">Cancel</button>
-    </div>
 
     <script>
-        function openPopup(button) {
-            const productId = button.getAttribute('data-id'); // Get product ID
-
-            // Store the product ID in the confirmDelete button's dataset
-            const confirmDelete = document.getElementById('confirmDelete');
-            confirmDelete.setAttribute('data-id', productId);
-
-            // Show the pop-up
-            document.getElementById('popup').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
+        function confirmDelete(productId) {
+            if (confirm("Are you sure you want to delete this product? This action cannot be undone.")) {
+                window.location.href = `DeleteProductServlet?id=${productId}`;
+            }
         }
-
-        document.getElementById('confirmDelete').addEventListener('click', () => {
-            const confirmDelete = document.getElementById('confirmDelete');
-            const productId = confirmDelete.getAttribute('data-id');
-
-            // Redirect to the delete servlet with the product ID
-            window.location.href = `DeleteProductServlet?id=${productId}`;
-        });
-
-        document.getElementById('cancelPopup').addEventListener('click', () => {
-            // Hide the pop-up
-            document.getElementById('popup').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        });
-
-        document.getElementById('overlay').addEventListener('click', () => {
-            // Hide the pop-up
-            document.getElementById('popup').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        });
     </script>
 </body>
 </html>

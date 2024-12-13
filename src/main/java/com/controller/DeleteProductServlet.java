@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 import com.project.DBConnection;
 
@@ -21,9 +20,9 @@ public class DeleteProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String idParam = request.getParameter("id");
-        String productType = request.getParameter("type"); // e.g., "food" or "drink"
+        String productType = request.getParameter("type"); // "food" or "drink"
 
-        // Input validation
+        // Validate input
         if (idParam == null || productType == null) {
             response.sendRedirect("ViewProduct.jsp?error=invalidinput");
             return;
@@ -37,18 +36,18 @@ public class DeleteProductServlet extends HttpServlet {
             return;
         }
 
-        // Validate product type
-        String deleteQuery;
-        if ("food".equalsIgnoreCase(productType)) {
-            deleteQuery = "DELETE FROM Food WHERE productId = ?";
-        } else if ("drink".equalsIgnoreCase(productType)) {
-            deleteQuery = "DELETE FROM Drink WHERE productId = ?";
-        } else {
+        // Determine the correct delete query
+        String deleteQuery = ("food".equalsIgnoreCase(productType)) ? 
+                "DELETE FROM Food WHERE productId = ?" : 
+                ("drink".equalsIgnoreCase(productType)) ? 
+                "DELETE FROM Drink WHERE productId = ?" : null;
+
+        if (deleteQuery == null) {
             response.sendRedirect("ViewProduct.jsp?error=invalidtype");
             return;
         }
 
-        // Execute deletion
+        // Perform deletion
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(deleteQuery)) {
             stmt.setInt(1, productId);
@@ -60,7 +59,6 @@ public class DeleteProductServlet extends HttpServlet {
                 response.sendRedirect("InventoryList.jsp?error=notfound");
             }
         } catch (Exception e) {
-            e.printStackTrace();
             response.sendRedirect("InventoryList.jsp?error=sqlerror");
         }
     }

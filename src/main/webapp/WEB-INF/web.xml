@@ -6,16 +6,17 @@
   
   <display-name>Kedai Kerepek Maksu Inventory System</display-name>
 
-<welcome-file-list>
-      <welcome-file>DashboardHome.jsp</welcome-file>  <!-- Change this to your actual welcome page -->
+  <welcome-file-list>
+      <welcome-file>DashboardHome.jsp</welcome-file>  <!-- Make sure this is the correct welcome page -->
   </welcome-file-list>
 
-  <!-- Servlet definitions -->
-<servlet>
-    <description></description>
+  <!-- Servlet Definitions -->
+  <servlet>
+    <description>Handles the creation of new products</description>
     <display-name>CreateProductServlet</display-name>
     <servlet-name>CreateProductServlet</servlet-name>
     <servlet-class>com.controller.CreateProductServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
   </servlet>
 
   <servlet-mapping>
@@ -24,10 +25,11 @@
   </servlet-mapping>
 
   <servlet>
-    <description></description>
+    <description>Displays a list of products</description>
     <display-name>ViewProductServlet</display-name>
     <servlet-name>ViewProductServlet</servlet-name>
     <servlet-class>com.controller.ViewProductServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
   </servlet>
 
   <servlet-mapping>
@@ -36,10 +38,11 @@
   </servlet-mapping>
 
   <servlet>
-    <description></description>
+    <description>Handles product updates</description>
     <display-name>UpdateProductServlet</display-name>
     <servlet-name>UpdateProductServlet</servlet-name>
     <servlet-class>com.controller.UpdateProductServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
   </servlet>
 
   <servlet-mapping>
@@ -48,10 +51,11 @@
   </servlet-mapping>
 
   <servlet>
-    <description></description>
+    <description>Handles product deletion</description>
     <display-name>DeleteProductServlet</display-name>
     <servlet-name>DeleteProductServlet</servlet-name>
     <servlet-class>com.controller.DeleteProductServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
   </servlet>
 
   <servlet-mapping>
