@@ -21,13 +21,18 @@ public class ViewProductServlet extends HttpServlet {
     private static final String DB_USER = "maksuadmin";
     private static final String DB_PASSWORD = "Larvapass@";
 
+    /*@Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Product> products = new ArrayList<>();*/
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Product> products = new ArrayList<>();
+        response.getWriter().println("Servlet is working!");
+    };
 
-        String query = "SELECT PROD_ID, PROD_NAME, IMAGE_PATH QUANTITY_STOCK, PROD_PRICE FROM PRODUCTS";
 
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+        //String query = "SELECT PROD_ID, PROD_NAME, IMAGE_PATH QUANTITY_STOCK, PROD_PRICE FROM PRODUCTS";
+
+        /*try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
 
@@ -58,6 +63,6 @@ public class ViewProductServlet extends HttpServlet {
 
         // Attach products list to request and forward to JSP
         request.setAttribute("products", products);
-        request.getRequestDispatcher("ViewProduct.jsp").forward(request, response);
+        request.getRequestDispatcher("ViewProduct.jsp").forward(request, response);*/
     }
-}
+//}
