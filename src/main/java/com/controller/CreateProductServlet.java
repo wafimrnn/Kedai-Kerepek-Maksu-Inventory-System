@@ -1,12 +1,11 @@
 package com.controller;
 
-import com.azure.storage.blob.*;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,11 +13,12 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.util.List;
 import java.util.UUID;
 
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import com.azure.storage.blob.BlobClient;
+import com.azure.storage.blob.BlobContainerClient;
+import com.azure.storage.blob.BlobServiceClient;
+import com.azure.storage.blob.BlobServiceClientBuilder;
 
 @WebServlet("/CreateProductServlet")
 public class CreateProductServlet extends HttpServlet {
@@ -28,8 +28,7 @@ public class CreateProductServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Check if the form is a multipart request (i.e., contains files)
-        if (ServletFileUpload.isMultipartContent((javax.servlet.http.HttpServletRequest) request)) {
-            ServletFileUpload upload = new ServletFileUpload(new DiskFileItemFactory());
+        if (request.getContentType() != null && request.getContentType().startsWith("multipart/form-data")) {
 
             // Initialize product variables
             String productName = "", category = "", productId = "", imagePath = "";
@@ -37,24 +36,27 @@ public class CreateProductServlet extends HttpServlet {
             double price = 0.0;
 
             try {
-                // Parse the form data
-                List<org.apache.commons.fileupload.FileItem> formItems = upload.parseRequest((javax.servlet.http.HttpServletRequest) request);
-                for (org.apache.commons.fileupload.FileItem item : formItems) {
-                    if (((org.apache.commons.fileupload.FileItem) item).isFormField()) {
-                        // Extract form fields
-                        switch (item.getName()) {
-                            case "product-name" -> productName = item.toString();
-                            case "category" -> category = item.toString();
-                            case "product-id" -> productId = item.toString();
-                            case "quantity" -> quantity = Integer.parseInt(item.toString());
-                            case "price" -> price = Double.parseDouble(item.toString());
-                        }
-                    } else if ("product-image".equals(item.getName())) {
+                // Get parts of the request
+                for (Part part : request.getParts()) {
+                    String partName = part.getName();
+
+                    // Handle regular form fields (non-file inputs)
+                    if (partName.equals("product-name")) {
+                        productName = getFormFieldValue(part);
+                    } else if (partName.equals("category")) {
+                        category = getFormFieldValue(part);
+                    } else if (partName.equals("product-id")) {
+                        productId = getFormFieldValue(part);
+                    } else if (partName.equals("quantity")) {
+                        quantity = Integer.parseInt(getFormFieldValue(part));
+                    } else if (partName.equals("price")) {
+                        price = Double.parseDouble(getFormFieldValue(part));
+                    } else if (partName.equals("product-image")) {
                         // Handle file upload (product image)
-                        String fileName = UUID.randomUUID() + "_" + new File(item.getName()).getName();
-                        try (InputStream fileInputStream = ((ServletRequest) item).getInputStream()) {
+                        String fileName = UUID.randomUUID() + "_" + new File(part.getSubmittedFileName()).getName();
+                        try (InputStream fileInputStream = part.getInputStream()) {
                             // Upload to Azure Blob Storage
-                            uploadToAzureBlob(fileName, fileInputStream, ((org.apache.commons.fileupload.FileItem) item).getSize());
+                            uploadToAzureBlob(fileName, fileInputStream, part.getSize());
                             imagePath = "https://kerepekmaksustorage.blob.core.windows.net/" + CONTAINER_NAME + "/" + fileName;
                         }
                     }
@@ -90,6 +92,13 @@ public class CreateProductServlet extends HttpServlet {
         } else {
             // If the form is not multipart, send a bad request response
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Form is not multipart.");
+        }
+    }
+
+    private String getFormFieldValue(Part part) throws IOException {
+        // Read the form field value (non-file input)
+        try (InputStream inputStream = part.getInputStream()) {
+            return new String(inputStream.readAllBytes());
         }
     }
 

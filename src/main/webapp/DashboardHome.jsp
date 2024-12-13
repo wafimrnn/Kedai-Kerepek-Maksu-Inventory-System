@@ -1,4 +1,4 @@
-<%@ page import="java.sql.*, java.util.*, com.project.DBConnection" %>
+<%@ page import="jakarta.servlet.*, java.sql.*, java.util.*, com.project.DBConnection" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -168,68 +168,63 @@
 
         <!-- Sales and Inventory Summary -->
         <%
-    Connection conn = null;
-    PreparedStatement stmt = null;
-    ResultSet rs = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        double totalSales = 0;
+        int totalProducts = 0;
 
-    double totalSales = 0;
-    int totalProducts = 0;
+        try {
+            conn = DBConnection.getConnection();
+            String totalSalesQuery = "SELECT SUM(totalAmount) FROM Orders";
+            stmt = conn.prepareStatement(totalSalesQuery);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                totalSales = rs.getDouble(1);
+            }
 
-    try {
-        // Establish database connection
-        conn = DBConnection.getConnection();
+            if (stmt != null) stmt.close(); // Close previous statement
 
-        // Query for total sales
-        String totalSalesQuery = "SELECT SUM(totalAmount) FROM Orders";
-        stmt = conn.prepareStatement(totalSalesQuery);
-        rs = stmt.executeQuery();
-        if (rs.next()) {
-            totalSales = rs.getDouble(1);
+            String totalProductsQuery = "SELECT SUM(stockQuantity) FROM Product";
+            stmt = conn.prepareStatement(totalProductsQuery);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                totalProducts = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            log("Database error: " + e.getMessage());
+        } finally {
+            if (rs != null) try { rs.close(); } catch (SQLException ignored) {}
+            if (stmt != null) try { stmt.close(); } catch (SQLException ignored) {}
+            if (conn != null) try { conn.close(); } catch (SQLException ignored) {}
         }
+        %>
 
-        // Close the previous statement
-        if (stmt != null) stmt.close();
+        <div class="summary">
+            <div class="summary-item">
+                <h3>Total Sales</h3>
+                <p><%= String.format("%.2f", totalSales) %> USD</p>
+            </div>
+            <div class="summary-item">
+                <h3>Total Products in Stock</h3>
+                <p><%= totalProducts %> items</p>
+            </div>
+        </div>
 
-        // Query for total products in stock
-        String totalProductsQuery = "SELECT SUM(stockQuantity) FROM Product";
-        stmt = conn.prepareStatement(totalProductsQuery);
-        rs = stmt.executeQuery();
-        if (rs.next()) {
-            totalProducts = rs.getInt(1);
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    } finally {
-        if (rs != null) try { rs.close(); } catch (SQLException ignored) {}
-        if (stmt != null) try { stmt.close(); } catch (SQLException ignored) {}
-        if (conn != null) try { conn.close(); } catch (SQLException ignored) {}
-    }
-%>
+        <div class="inventory">
+        <%
+        try {
+            conn = DBConnection.getConnection();
+            String productQuery = "SELECT productId, productName, imagePath, stockQuantity FROM Product";
+            stmt = conn.prepareStatement(productQuery);
+            rs = stmt.executeQuery();
 
-	<div class="summary">
-    	<div class="summary-item">
-        	<h3>Total Sales</h3>
-        	<p><%= String.format("%.2f", totalSales) %> USD</p>
-    	</div>
-    	<div class="summary-item">
-        	<h3>Total Products in Stock</h3>
-        	<p><%= totalProducts %> items</p>
-    	</div>
-	</div>
-	<div class="inventory">
-	<%
-    try {
-        conn = DBConnection.getConnection();
-        String productQuery = "SELECT productId, productName, imagePath, stockQuantity FROM Product";
-        stmt = conn.prepareStatement(productQuery);
-        rs = stmt.executeQuery();
-
-        while (rs.next()) {
-            int productId = rs.getInt("productId");
-            String productName = rs.getString("productName");
-            String imagePath = rs.getString("imagePath");
-            int stockQuantity = rs.getInt("stockQuantity");
-	%>
+            while (rs.next()) {
+                int productId = rs.getInt("productId");
+                String productName = rs.getString("productName");
+                String imagePath = rs.getString("imagePath");
+                int stockQuantity = rs.getInt("stockQuantity");
+        %>
             <div class="inventory-item">
                 <img src="<%= imagePath != null ? imagePath : "default-image.jpg" %>" alt="<%= productName %>" style="height:150px; width:150px;">
                 <h3><%= productName %></h3>
@@ -239,17 +234,17 @@
                     <a href="DeleteProductServlet?id=<%= productId %>" class="black-button">Delete</a>
                 </div>
             </div>
-	<%
+        <%
+            }
+        } catch (SQLException e) {
+            System.out.println("Error executing SQL: " + e.getMessage());
+        } finally {
+            if (rs != null) try { rs.close(); } catch (SQLException ignored) {}
+            if (stmt != null) try { stmt.close(); } catch (SQLException ignored) {}
+            if (conn != null) try { conn.close(); } catch (SQLException ignored) {}
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    } finally {
-        if (rs != null) try { rs.close(); } catch (SQLException ignored) {}
-        if (stmt != null) try { stmt.close(); } catch (SQLException ignored) {}
-        if (conn != null) try { conn.close(); } catch (SQLException ignored) {}
-    }
-	%>
-	</div>  
+        %>
+        </div>  
     </div>
 </body>
 </html>
