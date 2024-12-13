@@ -25,7 +25,7 @@ public class ViewProductServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Product> products = new ArrayList<>();
 
-        String query = "SELECT product_id, product_name, image_path, category, quantity, price FROM products";
+        String query = "SELECT PROD_ID, PROD_NAME, IMAGE_PATH QUANTITY_STOCK, PROD_PRICE FROM PRODUCTS";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(query);
