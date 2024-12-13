@@ -29,9 +29,6 @@ public class Product {
         this.imagePath = imagePath;
     }
 
-    public Product(int productId, String productName, String category, int quantity, double price, Date expiryDate, int restockLevel, double weight, String packagingType, double volume, String imagePath) {
-
-	}
 
 	// Getters and setters
     public int getProductId() { return productId; }
@@ -55,23 +52,20 @@ public class Product {
     public Date getExpiryDate() { return expiryDate; }
     public void setExpiryDate(Date expiryDate) { this.expiryDate = expiryDate; }
 
-	public int getRestockLevel() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    public int getRestockLevel() {
+        return restockLevel;
+    }
 
-	public double getWeight() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    public double getWeight() {
+        return weight;
+    }
 
-	public String getPackagingType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public String getPackagingType() {
+        return packagingType;
+    }
 
-	public double getVolume() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    public double getVolume() {
+        return volume;
+    }
+
 }

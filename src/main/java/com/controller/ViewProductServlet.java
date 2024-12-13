@@ -16,7 +16,6 @@ import java.util.List;
 
 import com.model.Product;
 
-
 public class ViewProductServlet extends HttpServlet {
     private static final String DB_URL = "jdbc:sqlserver://maksukerepek.database.windows.net:1433;database=KedaiMaksuDB;";
     private static final String DB_USER = "maksuadmin";
@@ -33,20 +32,31 @@ public class ViewProductServlet extends HttpServlet {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                products.add(new Product(
-                    rs.getInt("product_id"),
-                    rs.getString("product_name"),
-                    rs.getString("image_path"),
-                    rs.getInt("quantity"),
-                    rs.getString("category"),
-                    rs.getDouble("price"),
-                    null // Assuming expiry date is not fetched here
-                ));
+                // Retrieve data from ResultSet
+                int productId = rs.getInt("product_id");
+                String productName = rs.getString("product_name");
+                String category = rs.getString("category");
+                int quantity = rs.getInt("quantity");
+                double price = rs.getDouble("price");
+                String imagePath = rs.getString("image_path");
+
+                // Create Product object with default/null values for missing fields
+                Product product = new Product(
+                    productId, productName, category, quantity, price, null, // expiryDate
+                    0, // restockLevel (default)
+                    0.0, // weight (default)
+                    null, // packagingType (default)
+                    0.0, // volume (default)
+                    imagePath
+                );
+
+                products.add(product);
             }
         } catch (SQLException e) {
             e.printStackTrace(); // Consider logging this instead
         }
 
+        // Attach products list to request and forward to JSP
         request.setAttribute("products", products);
         request.getRequestDispatcher("ViewProduct.jsp").forward(request, response);
     }
