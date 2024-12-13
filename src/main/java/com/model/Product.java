@@ -22,7 +22,12 @@ public class Product {
         this.expiryDate = expiryDate;
     }
 
-    // Getters and setters
+    public Product(int int1, String string, String string2, int int2, double double1, java.sql.Date date, int int3,
+			double double2, String string3, double double3) {
+		// TODO Auto-generated constructor stub
+	}
+
+	// Getters and setters
     public int getProductId() { return productId; }
     public void setProductId(int productId) { this.productId = productId; }
     

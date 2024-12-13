@@ -85,7 +85,7 @@
         <form action="UpdateProductServlet" method="post">
             <div class="form-group">
                 <label for="product-name">Product Name</label>
-                <input type="text" id="product-name" name="product-name" value="${product.productName}" placeholder="Kerepek Bawang" required>
+                <input type="text" id="product-name" name="product-name" value="${product.prodName}" placeholder="Kerepek Bawang" required>
             </div>
             <div class="form-group">
                 <label for="category">Category</label>
@@ -96,21 +96,81 @@
             </div>
             <div class="form-group">
                 <label for="product-id">Product ID</label>
-                <input type="text" id="product-id" name="product-id" value="${product.productId}" readonly>
+                <input type="text" id="product-id" name="product-id" value="${product.prodId}" readonly>
             </div>
             <div class="form-group">
                 <label for="quantity">Quantity Stock</label>
-                <input type="number" id="quantity" name="quantity" value="${product.quantity}" placeholder="3" min="1" required>
+                <input type="number" id="quantity" name="quantity" value="${product.quantityStock}" placeholder="3" min="1" required>
             </div>
             <div class="form-group">
                 <label for="price">Price (RM)</label>
-                <input type="text" id="price" name="price" value="${product.price}" placeholder="RM12.00" required>
+                <input type="text" id="price" name="price" value="${product.prodPrice}" placeholder="RM12.00" required>
             </div>
+
+            <!-- Food-specific fields -->
+            <div class="form-group" id="food-fields" style="display: none;">
+                <label for="weight">Weight (g)</label>
+                <input type="number" id="weight" name="weight" value="${product.weight}" placeholder="150" min="1">
+            </div>
+            <div class="form-group" id="food-fields" style="display: none;">
+                <label for="packaging-type">Packaging Type</label>
+                <input type="text" id="packaging-type" name="packaging-type" value="${product.packagingType}" placeholder="Plastic">
+            </div>
+
+            <!-- Drink-specific fields -->
+            <div class="form-group" id="drink-fields" style="display: none;">
+                <label for="volume">Volume (ml)</label>
+                <input type="number" id="volume" name="volume" value="${product.volume}" placeholder="500" min="1">
+            </div>
+
+            <div class="form-group">
+                <label for="expiry-date">Expiry Date</label>
+                <input type="date" id="expiry-date" name="expiry-date" value="${product.expiryDate}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="restock-level">Restock Level</label>
+                <input type="number" id="restock-level" name="restock-level" value="${product.restockLevel}" placeholder="5" min="1">
+            </div>
+            <div class="form-group">
+                <label for="product-status">Product Status</label>
+                <select id="product-status" name="product-status" required>
+                    <option value="active" <c:if test="${product.prodStatus == 'active'}">selected</c:if>>Active</option>
+                    <option value="inactive" <c:if test="${product.prodStatus == 'inactive'}">selected</c:if>>Inactive</option>
+                </select>
+            </div>
+
             <div class="form-actions">
                 <button type="submit">Update</button>
             </div>
         </form>
     </div>
+
+    <script>
+        // Show and hide fields based on category selection
+        const categorySelect = document.getElementById('category');
+        const foodFields = document.getElementById('food-fields');
+        const drinkFields = document.getElementById('drink-fields');
+
+        categorySelect.addEventListener('change', function () {
+            if (categorySelect.value === 'snacks') {
+                foodFields.style.display = 'block';
+                drinkFields.style.display = 'none';
+            } else if (categorySelect.value === 'drinks') {
+                foodFields.style.display = 'none';
+                drinkFields.style.display = 'block';
+            }
+        });
+
+        // Trigger initial display based on the current category
+        if (categorySelect.value === 'snacks') {
+            foodFields.style.display = 'block';
+            drinkFields.style.display = 'none';
+        } else if (categorySelect.value === 'drinks') {
+            foodFields.style.display = 'none';
+            drinkFields.style.display = 'block';
+        }
+    </script>
 
 </body>
 </html>
