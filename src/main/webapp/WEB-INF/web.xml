@@ -8,6 +8,17 @@
 
   <!-- Servlet definitions -->
   <servlet>
+        <servlet-name>DashboardServlet</servlet-name>
+        <servlet-class>com.project.DashboardServlet</servlet-class>
+    </servlet>
+
+    <!-- Servlet Mapping for DashboardServlet -->
+    <servlet-mapping>
+        <servlet-name>DashboardServlet</servlet-name>
+        <url-pattern>/DashboardServlet</url-pattern>  <!-- You can customize the URL here -->
+    </servlet-mapping>
+  
+  <servlet>
     <description></description>
     <display-name>CreateProductServlet</display-name>
     <servlet-name>CreateProductServlet</servlet-name>
