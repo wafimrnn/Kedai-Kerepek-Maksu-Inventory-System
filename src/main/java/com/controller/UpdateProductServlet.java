@@ -38,19 +38,19 @@ public class UpdateProductServlet extends HttpServlet {
                 ResultSet resultSet = statement.executeQuery();
        
        if (resultSet.next()) {
-           product = new Product(
-               resultSet.getInt("product_id"),
-               resultSet.getString("product_name"),
-               resultSet.getString("category"),
-               resultSet.getInt("quantity"),
-               resultSet.getDouble("price"),
-               resultSet.getDate("expiry_date"),
-               resultSet.getInt("restock_level"),
-               resultSet.getDouble("weight"),
-               resultSet.getString("packaging_type"),
-               resultSet.getDouble("volume"),
-               resultSet.getString("image_path")  // Fetch image path from the result
-           );
+    	   product = new Product(
+    			    resultSet.getInt("product_id"),
+    			    resultSet.getString("product_name"),
+    			    resultSet.getString("category"),
+    			    resultSet.getInt("quantity"),
+    			    resultSet.getDouble("price"),
+    			    resultSet.getDate("expiry_date"),
+    			    resultSet.getInt("restock_level"),
+    			    resultSet.getDouble("weight"),
+    			    resultSet.getString("packaging_type"),
+    			    resultSet.getDouble("volume"),
+    			    resultSet.getString("image_path")
+    			);
        }
    }
         } catch (SQLException e) {

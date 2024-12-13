@@ -29,9 +29,8 @@ public class Product {
         this.imagePath = imagePath;
     }
 
-    public Product(int int1, String string, String string2, int int2, double double1, java.sql.Date date, int int3,
-			double double2, String string3, double double3) {
-		// TODO Auto-generated constructor stub
+    public Product(int productId, String productName, String category, int quantity, double price, Date expiryDate, int restockLevel, double weight, String packagingType, double volume, String imagePath) {
+
 	}
 
 	// Getters and setters
@@ -55,4 +54,24 @@ public class Product {
     
     public Date getExpiryDate() { return expiryDate; }
     public void setExpiryDate(Date expiryDate) { this.expiryDate = expiryDate; }
+
+	public int getRestockLevel() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public double getWeight() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public String getPackagingType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public double getVolume() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
