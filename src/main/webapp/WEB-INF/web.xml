@@ -6,19 +6,12 @@
   
   <display-name>Kedai Kerepek Maksu Inventory System</display-name>
 
-  <!-- Servlet definitions -->
-  <servlet>
-        <servlet-name>DashboardServlet</servlet-name>
-        <servlet-class>com.project.DashboardServlet</servlet-class>
-    </servlet>
+<welcome-file-list>
+      <welcome-file>DashboardHome.jsp</welcome-file>  <!-- Change this to your actual welcome page -->
+  </welcome-file-list>
 
-    <!-- Servlet Mapping for DashboardServlet -->
-    <servlet-mapping>
-        <servlet-name>DashboardServlet</servlet-name>
-        <url-pattern>/DashboardServlet</url-pattern>  <!-- You can customize the URL here -->
-    </servlet-mapping>
-  
-  <servlet>
+  <!-- Servlet definitions -->
+<servlet>
     <description></description>
     <display-name>CreateProductServlet</display-name>
     <servlet-name>CreateProductServlet</servlet-name>
