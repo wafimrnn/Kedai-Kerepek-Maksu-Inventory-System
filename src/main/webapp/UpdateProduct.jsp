@@ -138,6 +138,8 @@
                     <option value="active" <c:if test="${product.prodStatus == 'active'}">selected</c:if>>Active</option>
                     <option value="inactive" <c:if test="${product.prodStatus == 'inactive'}">selected</c:if>>Inactive</option>
                 </select>
+                <label for="image-path">Image Path:</label>
+    			<input type="text" id="image-path" name="image-path" value="${product.imagePath}">
             </div>
 
             <div class="form-actions">

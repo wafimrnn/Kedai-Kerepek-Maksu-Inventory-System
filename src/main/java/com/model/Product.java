@@ -3,23 +3,30 @@ package com.model;
 import java.util.Date;
 
 public class Product {
-
-    private int productId;
+	private int productId;
     private String productName;
-    private String imagePath;
-    private int quantity;
     private String category;
+    private int quantity;
     private double price;
-    private Date expiryDate; // Add expiryDate field
+    private Date expiryDate;
+    private int restockLevel;
+    private double weight;
+    private String packagingType;
+    private double volume;
+    private String imagePath;
 
-    public Product(int productId, String productName, String imagePath, int quantity, String category, double price, Date expiryDate) {
+    public Product(int productId, String productName, String category, int quantity, double price, java.sql.Date expiryDate, int restockLevel, double weight, String packagingType, double volume, String imagePath) {
         this.productId = productId;
         this.productName = productName;
-        this.imagePath = imagePath;
-        this.quantity = quantity;
         this.category = category;
+        this.quantity = quantity;
         this.price = price;
         this.expiryDate = expiryDate;
+        this.restockLevel = restockLevel;
+        this.weight = weight;
+        this.packagingType = packagingType;
+        this.volume = volume;
+        this.imagePath = imagePath;
     }
 
     public Product(int int1, String string, String string2, int int2, double double1, java.sql.Date date, int int3,
