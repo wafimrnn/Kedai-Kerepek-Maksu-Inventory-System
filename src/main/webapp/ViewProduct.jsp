@@ -84,6 +84,18 @@
             background-color: #e74c3c;
             color: white;
         }
+
+        .add-buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .add-buttons .button {
+            background-color: #4caf50;
+            color: white;
+            margin: 10px;
+        }
+
     </style>
 </head>
 <body>
@@ -91,10 +103,10 @@
         <h2>Kedai Kerepek Maksu</h2>
         <ul>
             <li><a href="DashboardHome.jsp" class="active">Dashboard</a></li>
-            <li><a href="#">Inventories</a></li>
-            <li><a href="#">Reports</a></li>
-            <li><a href="#">Profile Account</a></li>
-            <li><a href="#">Log Out</a></li>
+            <li><a href="ViewProduct.jsp">Inventories</a></li>
+            <li><a href="Reports.jsp">Reports</a></li>
+            <li><a href="ProfileAccount.jsp">Profile Account</a></li>
+            <li><a href="Logout.jsp">Log Out</a></li>
         </ul>
     </div>
 
@@ -138,6 +150,16 @@
             <% 
                 }
             %>
+        </div>
+
+        <!-- Buttons to add product and create sale -->
+        <div class="add-buttons">
+            <a href="AddProduct.jsp">
+                <button class="button">Add Product</button>
+            </a>
+            <a href="CreateSale.jsp">
+                <button class="button">Create Sale</button>
+            </a>
         </div>
     </div>
 

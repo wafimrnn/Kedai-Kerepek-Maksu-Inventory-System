@@ -17,34 +17,39 @@
         .form-container {
             background-color: white;
             border-radius: 10px;
-            padding: 20px;
+            padding: 25px;
             max-width: 600px;
-            margin: 30px auto;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 40px auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .form-container h3 {
             text-align: center;
-            font-size: 1.5em;
-            margin-bottom: 20px;
+            font-size: 1.6em;
+            margin-bottom: 25px;
+            color: #333;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             display: flex;
             flex-direction: column;
         }
 
         .form-group label {
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-weight: bold;
+            font-size: 1.1em;
+            color: #444;
         }
 
         .form-group input, .form-group select {
-            padding: 8px;
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 1em;
+            background-color: #fafafa;
+            transition: border-color 0.3s ease;
         }
 
         .form-group input:focus, .form-group select:focus {
@@ -57,7 +62,7 @@
         }
 
         .form-actions button {
-            padding: 10px 20px;
+            padding: 12px 25px;
             background-color: #000;
             color: white;
             border: none;
@@ -65,6 +70,7 @@
             cursor: pointer;
             font-weight: bold;
             text-transform: uppercase;
+            transition: background-color 0.3s ease;
         }
 
         .form-actions button:hover {
@@ -79,11 +85,11 @@
         <form action="UpdateProductServlet" method="post">
             <div class="form-group">
                 <label for="product-name">Product Name</label>
-                <input type="text" id="product-name" name="product-name" value="${product.productName}" placeholder="Kerepek Bawang">
+                <input type="text" id="product-name" name="product-name" value="${product.productName}" placeholder="Kerepek Bawang" required>
             </div>
             <div class="form-group">
                 <label for="category">Category</label>
-                <select id="category" name="category">
+                <select id="category" name="category" required>
                     <option value="snacks" <c:if test="${product.category == 'snacks'}">selected</c:if>>Foods</option>
                     <option value="drinks" <c:if test="${product.category == 'drinks'}">selected</c:if>>Drinks</option>
                 </select>
@@ -94,11 +100,11 @@
             </div>
             <div class="form-group">
                 <label for="quantity">Quantity Stock</label>
-                <input type="number" id="quantity" name="quantity" value="${product.quantity}" placeholder="3">
+                <input type="number" id="quantity" name="quantity" value="${product.quantity}" placeholder="3" min="1" required>
             </div>
             <div class="form-group">
-                <label for="price">Price</label>
-                <input type="text" id="price" name="price" value="${product.price}" placeholder="RM12.00">
+                <label for="price">Price (RM)</label>
+                <input type="text" id="price" name="price" value="${product.price}" placeholder="RM12.00" required>
             </div>
             <div class="form-actions">
                 <button type="submit">Update</button>
