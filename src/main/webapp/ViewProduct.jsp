@@ -14,30 +14,40 @@
             background-color: #f5f5f5;
         }
 
-        .sidebar {
-            width: 250px;
-            background-color: #2c2c2c;
-            color: white;
+        nav {
+            background-color: #2c3e50;
+            width: 200px;
+            height: 100vh;
+            padding-top: 20px;
             position: fixed;
-            height: 100%;
-            padding: 20px;
         }
 
-        .sidebar ul {
+        nav ul {
             list-style-type: none;
             padding: 0;
         }
 
-        .sidebar ul li a {
-            text-decoration: none;
-            color: white;
+        nav ul li {
             padding: 10px;
-            display: block;
-            border-radius: 5px;
+            text-align: center;
         }
 
-        .sidebar ul li a:hover, .sidebar ul li a.active {
-            background-color: #444;
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            background-color: #34495e;
+            margin: 5px 0;
+            border-radius: 4px;
+        }
+
+        nav ul li a:hover {
+            background-color: #16a085;
+        }
+        
+        h3 {
+            color: #2c3e50;
         }
 
         .content {
@@ -69,49 +79,43 @@
 
         .button {
             padding: 10px 20px;
-            margin: 10px;
+            background-color: #16a085;
+            color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            text-decoration: none;
+            margin: 10px 0;
         }
 
+        .button:hover {
+            background-color: #1abc9c;
+        }
+        
         .back-button {
             background-color: #ffc107;
             color: white;
         }
 
-        .delete-button {
-            background-color: #e74c3c;
-            color: white;
-        }
-
-        .add-buttons {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .add-buttons .button {
-            background-color: #4caf50;
-            color: white;
-            margin: 10px;
-        }
-
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <h2>Kedai Kerepek Maksu</h2>
+    <nav>
         <ul>
-            <li><a href="DashboardHome.jsp" class="active">Dashboard</a></li>
+            <li><a href="Dashboard.jsp">Dashboard</a></li>
             <li><a href="ViewProduct.jsp">Inventories</a></li>
             <li><a href="Reports.jsp">Reports</a></li>
             <li><a href="ProfileAccount.jsp">Profile Account</a></li>
             <li><a href="Logout.jsp">Log Out</a></li>
         </ul>
-    </div>
+    </nav>
 
     <div class="content">
         <div class="product-details">
+        <h3>Products</h3>
+
+        <a href="AddProduct.jsp" class="button">Add Product</a>
+        <a href="CreateSale.jsp" class="button">Create Sale</a>
             <% 
                 String productIdStr = request.getParameter("id");
                 if (productIdStr != null) {
@@ -153,14 +157,6 @@
         </div>
 
         <!-- Buttons to add product and create sale -->
-        <div class="add-buttons">
-            <a href="AddProduct.jsp">
-                <button class="button">Add Product</button>
-            </a>
-            <a href="CreateSale.jsp">
-                <button class="button">Create Sale</button>
-            </a>
-        </div>
     </div>
 
     <script>

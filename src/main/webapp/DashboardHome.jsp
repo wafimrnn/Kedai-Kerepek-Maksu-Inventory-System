@@ -152,7 +152,7 @@
             }
             %>
 
-            <p>Total Sales: <%= String.format("%.2f", totalSales) %> USD</p>
+            <p>Total Sales: <%= String.format("%.2f", totalSales) %> RM</p>
             <p>Total Products in Stock: <%= totalProducts %> items</p>
         </section>
 
