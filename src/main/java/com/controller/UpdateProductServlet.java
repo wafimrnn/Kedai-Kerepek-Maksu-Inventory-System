@@ -75,46 +75,49 @@ public class UpdateProductServlet extends HttpServlet {
         double weight = category.equals("snacks") ? Double.parseDouble(request.getParameter("weight")) : 0;
         String packagingType = category.equals("snacks") ? request.getParameter("packaging-type") : null;
         double volume = category.equals("drinks") ? Double.parseDouble(request.getParameter("volume")) : 0;
-        String imagePath = request.getParameter("image-path");  // Get image path from the form
-        
-        // Update the product in the database
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-        	String sql = "UPDATE products SET product_name = ?, category = ?, quantity = ?, price = ?, expiry_date = ?, " +
-                    "restock_level = ?, image_path = ? WHERE product_id = ?";
-       try (PreparedStatement statement = conn.prepareStatement(sql)) {
-           statement.setString(1, productName);
-           statement.setString(2, category);
-           statement.setInt(3, quantity);
-           statement.setDouble(4, price);
-           statement.setString(5, expiryDate);
-           statement.setInt(6, restockLevel);
-           statement.setString(7, imagePath);  // Set image path
-           statement.setInt(8, Integer.parseInt(productId));
-           statement.executeUpdate();
-       }
+        String imagePath = request.getParameter("image-path");
 
-            // Update child tables (Food or Drink) based on category
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            // Update products table
+            String sql = "UPDATE products SET product_name = ?, category = ?, quantity = ?, price = ?, expiry_date = ?, restock_level = ?, image_path = ? WHERE product_id = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, productName);
+                stmt.setString(2, category);
+                stmt.setInt(3, quantity);
+                stmt.setDouble(4, price);
+                stmt.setString(5, expiryDate);
+                stmt.setInt(6, restockLevel);
+                stmt.setString(7, imagePath);
+                stmt.setInt(8, Integer.parseInt(productId));
+                stmt.executeUpdate();
+            }
+
+            // Update specific category tables
             if (category.equals("snacks")) {
                 String foodSql = "UPDATE food SET weight = ?, packaging_type = ? WHERE product_id = ?";
-                try (PreparedStatement foodStatement = conn.prepareStatement(foodSql)) {
-                    foodStatement.setDouble(1, weight);
-                    foodStatement.setString(2, packagingType);
-                    foodStatement.setInt(3, Integer.parseInt(productId));
-                    foodStatement.executeUpdate();
+                try (PreparedStatement foodStmt = conn.prepareStatement(foodSql)) {
+                    foodStmt.setDouble(1, weight);
+                    foodStmt.setString(2, packagingType);
+                    foodStmt.setInt(3, Integer.parseInt(productId));
+                    foodStmt.executeUpdate();
                 }
             } else if (category.equals("drinks")) {
                 String drinkSql = "UPDATE drink SET volume = ? WHERE product_id = ?";
-                try (PreparedStatement drinkStatement = conn.prepareStatement(drinkSql)) {
-                    drinkStatement.setDouble(1, volume);
-                    drinkStatement.setInt(2, Integer.parseInt(productId));
-                    drinkStatement.executeUpdate();
+                try (PreparedStatement drinkStmt = conn.prepareStatement(drinkSql)) {
+                    drinkStmt.setDouble(1, volume);
+                    drinkStmt.setInt(2, Integer.parseInt(productId));
+                    drinkStmt.executeUpdate();
                 }
             }
+
+            request.setAttribute("message", "Product updated successfully!");
+            request.setAttribute("messageType", "success");
         } catch (SQLException e) {
             e.printStackTrace();
+            request.setAttribute("message", "Error updating product: " + e.getMessage());
+            request.setAttribute("messageType", "error");
         }
 
-        // Redirect to the product view page
-        response.sendRedirect("ViewProductServlet");
+        request.getRequestDispatcher("UpdateProduct.jsp").forward(request, response);
     }
 }
