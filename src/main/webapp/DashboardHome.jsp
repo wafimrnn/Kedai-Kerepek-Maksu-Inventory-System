@@ -111,7 +111,7 @@
     <div class="container">
         <h1>Welcome to Kedai Kerepek Maksu</h1>
 
-        <a href="AddProduct.jsp" class="button">Add Product</a>
+        <a href="CreateProduct.jsp" class="button">Add Product</a>
         <a href="CreateSale.jsp" class="button">Create Sale</a>
 
         <!-- Summary Section -->

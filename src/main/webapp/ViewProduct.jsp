@@ -114,7 +114,7 @@
         <div class="product-details">
         <h3>Products</h3>
 
-        <a href="AddProduct.jsp" class="button">Add Product</a>
+        <a href="CreateProduct.jsp" class="button">Add Product</a>
         <a href="CreateSale.jsp" class="button">Create Sale</a>
             <% 
                 String productIdStr = request.getParameter("id");
