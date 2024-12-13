@@ -15,7 +15,7 @@ import com.project.DBConnection;
 /**
  * Servlet implementation class DeleteProductServlet
  */
-@WebServlet("/DeleteProductServlet")
+
 public class DeleteProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

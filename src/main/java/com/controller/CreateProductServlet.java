@@ -1,7 +1,6 @@
 package com.controller;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,7 +18,6 @@ import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.BlobServiceClientBuilder;
 
-@WebServlet("/CreateProductServlet")
 public class CreateProductServlet extends HttpServlet {
     private static final String CONTAINER_NAME = "product-images";
     private static final String CONNECTION_STRING = System.getenv("AZURE_CONNECTION_STRING");

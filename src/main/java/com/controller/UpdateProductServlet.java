@@ -14,7 +14,7 @@ import java.sql.SQLException;
 
 import com.model.Product;
 
-@WebServlet("/UpdateProductServlet")
+
 public class UpdateProductServlet extends HttpServlet {
     private static final String DB_URL = "jdbc:sqlserver://maksukerepek.database.windows.net:1433;database=KedaiMaksuDB;";
     private static final String DB_USER = "maksuadmin";

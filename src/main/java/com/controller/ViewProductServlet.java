@@ -16,7 +16,7 @@ import java.util.List;
 
 import com.model.Product;
 
-@WebServlet("/ViewProductServlet")
+
 public class ViewProductServlet extends HttpServlet {
     private static final String DB_URL = "jdbc:sqlserver://maksukerepek.database.windows.net:1433;database=KedaiMaksuDB;";
     private static final String DB_USER = "maksuadmin";
