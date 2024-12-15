@@ -1,4 +1,4 @@
-package com.servlet;
+package com.controller;
 
 import com.dao.ProductDAO;
 import com.model.Food;
@@ -43,14 +43,14 @@ public class UpdateProductServlet extends HttpServlet {
             double weight = Double.parseDouble(request.getParameter("weight"));
             String packagingType = request.getParameter("packagingType");
             
-            product = new Food();
+            product = new Food(restockLevel, packagingType, restockLevel, weight, null, restockLevel, packagingType, packagingType, weight, packagingType);
             ((Food) product).setWeight(weight);
             ((Food) product).setPackagingType(packagingType);
         } else if ("drink".equalsIgnoreCase(category)) {
             // Fetch drink-specific details
             double volume = Double.parseDouble(request.getParameter("volume"));
             
-            product = new Drink();
+            product = new Drink(restockLevel, category, restockLevel, volume, null, restockLevel, category, category, volume);
             ((Drink) product).setVolume(volume);
         }
         
@@ -61,7 +61,10 @@ public class UpdateProductServlet extends HttpServlet {
             product.setPrice(price);
             product.setQuantityStock(quantityStock);
             product.setRestockLevel(restockLevel);
-            product.setExpiryDate(expiryDate);
+            if (expiryDate != null && !expiryDate.isEmpty()) {
+                java.sql.Date expiryDateFormatted = java.sql.Date.valueOf(expiryDate); // Convert String to Date
+                product.setExpiryDate(expiryDateFormatted);
+            }}
             product.setProductStatus(productStatus);
 
             try {
@@ -78,8 +81,5 @@ public class UpdateProductServlet extends HttpServlet {
                 // Handle SQL exception
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error: " + e.getMessage());
             }
-        } else {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid product category");
-        }
+        } 
     }
-}
