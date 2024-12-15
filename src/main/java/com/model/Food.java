@@ -1,5 +1,7 @@
 package com.model;
 
+import java.sql.Date;
+
 public class Food extends Product {
     private String packagingType;
     private double weight;
@@ -34,7 +36,6 @@ public class Food extends Product {
     }
 
     // toString() method to return a string representation of the object
-    @Override
     public String toString() {
         return "Food{" +
                 "packagingType='" + packagingType + '\'' +
