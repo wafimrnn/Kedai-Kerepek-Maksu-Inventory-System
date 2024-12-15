@@ -12,9 +12,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.UUID;
 
-import com.project.AzureBlobUtils;
-import com.project.DBConnection;
-
 public class CreateProductServlet extends HttpServlet {
 
     @Override
@@ -43,7 +40,7 @@ public class CreateProductServlet extends HttpServlet {
                 // Handle file upload
                 Part imagePart = request.getPart("image");
                 String fileName = UUID.randomUUID() + "_" + imagePart.getSubmittedFileName();
-                String imagePath = AzureBlobUtils.uploadToAzureBlob(fileName, imagePart.getInputStream(), imagePart.getSize());
+                String imagePath = uploadToAzureBlob(fileName, imagePart.getInputStream(), imagePart.getSize());
 
                 // Insert into database
                 insertProduct(productName, category, quantity, price, expiryDate, weight, packagingType, volume, imagePath);
@@ -59,12 +56,25 @@ public class CreateProductServlet extends HttpServlet {
         }
     }
 
+    // This function uploads the image to Azure Blob Storage
+    private String uploadToAzureBlob(String fileName, InputStream fileInputStream, long fileSize) throws IOException {
+        String connectionString = System.getenv("BLOB_CONNECTION_STRING"); // Get the connection string from environment variable
+        BlobServiceClient blobServiceClient = new BlobServiceClientBuilder()
+                .connectionString(connectionString)
+                .buildClient();
+        BlobContainerClient containerClient = blobServiceClient.getBlobContainerClient("product-images"); // Assuming you have this container
+        BlobClient blobClient = containerClient.getBlobClient(fileName);
+        blobClient.upload(fileInputStream, fileSize, true);
+        return "https://<your-storage-account-name>.blob.core.windows.net/product-images/" + fileName; // Replace with your storage URL
+    }
+
+    // This function inserts product details into the database
     private void insertProduct(String productName, String category, int quantity, double price, String expiryDate,
                                Double weight, String packagingType, Integer volume, String imagePath) throws Exception {
         String sql = "INSERT INTO products (product_name, category, quantity, price, expiry_date, weight, packaging_type, volume, image_path) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = DBConnection.getConnection();
+        try (Connection conn = getConnection(); // Using the connection from the environment variable
              PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, productName);
             statement.setString(2, category);
@@ -77,5 +87,11 @@ public class CreateProductServlet extends HttpServlet {
             statement.setString(9, imagePath);
             statement.executeUpdate();
         }
+    }
+
+    // This function retrieves the database connection string from environment variable
+    private Connection getConnection() throws Exception {
+        String connectionString = System.getenv("SQL_CONNECTION_STRING"); // Get SQL connection string from environment variable
+        return DriverManager.getConnection(connectionString);
     }
 }

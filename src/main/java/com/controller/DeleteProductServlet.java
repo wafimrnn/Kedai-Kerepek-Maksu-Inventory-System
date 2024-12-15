@@ -7,16 +7,21 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
-import com.project.DBConnection;
-
-/**
- * Servlet implementation class DeleteProductServlet
- */
+import com.dao.ProductDAO;
 
 public class DeleteProductServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    private ProductDAO productDAO;
+
+    public DeleteProductServlet() {
+        super();
+        // Initialize ProductDAO
+        productDAO = new ProductDAO();
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String idParam = request.getParameter("id");
@@ -36,29 +41,17 @@ public class DeleteProductServlet extends HttpServlet {
             return;
         }
 
-        // Determine the correct delete query
-        String deleteQuery = ("food".equalsIgnoreCase(productType)) ? 
-                "DELETE FROM Food WHERE productId = ?" : 
-                ("drink".equalsIgnoreCase(productType)) ? 
-                "DELETE FROM Drink WHERE productId = ?" : null;
+        try {
+            // Delete the product based on type
+            boolean isDeleted = productDAO.deleteProductById(productId, productType);
 
-        if (deleteQuery == null) {
-            response.sendRedirect("ViewProduct.jsp?error=invalidtype");
-            return;
-        }
-
-        // Perform deletion
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(deleteQuery)) {
-            stmt.setInt(1, productId);
-            int rowsAffected = stmt.executeUpdate();
-
-            if (rowsAffected > 0) {
+            if (isDeleted) {
                 response.sendRedirect("InventoryList.jsp?success=true");
             } else {
                 response.sendRedirect("InventoryList.jsp?error=notfound");
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
+            e.printStackTrace();  // Log exception for debugging
             response.sendRedirect("InventoryList.jsp?error=sqlerror");
         }
     }
