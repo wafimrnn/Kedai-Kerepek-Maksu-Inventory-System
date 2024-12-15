@@ -6,7 +6,6 @@ import com.model.Product;
 import com.manager.DBConnection;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,7 +17,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet("/ViewProductServlet")
 public class ViewProductServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("Starting ViewProductServlet...");
@@ -30,7 +28,7 @@ public class ViewProductServlet extends HttpServlet {
         request.setAttribute("products", products);
 
         // Step 3: Forward to JSP page
-        request.getRequestDispatcher("viewProduct.jsp").forward(request, response);
+        request.getRequestDispatcher("ViewProduct.jsp").forward(request, response);
     }
 
     private List<Product> fetchProductsFromDatabase() {

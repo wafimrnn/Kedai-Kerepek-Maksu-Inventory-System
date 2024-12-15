@@ -17,6 +17,11 @@
 </head>
 <body>
     <h1>Product Catalog</h1>
+    
+    <form action="CreateProduct.html" method="get">
+    	<button class="add-button">Add Product</button>
+	</form>
+    
     <div class="product-catalog">
         <%
             // Retrieve the product list from the request
