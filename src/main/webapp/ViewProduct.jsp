@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ page import="com.model.Product" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Date" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -50,9 +52,12 @@
                 <h2><%= product.getProductName() %></h2>
                 <p>Price: $<%= product.getPrice() %></p>
                 <p>Stock Quantity: <%= product.getQuantityStock() %></p>
-                <p>Expiry Date: <%= product.getExpiryDate() %></p>
-                <!-- Add more attributes as necessary -->
-                <button>Add to Cart</button>
+                <% 
+    				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    				String formattedExpiryDate = sdf.format(product.getExpiryDate());
+				%>
+
+				<p>Expiry Date: <%= formattedExpiryDate %></p>
             </div>
         <% 
                 }

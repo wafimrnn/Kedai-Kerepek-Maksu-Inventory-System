@@ -12,8 +12,7 @@ public class ProductDAO {
 	private Connection getConnection() throws SQLException {
         String connectionString = System.getenv("AZURE_SQL_CONNECTIONSTRING");
         if (connectionString == null || connectionString.isEmpty()) {
-            System.out.println("Connection string is missing!");
-            return null;
+            throw new SQLException("Connection string is missing!");
         }
         return DriverManager.getConnection(connectionString);
     }
@@ -131,16 +130,28 @@ public class ProductDAO {
     }
 
     private String determineCategory(int productId, Connection conn) throws SQLException {
-        String query = "SELECT 1 FROM FOOD WHERE FOOD_ID = ? UNION SELECT 1 FROM DRINK WHERE DRINK_ID = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, productId);
-            stmt.setInt(2, productId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                String category = rs.next() ? "FOOD" : "DRINK";
-                System.out.println("Category for product ID " + productId + ": " + category); // Debug line
-                return category;
+        String queryFood = "SELECT 1 FROM FOOD WHERE FOOD_ID = ?";
+        String queryDrink = "SELECT 1 FROM DRINK WHERE DRINK_ID = ?";
+        
+        try (PreparedStatement foodStmt = conn.prepareStatement(queryFood)) {
+            foodStmt.setInt(1, productId);
+            try (ResultSet foodRs = foodStmt.executeQuery()) {
+                if (foodRs.next()) {
+                    return "FOOD";
+                }
             }
         }
+
+        try (PreparedStatement drinkStmt = conn.prepareStatement(queryDrink)) {
+            drinkStmt.setInt(1, productId);
+            try (ResultSet drinkRs = drinkStmt.executeQuery()) {
+                if (drinkRs.next()) {
+                    return "DRINK";
+                }
+            }
+        }
+
+        return null; // This case should be handled, as product should belong to either FOOD or DRINK
     }
 
     // Update product
