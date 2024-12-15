@@ -1,5 +1,7 @@
 package com.controller;
 
+import com.model.Food;
+import com.model.Drink;
 import com.model.Product;
 import com.manager.DBConnection;
 
@@ -10,65 +12,71 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@WebServlet("/ViewProductServlet")
 public class ViewProductServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("Starting ViewProductServlet...");
 
-    public ViewProductServlet() {
-        super();
+        // Step 1: Fetch product list
+        List<Product> products = fetchProductsFromDatabase();
+
+        // Step 2: Add products to request scope
+        request.setAttribute("products", products);
+
+        // Step 3: Forward to JSP page
+        request.getRequestDispatcher("viewProduct.jsp").forward(request, response);
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        List<Product> productList = new ArrayList<>();
+    private List<Product> fetchProductsFromDatabase() {
+        List<Product> products = new ArrayList<>();
 
-        String query = "SELECT p.PROD_ID, p.PROD_NAME, p.PROD_PRICE, p.QUANTITY_STOCK, " +
-                       "p.RESTOCK_LEVEL, p.EXPIRY_DATE, p.IMAGE_PATH, p.PROD_STATUS, " +
-                       "f.PACKAGING_TYPE, f.WEIGHT, d.VOLUME " +
-                       "FROM Products p " +
-                       "LEFT JOIN Food f ON p.PROD_ID = f.PROD_ID " +
-                       "LEFT JOIN Drink d ON p.PROD_ID = d.PROD_ID";
+        try (Connection conn = DBConnection.getConnection()) {
+            // Query to fetch active products and their specific child data (Food/Drink)
+            String sql = "SELECT p.PROD_ID, p.PROD_NAME, p.PROD_PRICE, p.QUANTITY_STOCK, p.IMAGE_PATH, " +
+                         "       f.PACKAGING_TYPE, f.WEIGHT, " +
+                         "       d.VOLUME " +
+                         "FROM Products p " +
+                         "LEFT JOIN Food f ON p.PROD_ID = f.PROD_ID " +
+                         "LEFT JOIN Drink d ON p.PROD_ID = d.PROD_ID " +
+                         "WHERE p.PROD_STATUS = 'ACTIVE'";
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
+            try (PreparedStatement ps = conn.prepareStatement(sql);
+                 ResultSet rs = ps.executeQuery()) {
 
-            while (rs.next()) {
-                Product product;
-                String status = rs.getString("PROD_STATUS");
-                if ("Food".equalsIgnoreCase(status)) {
-                    product = new com.model.Food();
-                    ((com.model.Food) product).setPackagingType(rs.getString("PACKAGING_TYPE"));
-                    ((com.model.Food) product).setWeight(rs.getDouble("WEIGHT"));
-                } else if ("Drink".equalsIgnoreCase(status)) {
-                    product = new com.model.Drink();
-                    ((com.model.Drink) product).setVolume(rs.getDouble("VOLUME"));
-                } else {
-                    product = new Product();
+                while (rs.next()) {
+                    // Check if the product is Food or Drink based on which columns are non-null
+                    if (rs.getString("PACKAGING_TYPE") != null || rs.getDouble("WEIGHT") > 0) {
+                        Food food = new Food();
+                        food.setProdId(rs.getInt("PROD_ID"));
+                        food.setProdName(rs.getString("PROD_NAME"));
+                        food.setProdPrice(rs.getDouble("PROD_PRICE"));
+                        food.setQuantityStock(rs.getInt("QUANTITY_STOCK"));
+                        food.setImagePath(rs.getString("IMAGE_PATH"));
+                        food.setPackagingType(rs.getString("PACKAGING_TYPE"));
+                        food.setWeight(rs.getDouble("WEIGHT"));
+                        products.add(food);
+                    } else if (rs.getDouble("VOLUME") > 0) {
+                        Drink drink = new Drink();
+                        drink.setProdId(rs.getInt("PROD_ID"));
+                        drink.setProdName(rs.getString("PROD_NAME"));
+                        drink.setProdPrice(rs.getDouble("PROD_PRICE"));
+                        drink.setQuantityStock(rs.getInt("QUANTITY_STOCK"));
+                        drink.setImagePath(rs.getString("IMAGE_PATH"));
+                        drink.setVolume(rs.getDouble("VOLUME"));
+                        products.add(drink);
+                    }
                 }
-
-                product.setProdId(rs.getInt("PROD_ID"));
-                product.setProdName(rs.getString("PROD_NAME"));
-                product.setProdPrice(rs.getDouble("PROD_PRICE"));
-                product.setQuantityStock(rs.getInt("QUANTITY_STOCK"));
-                product.setRestockLevel(rs.getInt("RESTOCK_LEVEL"));
-                product.setExpiryDate(rs.getDate("EXPIRY_DATE"));
-                product.setImagePath(rs.getString("IMAGE_PATH"));
-                product.setProdStatus(status);
-
-                productList.add(product);
             }
-
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            // Handle exception appropriately
         }
 
-        request.setAttribute("productList", productList);
-        request.getRequestDispatcher("ViewProduct.jsp").forward(request, response);
+        return products;
     }
 }
