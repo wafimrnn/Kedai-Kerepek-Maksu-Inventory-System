@@ -29,7 +29,7 @@
 <body>
     <div class="form-container">
         <h2>Create New Product</h2>
-        <form action="CreateProductServlet" method="post">
+        <form action="CreateProductServlet" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="prodName">Product Name:</label>
                 <input type="text" id="prodName" name="prodName" required/>
@@ -51,8 +51,8 @@
                 <input type="date" id="expiryDate" name="expiryDate" required/>
             </div>
             <div class="form-group">
-                <label for="imagePath">Image URL:</label>
-                <input type="text" id="imagePath" name="imagePath"/>
+                <label for="image">Product Image:</label>
+    			<input type="file" name="image" accept="image/*" required><br>
             </div>
             <div class="form-group">
                 <label for="prodStatus">Category:</label>

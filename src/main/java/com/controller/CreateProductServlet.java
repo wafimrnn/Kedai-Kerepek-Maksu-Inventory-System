@@ -1,113 +1,95 @@
-// CreateProductServlet.java
-package com.controller;
-
-import com.manager.DBConnection;
-
+import com.azure.storage.blob.*;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
+import jakarta.servlet.http.*;
+import java.io.*;
+import java.util.UUID;
 import java.sql.*;
 
-
 public class CreateProductServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
 
-    public CreateProductServlet() {
-        super();
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Step 1: Retrieve form parameters
+        String productName = request.getParameter("name");
+        double price = Double.parseDouble(request.getParameter("price"));
+        int quantity = Integer.parseInt(request.getParameter("quantity"));
+        String category = request.getParameter("category");
+
+        // Step 2: Handle image upload (if available)
+        Part filePart = request.getPart("image");
+        String imageUrl = null;
+
+        if (filePart != null) {
+            imageUrl = uploadImageToBlob(filePart); // Upload the image to Blob Storage
+        }
+
+        if (imageUrl != null) {
+            // Step 3: Save the product to the database, including image URL
+            saveProductToDatabase(productName, price, quantity, category, imageUrl);
+            response.sendRedirect("product-list.jsp"); // Redirect after successful creation
+        } else {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Image file is required.");
+        }
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        // Retrieve form data
-        String prodName = request.getParameter("prodName");
-        double prodPrice = Double.parseDouble(request.getParameter("prodPrice"));
-        int quantityStock = Integer.parseInt(request.getParameter("quantityStock"));
-        int restockLevel = Integer.parseInt(request.getParameter("restockLevel"));
-        String expiryDateStr = request.getParameter("expiryDate"); // Expecting format 'yyyy-MM-dd'
-        String imagePath = request.getParameter("imagePath");
-        String prodStatus = request.getParameter("prodStatus"); // "Food" or "Drink"
+    // Step 4: Upload the image to Azure Blob Storage and return the image URL
+    private String uploadImageToBlob(Part filePart) throws IOException {
+        String fileName = UUID.randomUUID().toString() + "-" + filePart.getSubmittedFileName();
+        
+        // Use the Blob connection string provided by Azure Service Connector
+        String blobConnectionString = System.getenv("BLOB_CONNECTION_STRING");
+        
+        // Initialize BlobServiceClient using the connection string
+        BlobServiceClient blobServiceClient = new BlobServiceClientBuilder()
+            .connectionString(blobConnectionString)
+            .buildClient();
 
-        // Additional fields based on category
-        String packagingType = null;
-        Double weight = null;
-        Double volume = null;
+        // Define your container name (ensure the container exists in Blob Storage)
+        String containerName = "your-container-name"; // Replace with your actual container name
+        BlobContainerClient containerClient = blobServiceClient.getBlobContainerClient(containerName);
 
-        if ("Food".equalsIgnoreCase(prodStatus)) {
-            packagingType = request.getParameter("packagingType");
-            weight = Double.parseDouble(request.getParameter("weight"));
-        } else if ("Drink".equalsIgnoreCase(prodStatus)) {
-            volume = Double.parseDouble(request.getParameter("volume"));
+        // Create a BlobClient to represent the new image file in the container
+        BlobClient blobClient = containerClient.getBlobClient(fileName);
+
+        // Upload the file to Blob Storage
+        try (InputStream inputStream = filePart.getInputStream()) {
+            blobClient.upload(inputStream, filePart.getSize(), true);  // Overwrite if the blob already exists
         }
 
-        String insertProduct = "INSERT INTO Products (PROD_NAME, PROD_PRICE, QUANTITY_STOCK, " +
-                               "RESTOCK_LEVEL, EXPIRY_DATE, IMAGE_PATH, PROD_STATUS) " +
-                               "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        // Return the URL of the uploaded image
+        return blobClient.getBlobUrl().toString();
+    }
 
-        String insertFood = "INSERT INTO Food (PROD_ID, PACKAGING_TYPE, WEIGHT) VALUES (?, ?, ?)";
-        String insertDrink = "INSERT INTO Drink (PROD_ID, VOLUME) VALUES (?, ?)";
+    // Step 5: Save product details to the database (including image URL)
+    private void saveProductToDatabase(String productName, double price, int quantity, String category, String imageUrl) {
+        // SQL query to insert product data
+        String sql = "INSERT INTO Products (PROD_NAME, PROD_PRICE, QUANTITY_STOCK, PROD_STATUS, IMAGE_PATH) VALUES (?, ?, ?, ?, ?)";
 
-        try (Connection conn = DBConnection.getConnection()) {
-            conn.setAutoCommit(false); // Start transaction
+        try (Connection conn = getConnection(); // Database connection
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+             
+            // Set parameters for the SQL query
+            ps.setString(1, productName);
+            ps.setDouble(2, price);
+            ps.setInt(3, quantity);
+            ps.setString(4, "Active");  // Default product status
+            ps.setString(5, imageUrl);  // Save image URL to the database
 
-            try (PreparedStatement productStmt = conn.prepareStatement(insertProduct, Statement.RETURN_GENERATED_KEYS)) {
-                productStmt.setString(1, prodName);
-                productStmt.setDouble(2, prodPrice);
-                productStmt.setInt(3, quantityStock);
-                productStmt.setInt(4, restockLevel);
-                productStmt.setDate(5, Date.valueOf(expiryDateStr));
-                productStmt.setString(6, imagePath);
-                productStmt.setString(7, prodStatus);
-
-                int affectedRows = productStmt.executeUpdate();
-                if (affectedRows == 0) {
-                    throw new SQLException("Creating product failed, no rows affected.");
-                }
-
-                // Retrieve the generated PROD_ID
-                int prodId;
-                try (ResultSet generatedKeys = productStmt.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        prodId = generatedKeys.getInt(1);
-                    } else {
-                        throw new SQLException("Creating product failed, no ID obtained.");
-                    }
-                }
-
-                // Insert into child table based on category
-                if ("Food".equalsIgnoreCase(prodStatus)) {
-                    try (PreparedStatement foodStmt = conn.prepareStatement(insertFood)) {
-                        foodStmt.setInt(1, prodId);
-                        foodStmt.setString(2, packagingType);
-                        foodStmt.setDouble(3, weight);
-                        foodStmt.executeUpdate();
-                    }
-                } else if ("Drink".equalsIgnoreCase(prodStatus)) {
-                    try (PreparedStatement drinkStmt = conn.prepareStatement(insertDrink)) {
-                        drinkStmt.setInt(1, prodId);
-                        drinkStmt.setDouble(2, volume);
-                        drinkStmt.executeUpdate();
-                    }
-                }
-
-                conn.commit(); // Commit transaction
-            } catch (SQLException e) {
-                conn.rollback(); // Rollback transaction on error
-                e.printStackTrace();
-                // Handle exception appropriately
-                response.sendRedirect("error.jsp"); // Redirect to an error page
-                return;
-            }
+            // Execute the insert statement
+            ps.executeUpdate();
 
         } catch (SQLException e) {
-            e.printStackTrace();
-            response.sendRedirect("error.jsp"); // Redirect to an error page
-            return;
+            e.printStackTrace();  // Log the exception
         }
+    }
 
-        response.sendRedirect("ViewProductServlet"); // Redirect to product list
+    // Utility method to establish a connection to the database (adjust according to your DB setup)
+    private Connection getConnection() throws SQLException {
+        String dbUrl = System.getenv("SQL_CONNECTION_STRING");  // Use the environment variable for SQL connection
+        try {
+            return DriverManager.getConnection(dbUrl);  // Establish the connection
+        } catch (SQLException e) {
+            throw new SQLException("Error connecting to the database", e);
+        }
     }
 }
