@@ -18,69 +18,75 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ViewProductServlet extends HttpServlet {
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("Starting ViewProductServlet...");
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	    System.out.println("Starting ViewProductServlet...");
 
-        // Step 1: Fetch product list
-        List<Product> products = fetchProductsFromDatabase();
+	    // Fetch products
+	    List<Product> products = fetchProductsFromDatabase();
 
-        // Step 2: Add products to request scope
-        request.setAttribute("products", products);
+	    // Debug: Log product size
+	    System.out.println("Fetched products: " + (products != null ? products.size() : 0));
 
-        // Step 3: Forward to JSP page
-        request.getRequestDispatcher("ViewProduct.jsp").forward(request, response);
-    }
+	    // Set products in request scope
+	    request.setAttribute("products", products);
 
-    private List<Product> fetchProductsFromDatabase() {
-        List<Product> products = new ArrayList<>();
+	    // Disable caching to prevent stale data issues
+	    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+	    response.setHeader("Pragma", "no-cache");
+	    response.setDateHeader("Expires", 0);
 
-        try (Connection conn = DBConnection.getConnection()) {
-            String sql = "SELECT p.PROD_ID, p.PROD_NAME, p.PROD_PRICE, p.QUANTITY_STOCK, p.IMAGE_PATH, " +
-                         "       f.PACKAGING_TYPE, f.WEIGHT, " +
-                         "       d.VOLUME " +
-                         "FROM Products p " +
-                         "LEFT JOIN Food f ON p.PROD_ID = f.PROD_ID " +
-                         "LEFT JOIN Drink d ON p.PROD_ID = d.PROD_ID " +
-                         "WHERE p.PROD_STATUS = 'ACTIVE'";
+	    // Forward to JSP
+	    request.getRequestDispatcher("ViewProduct.jsp").forward(request, response);
+	}
 
-            try (PreparedStatement ps = conn.prepareStatement(sql);
-                 ResultSet rs = ps.executeQuery()) {
+	private List<Product> fetchProductsFromDatabase() {
+	    List<Product> products = new ArrayList<>();
 
-                while (rs.next()) {
-                    String imagePath = rs.getString("IMAGE_PATH");
-                    // Handle null IMAGE_PATH by assigning a default value
-                    if (imagePath == null || imagePath.isEmpty()) {
-                        imagePath = "default-image.png"; // Replace with actual default image path
-                    }
+	    try (Connection conn = DBConnection.getConnection()) {
+	        String sql = "SELECT p.PROD_ID, p.PROD_NAME, p.PROD_PRICE, p.QUANTITY_STOCK, p.IMAGE_PATH, " +
+	                     "       f.PACKAGING_TYPE, f.WEIGHT, d.VOLUME " +
+	                     "FROM Products p " +
+	                     "LEFT JOIN Food f ON p.PROD_ID = f.PROD_ID " +
+	                     "LEFT JOIN Drink d ON p.PROD_ID = d.PROD_ID " +
+	                     "WHERE p.PROD_STATUS = 'ACTIVE'";
 
-                    if (rs.getString("PACKAGING_TYPE") != null || rs.getDouble("WEIGHT") > 0) {
-                        Food food = new Food();
-                        food.setProdId(rs.getInt("PROD_ID"));
-                        food.setProdName(rs.getString("PROD_NAME"));
-                        food.setProdPrice(rs.getDouble("PROD_PRICE"));
-                        food.setQuantityStock(rs.getInt("QUANTITY_STOCK"));
-                        food.setImagePath(imagePath);
-                        food.setPackagingType(rs.getString("PACKAGING_TYPE"));
-                        food.setWeight(rs.getDouble("WEIGHT"));
-                        products.add(food);
-                    } else if (rs.getDouble("VOLUME") > 0) {
-                        Drink drink = new Drink();
-                        drink.setProdId(rs.getInt("PROD_ID"));
-                        drink.setProdName(rs.getString("PROD_NAME"));
-                        drink.setProdPrice(rs.getDouble("PROD_PRICE"));
-                        drink.setQuantityStock(rs.getInt("QUANTITY_STOCK"));
-                        drink.setImagePath(imagePath);
-                        drink.setVolume(rs.getDouble("VOLUME"));
-                        products.add(drink);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Error fetching products: " + e.getMessage());
-            e.printStackTrace();
-        }
+	        try (PreparedStatement ps = conn.prepareStatement(sql);
+	             ResultSet rs = ps.executeQuery()) {
 
-        return products;
-    }
+	            while (rs.next()) {
+	                System.out.println("Database Row: PROD_ID=" + rs.getInt("PROD_ID") +
+	                                   ", PROD_NAME=" + rs.getString("PROD_NAME") +
+	                                   ", PROD_PRICE=" + rs.getDouble("PROD_PRICE") +
+	                                   ", QUANTITY_STOCK=" + rs.getInt("QUANTITY_STOCK") +
+	                                   ", IMAGE_PATH=" + rs.getString("IMAGE_PATH"));
 
+	                if (rs.getString("PACKAGING_TYPE") != null) {
+	                    Food food = new Food();
+	                    food.setProdId(rs.getInt("PROD_ID"));
+	                    food.setProdName(rs.getString("PROD_NAME"));
+	                    food.setProdPrice(rs.getDouble("PROD_PRICE"));
+	                    food.setQuantityStock(rs.getInt("QUANTITY_STOCK"));
+	                    food.setImagePath(rs.getString("IMAGE_PATH"));
+	                    food.setPackagingType(rs.getString("PACKAGING_TYPE"));
+	                    food.setWeight(rs.getDouble("WEIGHT"));
+	                    products.add(food);
+	                } else if (rs.getDouble("VOLUME") > 0) {
+	                    Drink drink = new Drink();
+	                    drink.setProdId(rs.getInt("PROD_ID"));
+	                    drink.setProdName(rs.getString("PROD_NAME"));
+	                    drink.setProdPrice(rs.getDouble("PROD_PRICE"));
+	                    drink.setQuantityStock(rs.getInt("QUANTITY_STOCK"));
+	                    drink.setImagePath(rs.getString("IMAGE_PATH"));
+	                    drink.setVolume(rs.getDouble("VOLUME"));
+	                    products.add(drink);
+	                }
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return products;
+	}
 }
