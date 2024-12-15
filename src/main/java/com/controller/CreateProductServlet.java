@@ -1,5 +1,6 @@
 package com.controller;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,10 +9,12 @@ import jakarta.servlet.http.Part;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.UUID;
 
 import com.azure.storage.blob.BlobClient;
@@ -29,65 +32,50 @@ public class CreateProductServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getContentType() != null && request.getContentType().startsWith("multipart/form-data")) {
-            try {
-                // Retrieve form fields
-                String productName = request.getParameter("productName");
-                String category = request.getParameter("category");
-                int quantity = Integer.parseInt(request.getParameter("quantity"));
-                double price = Double.parseDouble(request.getParameter("price"));
-                String expiryDate = request.getParameter("expiryDate");
-                int restockLevel = Integer.parseInt(request.getParameter("restockLevel"));
-                // Set default product status to 'ACTIVE'
-                String productStatus = "ACTIVE"; // Default status
-                // If the form has a product status value, use it
-                if (request.getParameter("productStatus") != null) {
-                    productStatus = request.getParameter("productStatus");
-                }
+        try {
+            // Retrieve form data
+            String productName = request.getParameter("productName");
+            int quantityStock = Integer.parseInt(request.getParameter("quantity"));
+            double price = Double.parseDouble(request.getParameter("price"));
+            Date expiryDate = Date.valueOf(request.getParameter("expiryDate"));
+            int restockLevel = 10; // Default value or retrieve from form if needed
+            String productStatus = "Active"; // Default status or retrieve from form if needed
+            String imagePath = ""; // Handle image upload as needed, e.g., using Azure Blob Storage
 
-                // Handle category-specific fields
-                Double weight = null;
-                String packagingType = null;
-                Integer volume = null;
+            // Retrieve the product type (FOOD or DRINK)
+            String productType = request.getParameter("category");
 
-                // Handle category-specific fields
-                if ("FOOD".equalsIgnoreCase(category)) {
-                    weight = Double.parseDouble(request.getParameter("weight"));
-                    packagingType = request.getParameter("packagingType");
-                } else if ("DRINK".equalsIgnoreCase(category)) {
-                    volume = Integer.parseInt(request.getParameter("volume"));
-                }
+            Product product = null;
 
-                // Handle file upload
-                Part imagePart = request.getPart("image");
-                String fileName = UUID.randomUUID() + "_" + imagePart.getSubmittedFileName();
-                String imagePath = uploadToAzureBlob(fileName, imagePart.getInputStream(), imagePart.getSize());
+            if ("FOOD".equalsIgnoreCase(productType)) {
+                // Retrieve food-specific fields
+                double weight = Double.parseDouble(request.getParameter("weight"));
+                String packagingType = request.getParameter("packagingType");
 
-                // Create the appropriate Product object based on the category
-                Product product = null;
+                // Create Food object using the constructor
+                product = new Food(0, productName, quantityStock, price, expiryDate, restockLevel, productStatus, imagePath, packagingType, weight);
+            } else if ("DRINK".equalsIgnoreCase(productType)) {
+                // Retrieve drink-specific fields
+                int volume = Integer.parseInt(request.getParameter("volume"));
 
-                if ("FOOD".equalsIgnoreCase(category)) {
-                    product = new Food(0, productName, quantity, price, Date.valueOf(expiryDate), restockLevel, imagePath, productStatus, weight, packagingType);
-                } else if ("DRINK".equalsIgnoreCase(category)) {
-                    product = new Drink(0, productName, quantity, price, Date.valueOf(expiryDate), restockLevel, imagePath, productStatus, volume);
-                }
-                
-                
-
-                // Call DAO method to add product to database
-                boolean success = productDAO.addProduct(product);
-
-                if (success) {
-                    response.sendRedirect("ViewProduct.jsp");
-                } else {
-                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to create product.");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to create product.");
+                // Create Drink object using the constructor
+                product = new Drink(0, productName, quantityStock, price, expiryDate, restockLevel, productStatus, imagePath, volume);
             }
-        } else {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Form is not multipart.");
+
+            // Save the product using DAO
+            boolean isProductAdded = productDAO.addProduct(product);
+            if (isProductAdded) {
+                response.sendRedirect("ViewProduct.jsp");
+            } else {
+                request.setAttribute("errorMessage", "Failed to add the product.");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("errorPage.jsp");
+                dispatcher.forward(request, response);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
+            RequestDispatcher dispatcher = request.getRequestDispatcher("errorPage.jsp");
+            dispatcher.forward(request, response);
         }
     }
 

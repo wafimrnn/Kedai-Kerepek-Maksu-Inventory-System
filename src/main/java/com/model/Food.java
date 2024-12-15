@@ -3,18 +3,15 @@ package com.model;
 import java.sql.Date;
 
 public class Food extends Product {
-    private double weight; // In grams or kg
-    private String packagingType; // "Packet" or "Jar"
-    
-    // Constructor
-    public Food(int productId, String productName, int quantityStock, double price, Date expiryDate, 
-                int restockLevel, String imagePath, String productStatus, double weight, String packagingType) {
-        // Call the parent class constructor to initialize inherited fields
-        super(productId, productName, quantityStock, price, expiryDate, restockLevel, imagePath, productStatus);
-        
-        // Initialize the new fields specific to the Food class
-        this.weight = weight;
+	private String packagingType;
+    private Double weight;
+
+    // Constructor for Food class, calling the parent constructor with super()
+    public Food(int productId, String productName, int quantityStock, double price, Date expiryDate,
+                int restockLevel, String productStatus, String imagePath, String packagingType, Double weight) {
+        super(productId, productName, quantityStock, price, expiryDate, restockLevel, productStatus, imagePath);  // Call the parent constructor
         this.packagingType = packagingType;
+        this.weight = weight;
     }
 
     // Getter and Setter methods

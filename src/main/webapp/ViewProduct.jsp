@@ -27,7 +27,7 @@
 
     <!-- Main Content -->
     <h1>Products</h1>
-        
+
     <!-- Add Product Button -->
     <a href="CreateProduct.html" class="button">Add Product</a>
 
@@ -35,16 +35,17 @@
         <% 
             // Retrieve the list of products from the request
             List<Product> products = (List<Product>) request.getAttribute("productList");
-            
+
             if (products != null && !products.isEmpty()) {
                 // Debugging to ensure the product list is being passed correctly
                 System.out.println("Product list size: " + products.size());
-                
+
                 for (Product product : products) {
                     // Debugging product details
                     System.out.println("Product Name: " + product.getProductName());
                     System.out.println("Product Image Path: " + product.getImagePath());
         %>
+
             <div class="product-card">
                 <!-- Image Path with a fallback to a default image if not provided -->
                 <img src="<%= (product.getImagePath() != null && !product.getImagePath().isEmpty()) ? product.getImagePath() : "default.jpg" %>" 
@@ -52,15 +53,12 @@
                 <h2><%= product.getProductName() %></h2>
                 <p>Price: $<%= product.getPrice() %></p>
                 <p>Stock Quantity: <%= product.getQuantityStock() %></p>
-                <% 
-    				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    				String formattedExpiryDate = sdf.format(product.getExpiryDate());
-				%>
-
-				<p>Expiry Date: <%= formattedExpiryDate %></p>
+                <p>Expiry Date: <%= product.getExpiryDate() %></p>
+                <!-- Add more attributes as necessary -->
             </div>
+
         <% 
-                }
+                } // End of product loop
             } else {
         %>
             <p>No products available.</p>

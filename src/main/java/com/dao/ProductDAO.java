@@ -17,8 +17,8 @@ public class ProductDAO {
         return DriverManager.getConnection(connectionString);
     }
 
-    public boolean addProduct(Product product) throws SQLException {
-        String insertProductQuery = "INSERT INTO PRODUCTS (PROD_NAME, PROD_PRICE, QUANTITY_STOCK, RESTOCK_LEVEL, EXPIRY_DATE, PRODUCT_STATUS) VALUES (?, ?, ?, ?, ?, ?)";
+	public boolean addProduct(Product product) throws SQLException {
+        String insertProductQuery = "INSERT INTO PRODUCTS (PROD_NAME, PROD_PRICE, QUANTITY_STOCK, EXPIRY_DATE, PRODUCT_STATUS) VALUES (?, ?, ?, ?, ?)";
         String insertFoodQuery = "INSERT INTO FOOD (FOOD_ID, WEIGHT, PACKAGING_TYPE) VALUES (?, ?, ?)";
         String insertDrinkQuery = "INSERT INTO DRINK (DRINK_ID, VOLUME) VALUES (?, ?)";
 
@@ -29,9 +29,8 @@ public class ProductDAO {
             productStmt.setString(1, product.getProductName());
             productStmt.setDouble(2, product.getPrice());
             productStmt.setInt(3, product.getQuantityStock());
-            productStmt.setInt(4, product.getRestockLevel());
-            productStmt.setDate(5, product.getExpiryDate());
-            productStmt.setString(6, product.getProductStatus());
+            productStmt.setDate(4, product.getExpiryDate());
+            productStmt.setString(5, product.getProductStatus());
             productStmt.executeUpdate();
 
             // Get the generated product ID
@@ -52,7 +51,7 @@ public class ProductDAO {
                         Drink drink = (Drink) product;
                         try (PreparedStatement drinkStmt = conn.prepareStatement(insertDrinkQuery)) {
                             drinkStmt.setInt(1, productId);
-                            drinkStmt.setDouble(2, drink.getVolume());
+                            drinkStmt.setInt(2, drink.getVolume());
                             drinkStmt.executeUpdate();
                         }
                     }
@@ -83,20 +82,17 @@ public class ProductDAO {
                         foodStmt.setInt(1, productId);
                         try (ResultSet foodRs = foodStmt.executeQuery()) {
                             if (foodRs.next()) {
-                                Food food = new Food(productId, category, productId, productId, null, productId, category, category, productId, category);
-                                food.setProductId(productId);
-                                food.setProductName(productRs.getString("PROD_NAME"));
-                                food.setPrice(productRs.getDouble("PROD_PRICE"));
-                                food.setQuantityStock(productRs.getInt("QUANTITY_STOCK"));
-                                food.setRestockLevel(productRs.getInt("RESTOCK_LEVEL"));
-                                String expiryDateStr = productRs.getString("EXPIRY_DATE");
-                                if (expiryDateStr != null) {
-                                    Date expiryDate = java.sql.Date.valueOf(expiryDateStr); // Convert String to Date
-                                    food.setExpiryDate(expiryDate); // Set the Date in the food object
-                                }
-                                food.setProductStatus(productRs.getString("PRODUCT_STATUS"));
-                                food.setWeight(foodRs.getDouble("WEIGHT"));
-                                food.setPackagingType(foodRs.getString("PACKAGING_TYPE"));
+                                Food food = new Food(
+                                    productId,
+                                    productRs.getString("PROD_NAME"),
+                                    productRs.getInt("QUANTITY_STOCK"),
+                                    productRs.getDouble("PROD_PRICE"),
+                                    Date.valueOf(productRs.getString("EXPIRY_DATE")),
+                                    productRs.getInt("RESTOCK_LEVEL"),
+                                    productRs.getString("PRODUCT_STATUS"),
+                                    foodRs.getDouble("WEIGHT"),
+                                    foodRs.getString("PACKAGING_TYPE")
+                                );
                                 products.add(food);
                             }
                         }
@@ -106,19 +102,16 @@ public class ProductDAO {
                         drinkStmt.setInt(1, productId);
                         try (ResultSet drinkRs = drinkStmt.executeQuery()) {
                             if (drinkRs.next()) {
-                                Drink drink = new Drink(productId, category, productId, productId, null, productId, category, category, productId);
-                                drink.setProductId(productId);
-                                drink.setProductName(productRs.getString("PROD_NAME"));
-                                drink.setPrice(productRs.getDouble("PROD_PRICE"));
-                                drink.setQuantityStock(productRs.getInt("QUANTITY_STOCK"));
-                                drink.setRestockLevel(productRs.getInt("RESTOCK_LEVEL"));
-                                String expiryDateStr = productRs.getString("EXPIRY_DATE");
-                                if (expiryDateStr != null) {
-                                    Date expiryDate = java.sql.Date.valueOf(expiryDateStr); // Convert String to Date
-                                    drink.setExpiryDate(expiryDate); // Set the Date in the drink object
-                                }
-                                drink.setProductStatus(productRs.getString("PRODUCT_STATUS"));
-                                drink.setVolume(drinkRs.getDouble("VOLUME"));
+                                Drink drink = new Drink(
+                                    productId,
+                                    productRs.getString("PROD_NAME"),
+                                    productRs.getInt("QUANTITY_STOCK"),
+                                    productRs.getDouble("PROD_PRICE"),
+                                    Date.valueOf(productRs.getString("EXPIRY_DATE")),
+                                    productRs.getInt("RESTOCK_LEVEL"),
+                                    productRs.getString("PRODUCT_STATUS"),
+                                    drinkRs.getDouble("VOLUME")
+                                );
                                 products.add(drink);
                             }
                         }
@@ -126,6 +119,7 @@ public class ProductDAO {
                 }
             }
         }
+        System.out.println("Total products retrieved: " + products.size());  // Log the size of the list
         return products;
     }
 

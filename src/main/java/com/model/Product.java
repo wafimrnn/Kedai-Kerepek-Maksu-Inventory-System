@@ -3,26 +3,26 @@ package com.model;
 import java.sql.Date;
 
 public class Product {
-    private int productId;
+	private int productId;
     private String productName;
     private int quantityStock;
     private double price;
     private Date expiryDate;
     private int restockLevel;
-    private String imagePath;
     private String productStatus;
+    private String imagePath;  // Added imagePath field
 
-    // Constructor
-    public Product(int productId, String productName, int quantityStock, double price, Date expiryDate, 
-                   int restockLevel, String imagePath, String productStatus) {
+    // Constructor for Product class
+    public Product(int productId, String productName, int quantityStock, double price, Date expiryDate,
+                   int restockLevel, String productStatus, String imagePath) {
         this.productId = productId;
         this.productName = productName;
         this.quantityStock = quantityStock;
         this.price = price;
         this.expiryDate = expiryDate;
         this.restockLevel = restockLevel;
-        this.imagePath = imagePath;
         this.productStatus = productStatus;
+        this.imagePath = imagePath;  // Initialize imagePath
     }
 
     // Getter and Setter methods
