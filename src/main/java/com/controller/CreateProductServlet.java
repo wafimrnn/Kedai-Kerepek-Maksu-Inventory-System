@@ -97,7 +97,7 @@ public class CreateProductServlet extends HttpServlet {
 
     // This function retrieves the database connection string from environment variable
     private Connection getConnection() throws Exception {
-        String connectionString = System.getenv("SQL_CONNECTION_STRING"); // Get SQL connection string from environment variable
+        String connectionString = System.getenv("AZURE_SQL_CONNECTIONSTRING"); // Get SQL connection string from environment variable
         return DriverManager.getConnection(connectionString);
     }
 }
