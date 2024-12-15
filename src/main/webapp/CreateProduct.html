@@ -3,163 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Product</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-
-        .sidebar {
-            width: 250px;
-            background-color: #2c2c2c;
-            color: white;
-            position: fixed;
-            height: 100%;
-            padding: 20px;
-        }
-
-        .sidebar h2 {
-            margin: 0;
-            font-size: 1.5em;
-        }
-
-        .sidebar ul {
-            list-style-type: none;
-            padding: 0;
-            margin-top: 20px;
-        }
-
-        .sidebar ul li {
-            margin: 10px 0;
-        }
-
-        .sidebar ul li a {
-            text-decoration: none;
-            color: white;
-            font-size: 1em;
-            display: block;
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        .sidebar ul li a:hover, .sidebar ul li a.active {
-            background-color: #444;
-        }
-
-        .content {
-            margin-left: 270px;
-            padding: 20px;
-        }
-
-        .form-container {
-            background-color: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .form-container h3 {
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            text-align: center;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .form-group input:focus, .form-group select:focus {
-            outline: none;
-            border-color: #ffc107;
-        }
-
-        .form-actions {
-            text-align: center;
-        }
-
-        .form-actions button {
-            padding: 10px 20px;
-            background-color: #000;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .form-actions button:hover {
-            background-color: #444;
-        }
-    </style>
+    <title>Create Product</title>
+    <link rel="stylesheet" href="style/CreateProduct.css">
 </head>
 <body>
-    <div class="sidebar">
+
+    <!-- Sidebar -->
+    <div id="sidebar">
         <h2>Kedai Kerepek Maksu</h2>
         <ul>
             <li><a href="DashboardHome.jsp">Dashboard</a></li>
-            <li><a href="ViewProduct.jsp">Inventories</a></li>
-            <li><a href="#">Reports</a></li>
-            <li><a href="#">Profile Account</a></li>
-            <li><a href="#">Log Out</a></li>
+            <li><a href="ViewProduct.jsp">Products</a></li>
+            <li><a href="#">Sales</a></li>
+            <li><a href="#">Report</a></li>
+            <li><a href="#">Account</a></li>
         </ul>
     </div>
 
-    <div class="content">
-        <div class="form-container">
-            <h3>Add Product</h3>
-            <form action="CreateProductServlet" method="post" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label for="product-name">Product Name</label>
-                    <input type="text" id="product-name" name="product-name" placeholder="Kerepek Bawang" required>
-                </div>
-                <div class="form-group">
-                    <label for="category">Category</label>
-                    <select id="category" name="category" required>
-                        <option value="">--Select Category--</option>
-                        <option value="snacks">Foods</option>
-                        <option value="drinks">Drinks</option>
-                        <option value="others">Others</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="product-id">Product ID</label>
-                    <input type="text" id="product-id" name="product-id" placeholder="0001" required>
-                </div>
-                <div class="form-group">
-                    <label for="quantity">Quantity Stock</label>
-                    <input type="number" id="quantity" name="quantity" placeholder="3" required>
-                </div>
-                <div class="form-group">
-                    <label for="price">Price</label>
-                    <input type="text" id="price" name="price" placeholder="RM12.00" required>
-                </div>
-                <div class="form-group">
-                    <label for="product-image">Product Image</label>
-                    <input type="file" id="product-image" name="product-image" accept="image/*" required>
-                </div>
-                <div class="form-actions">
-                    <button type="submit">Add Product</button>
-                </div>
-            </form>
+    <!-- Create Product Form -->
+    <main class="create-product-form">
+        <h1>Add New Product</h1>
+        <form action="CreateProductServlet" method="POST" enctype="multipart/form-data">
+            <label for="productName">Product Name</label>
+            <input type="text" id="productName" name="productName" required><br><br>
+
+            <label for="price">Price</label>
+            <input type="number" id="price" name="price" step="0.01" required><br><br>
+
+            <label for="quantity">Quantity in Stock</label>
+            <input type="number" id="quantity" name="quantity" required><br><br>
+
+            <label for="expiryDate">Expiry Date</label>
+            <input type="date" id="expiryDate" name="expiryDate" required><br><br>
+
+            <label for="image">Product Image</label>
+            <input type="file" id="image" name="image" accept="image/*"><br><br>
+
+            <label for="category">Category</label>
+            <select id="category" name="category" required>
+                <option value="FOOD">Food</option>
+                <option value="DRINK">Drink</option>
+            </select>
+            
+            <!-- Food-Specific Fields -->
+        <div id="foodFields" style="display: none;">
+            <label for="weight">Weight (grams):</label>
+            <input type="number" id="weight" name="weight">
+
+            <label for="packagingType">Packaging Type:</label>
+            <input type="text" id="packagingType" name="packagingType">
         </div>
-    </div>
+
+        <!-- Drink-Specific Fields -->
+        <div id="drinkFields" style="display: none;">
+            <label for="volume">Volume (ml):</label>
+            <input type="number" id="volume" name="volume">
+        </div><br><br>
+
+            <button type="submit">Add Product</button>
+        </form>
+    </main>
+	
+	<script>
+    // Function to toggle category-specific fields
+    function showCategoryFields() {
+        // Retrieve selected category
+        const category = document.getElementById("category").value;
+
+        // Get the category-specific containers
+        const foodFields = document.getElementById("foodFields");
+        const drinkFields = document.getElementById("drinkFields");
+
+        // Hide all category-specific fields initially
+        foodFields.style.display = "none";
+        drinkFields.style.display = "none";
+
+        // Show fields based on selected category
+        if (category === "FOOD") {
+            foodFields.style.display = "block"; // Show food-specific fields
+        } else if (category === "DRINK") {
+            drinkFields.style.display = "block"; // Show drink-specific fields
+        }
+    }
+
+    // Attach event listener and set initial state
+    document.addEventListener("DOMContentLoaded", function () {
+        const categoryDropdown = document.getElementById("category");
+        categoryDropdown.addEventListener("change", showCategoryFields);
+
+        // Call showCategoryFields on page load to initialize the fields
+        showCategoryFields();
+    });
+	</script>
+
+
 </body>
 </html>

@@ -46,7 +46,6 @@
     <version>5.0.0</version> <!-- Or the version compatible with your Tomcat -->
     <scope>provided</scope>
 </dependency>
-
   </dependencies>
 
   <build>

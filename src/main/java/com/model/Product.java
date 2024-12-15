@@ -1,71 +1,93 @@
 package com.model;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Product {
-	private int productId;
+    private int productId;
     private String productName;
-    private String category;
-    private int quantity;
+    private int quantityStock;
     private double price;
     private Date expiryDate;
     private int restockLevel;
-    private double weight;
-    private String packagingType;
-    private double volume;
     private String imagePath;
+    private String productStatus;
 
-    public Product(int productId, String productName, String category, int quantity, double price, java.sql.Date expiryDate, int restockLevel, double weight, String packagingType, double volume, String imagePath) {
+    // Constructor
+    public Product(int productId, String productName, int quantityStock, double price, Date expiryDate, 
+                   int restockLevel, String imagePath, String productStatus) {
         this.productId = productId;
         this.productName = productName;
-        this.category = category;
-        this.quantity = quantity;
+        this.quantityStock = quantityStock;
         this.price = price;
         this.expiryDate = expiryDate;
         this.restockLevel = restockLevel;
-        this.weight = weight;
-        this.packagingType = packagingType;
-        this.volume = volume;
         this.imagePath = imagePath;
+        this.productStatus = productStatus;
     }
 
+    // Getter and Setter methods
 
-	// Getters and setters
-    public int getProductId() { return productId; }
-    public void setProductId(int productId) { this.productId = productId; }
-    
-    public String getProductName() { return productName; }
-    public void setProductName(String productName) { this.productName = productName; }
-    
-    public String getImagePath() { return imagePath; }
-    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
-    
-    public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
-    
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
-    
-    public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
-    
-    public Date getExpiryDate() { return expiryDate; }
-    public void setExpiryDate(Date expiryDate) { this.expiryDate = expiryDate; }
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public int getQuantityStock() {
+        return quantityStock;
+    }
+
+    public void setQuantityStock(int quantityStock) {
+        this.quantityStock = quantityStock;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public Date getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(Date string) {
+        this.expiryDate = string;
+    }
 
     public int getRestockLevel() {
         return restockLevel;
     }
 
-    public double getWeight() {
-        return weight;
+    public void setRestockLevel(int restockLevel) {
+        this.restockLevel = restockLevel;
     }
 
-    public String getPackagingType() {
-        return packagingType;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public double getVolume() {
-        return volume;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
+    public String getProductStatus() {
+        return productStatus;
+    }
+
+    public void setProductStatus(String productStatus) {
+        this.productStatus = productStatus;
+    }
 }
