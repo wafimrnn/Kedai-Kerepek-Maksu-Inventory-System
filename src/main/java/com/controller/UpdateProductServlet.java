@@ -4,10 +4,14 @@ import com.dao.ProductDAO;
 import com.model.Food;
 import com.model.Drink;
 import com.model.Product;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.*;
 import java.sql.SQLException;
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 public class UpdateProductServlet extends HttpServlet {
     

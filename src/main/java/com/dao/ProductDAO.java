@@ -3,8 +3,6 @@ package com.dao;
 import com.model.Drink;
 import com.model.Food;
 import com.model.Product;
-import com.azure.identity.*;
-import com.azure.data.sql.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
