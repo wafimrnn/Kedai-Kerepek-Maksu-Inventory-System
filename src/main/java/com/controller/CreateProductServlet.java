@@ -9,6 +9,7 @@ import jakarta.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.util.UUID;
@@ -17,8 +18,14 @@ import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.BlobServiceClientBuilder;
+import com.dao.ProductDAO;
+import com.model.Drink;
+import com.model.Food;
+import com.model.Product;
 
 public class CreateProductServlet extends HttpServlet {
+
+    private ProductDAO productDAO = new ProductDAO(); // Create an instance of ProductDAO
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -30,12 +37,15 @@ public class CreateProductServlet extends HttpServlet {
                 int quantity = Integer.parseInt(request.getParameter("quantity"));
                 double price = Double.parseDouble(request.getParameter("price"));
                 String expiryDate = request.getParameter("expiryDate");
+                int restockLevel = Integer.parseInt(request.getParameter("restockLevel"));
+                String productStatus = request.getParameter("productStatus");
 
                 // Handle category-specific fields
                 Double weight = null;
                 String packagingType = null;
                 Integer volume = null;
 
+                // Handle category-specific fields
                 if ("FOOD".equalsIgnoreCase(category)) {
                     weight = Double.parseDouble(request.getParameter("weight"));
                     packagingType = request.getParameter("packagingType");
@@ -48,11 +58,23 @@ public class CreateProductServlet extends HttpServlet {
                 String fileName = UUID.randomUUID() + "_" + imagePart.getSubmittedFileName();
                 String imagePath = uploadToAzureBlob(fileName, imagePart.getInputStream(), imagePart.getSize());
 
-                // Insert into database
-                insertProduct(productName, category, quantity, price, expiryDate, weight, packagingType, volume, imagePath);
+                // Create the appropriate Product object based on the category
+                Product product = null;
 
-                // Redirect to success page
-                response.sendRedirect("ViewProduct.jsp");
+                if ("FOOD".equalsIgnoreCase(category)) {
+                    product = new Food(0, productName, quantity, price, Date.valueOf(expiryDate), restockLevel, imagePath, productStatus, weight, packagingType);
+                } else if ("DRINK".equalsIgnoreCase(category)) {
+                    product = new Drink(0, productName, quantity, price, Date.valueOf(expiryDate), restockLevel, imagePath, productStatus, volume);
+                }
+
+                // Call DAO method to add product to database
+                boolean success = productDAO.addProduct(product);
+
+                if (success) {
+                    response.sendRedirect("ViewProduct.jsp");
+                } else {
+                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to create product.");
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to create product.");
@@ -64,40 +86,13 @@ public class CreateProductServlet extends HttpServlet {
 
     // This function uploads the image to Azure Blob Storage
     private String uploadToAzureBlob(String fileName, InputStream fileInputStream, long fileSize) throws IOException {
-        String connectionString = System.getenv("BLOB_CONNECTION_STRING"); // Get the connection string from environment variable
+        String connectionString = System.getenv("BLOB_CONNECTION_STRING");
         BlobServiceClient blobServiceClient = new BlobServiceClientBuilder()
                 .connectionString(connectionString)
                 .buildClient();
-        BlobContainerClient containerClient = blobServiceClient.getBlobContainerClient("product-images"); // Assuming you have this container
+        BlobContainerClient containerClient = blobServiceClient.getBlobContainerClient("product-images");
         BlobClient blobClient = containerClient.getBlobClient(fileName);
         blobClient.upload(fileInputStream, fileSize, true);
-        return "https://<your-storage-account-name>.blob.core.windows.net/product-images/" + fileName; // Replace with your storage URL
-    }
-
-    // This function inserts product details into the database
-    private void insertProduct(String productName, String category, int quantity, double price, String expiryDate,
-                               Double weight, String packagingType, Integer volume, String imagePath) throws Exception {
-        String sql = "INSERT INTO products (product_name, category, quantity, price, expiry_date, weight, packaging_type, volume, image_path) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-        try (Connection conn = getConnection(); // Using the connection from the environment variable
-             PreparedStatement statement = conn.prepareStatement(sql)) {
-            statement.setString(1, productName);
-            statement.setString(2, category);
-            statement.setInt(3, quantity);
-            statement.setDouble(4, price);
-            statement.setString(5, expiryDate);
-            statement.setObject(6, weight); // Use setObject for nullable fields
-            statement.setString(7, packagingType);
-            statement.setObject(8, volume); // Use setObject for nullable fields
-            statement.setString(9, imagePath);
-            statement.executeUpdate();
-        }
-    }
-
-    // This function retrieves the database connection string from environment variable
-    private Connection getConnection() throws Exception {
-        String connectionString = System.getenv("AZURE_SQL_CONNECTIONSTRING"); // Get SQL connection string from environment variable
-        return DriverManager.getConnection(connectionString);
+        return "https://<your-storage-account-name>.blob.core.windows.net/product-images/" + fileName;
     }
 }

@@ -9,22 +9,15 @@ import java.util.List;
 
 public class ProductDAO {
 
-    // Method to get the connection using Azure Service Connector
-    private Connection getConnection() throws SQLException {
-    	// Load the connection string from environment variable
-    	String connectionString = System.getenv("AZURE_SQL_CONNECTIONSTRING");
-
-    	// Check if the connection string is loaded
-    	if (connectionString == null || connectionString.isEmpty()) {
-    	    System.out.println("Connection string is missing!");
-    	} else {
-    	    System.out.println("Connection string is loaded.");
-    	    // You can use this connection string now for connecting to the database
-    	}
-		return null;
+	private Connection getConnection() throws SQLException {
+        String connectionString = System.getenv("AZURE_SQL_CONNECTIONSTRING");
+        if (connectionString == null || connectionString.isEmpty()) {
+            System.out.println("Connection string is missing!");
+            return null;
+        }
+        return DriverManager.getConnection(connectionString);
     }
 
-    // ADD PRODUCT (CREATE)
     public boolean addProduct(Product product) throws SQLException {
         String insertProductQuery = "INSERT INTO PRODUCTS (PROD_NAME, PROD_PRICE, QUANTITY_STOCK, RESTOCK_LEVEL, EXPIRY_DATE, PRODUCT_STATUS) VALUES (?, ?, ?, ?, ?, ?)";
         String insertFoodQuery = "INSERT INTO FOOD (FOOD_ID, WEIGHT, PACKAGING_TYPE) VALUES (?, ?, ?)";
