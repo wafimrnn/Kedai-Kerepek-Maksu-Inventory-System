@@ -1,20 +1,30 @@
 package com.model;
 
-import java.sql.Date;
-
 public class Food extends Product {
-	private String packagingType;
-    private Double weight;
+    private String packagingType;
+    private double weight;
 
-    // Constructor for Food class, calling the parent constructor with super()
-    public Food(int productId, String productName, int quantityStock, double price, Date expiryDate,
-                int restockLevel, String productStatus, String imagePath, String packagingType, Double weight) {
-        super(productId, productName, quantityStock, price, expiryDate, restockLevel, productStatus, imagePath);  // Call the parent constructor
+    // Default constructor
+    public Food() {
+        super(); // Calling the constructor of the superclass (Product)
+    }
+
+    // Parameterized constructor
+    public Food(int prodId, String prodName, double prodPrice, int quantityStock, int restockLevel, Date expiryDate, String imagePath, String prodStatus, String packagingType, double weight) {
+        super(prodId, prodName, prodPrice, quantityStock, restockLevel, expiryDate, imagePath, prodStatus);
         this.packagingType = packagingType;
         this.weight = weight;
     }
 
-    // Getter and Setter methods
+    // Getters and Setters
+    public String getPackagingType() {
+        return packagingType;
+    }
+
+    public void setPackagingType(String packagingType) {
+        this.packagingType = packagingType;
+    }
+
     public double getWeight() {
         return weight;
     }
@@ -23,11 +33,13 @@ public class Food extends Product {
         this.weight = weight;
     }
 
-    public String getPackagingType() {
-        return packagingType;
-    }
-
-    public void setPackagingType(String packagingType) {
-        this.packagingType = packagingType;
+    // toString() method to return a string representation of the object
+    @Override
+    public String toString() {
+        return "Food{" +
+                "packagingType='" + packagingType + '\'' +
+                ", weight=" + weight +
+                ", " + super.toString() + // calling toString() from Product class
+                '}';
     }
 }

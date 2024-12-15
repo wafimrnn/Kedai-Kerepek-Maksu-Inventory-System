@@ -1,71 +1,90 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-<%@ page import="com.model.Product" %>
 <%@ page import="java.util.List" %>
-<%@ page import="java.text.SimpleDateFormat" %>
-<%@ page import="java.util.Date" %>
-
+<%@ page import="com.model.Product" %>
+<%@ page import="com.model.Food" %>
+<%@ page import="com.model.Drink" %>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>View Products</title>
-    <link rel="stylesheet" href="style/ViewProduct.css"> <!-- Your existing style file -->
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .button { padding: 5px 10px; margin-right: 5px; text-decoration: none; }
+        .add-button { background-color: green; color: white; }
+        .update-button { background-color: orange; color: white; }
+        .delete-button { background-color: red; color: white; }
+    </style>
 </head>
 <body>
-
-    <!-- Sidebar -->
-    <div id="sidebar">
-        <h2>Kedai Kerepek Maksu</h2>
-        <ul>
-            <li><a href="DashboardHome.jsp">Dashboard</a></li>
-            <li><a href="ViewProduct.jsp">Products</a></li>
-            <li><a href="#">Sales</a></li>
-            <li><a href="#">Report</a></li>
-            <li><a href="#">Account</a></li>
-        </ul>
-    </div>
-
-    <!-- Main Content -->
-    <h1>Products</h1>
-
-    <!-- Add Product Button -->
-    <a href="CreateProduct.html" class="button">Add Product</a>
-
-    <div class="product-container">
-        <% 
-            // Retrieve the list of products from the request
-            List<Product> products = (List<Product>) request.getAttribute("productList");
-
-            if (products != null && !products.isEmpty()) {
-                // Debugging to ensure the product list is being passed correctly
-                System.out.println("Product list size: " + products.size());
-
-                for (Product product : products) {
-                    // Debugging product details
-                    System.out.println("Product Name: " + product.getProductName());
-                    System.out.println("Product Image Path: " + product.getImagePath());
+    <h2>Product List</h2>
+    <a href="CreateProduct.html" class="button add-button">Add Product</a>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Restock Level</th>
+            <th>Expiry Date</th>
+            <th>Image</th>
+            <th>Category</th>
+            <th>Details</th>
+            <th>Actions</th>
+        </tr>
+        <%
+            List<Product> productList = (List<Product>) request.getAttribute("productList");
+            if (productList != null) {
+                for (Product p : productList) {
         %>
-
-            <div class="product-card">
-                <!-- Image Path with a fallback to a default image if not provided -->
-                <img src="<%= (product.getImagePath() != null && !product.getImagePath().isEmpty()) ? product.getImagePath() : "default.jpg" %>" 
-                     alt="<%= product.getProductName() %>" class="product-image">
-                <h2><%= product.getProductName() %></h2>
-                <p>Price: $<%= product.getPrice() %></p>
-                <p>Stock Quantity: <%= product.getQuantityStock() %></p>
-                <p>Expiry Date: <%= product.getExpiryDate() %></p>
-                <!-- Add more attributes as necessary -->
-            </div>
-
-        <% 
-                } // End of product loop
-            } else {
-        %>
-            <p>No products available.</p>
-        <% 
+        <tr>
+            <td><%= p.getProdId() %></td>
+            <td><%= p.getProdName() %></td>
+            <td><%= p.getProdPrice() %></td>
+            <td><%= p.getQuantityStock() %></td>
+            <td><%= p.getRestockLevel() %></td>
+            <td><%= p.getExpiryDate() %></td>
+            <td>
+                <% if (p.getImagePath() != null) { %>
+                    <img src="<%= p.getImagePath() %>" alt="Product Image" width="50" height="50"/>
+                <% } else { %>
+                    N/A
+                <% } %>
+            </td>
+            <td><%= p.getProdStatus() %></td>
+            <td>
+                <% 
+                    if ("Food".equalsIgnoreCase(p.getProdStatus())) {
+                        Food food = (Food) p;
+                %>
+                    Packaging: <%= food.getPackagingType() %><br/>
+                    Weight: <%= food.getWeight() %> kg
+                <% 
+                    } else if ("Drink".equalsIgnoreCase(p.getProdStatus())) {
+                        Drink drink = (Drink) p;
+                %>
+                    Volume: <%= drink.getVolume() %> L
+                <% } else { %>
+                    N/A
+                <% } %>
+            </td>
+            <td>
+                <form action="UpdateProduct.jsp" method="get" style="display:inline;">
+                    <input type="hidden" name="prodId" value="<%= p.getProdId() %>"/>
+                    <input type="submit" value="Update" class="button update-button"/>
+                </form>
+                <form action="DeleteProductServlet" method="post" style="display:inline;" 
+                      onsubmit="return confirm('Are you sure you want to delete this product?');">
+                    <input type="hidden" name="prodId" value="<%= p.getProdId() %>"/>
+                    <input type="submit" value="Delete" class="button delete-button"/>
+                </form>
+            </td>
+        </tr>
+        <%
+                }
             }
         %>
-    </div>
-
+    </table>
 </body>
 </html>

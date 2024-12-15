@@ -1,93 +1,113 @@
+// CreateProductServlet.java
 package com.controller;
 
-import jakarta.servlet.RequestDispatcher;
+import com.manager.DBConnection;
+
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.UUID;
+import java.sql.*;
 
-import com.azure.storage.blob.BlobClient;
-import com.azure.storage.blob.BlobContainerClient;
-import com.azure.storage.blob.BlobServiceClient;
-import com.azure.storage.blob.BlobServiceClientBuilder;
-import com.dao.ProductDAO;
-import com.model.Drink;
-import com.model.Food;
-import com.model.Product;
-
+@WebServlet("/CreateProductServlet")
 public class CreateProductServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
-    private ProductDAO productDAO = new ProductDAO(); // Create an instance of ProductDAO
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            // Retrieve form data
-            String productName = request.getParameter("productName");
-            int quantityStock = Integer.parseInt(request.getParameter("quantity"));
-            double price = Double.parseDouble(request.getParameter("price"));
-            Date expiryDate = Date.valueOf(request.getParameter("expiryDate"));
-            int restockLevel = 10; // Default value or retrieve from form if needed
-            String productStatus = "Active"; // Default status or retrieve from form if needed
-            String imagePath = ""; // Handle image upload as needed, e.g., using Azure Blob Storage
-
-            // Retrieve the product type (FOOD or DRINK)
-            String productType = request.getParameter("category");
-
-            Product product = null;
-
-            if ("FOOD".equalsIgnoreCase(productType)) {
-                // Retrieve food-specific fields
-                double weight = Double.parseDouble(request.getParameter("weight"));
-                String packagingType = request.getParameter("packagingType");
-
-                // Create Food object using the constructor
-                product = new Food(0, productName, quantityStock, price, expiryDate, restockLevel, productStatus, imagePath, packagingType, weight);
-            } else if ("DRINK".equalsIgnoreCase(productType)) {
-                // Retrieve drink-specific fields
-                int volume = Integer.parseInt(request.getParameter("volume"));
-
-                // Create Drink object using the constructor
-                product = new Drink(0, productName, quantityStock, price, expiryDate, restockLevel, productStatus, imagePath, volume);
-            }
-
-            // Save the product using DAO
-            boolean isProductAdded = productDAO.addProduct(product);
-            if (isProductAdded) {
-                response.sendRedirect("ViewProduct.jsp");
-            } else {
-                request.setAttribute("errorMessage", "Failed to add the product.");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("errorPage.jsp");
-                dispatcher.forward(request, response);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
-            RequestDispatcher dispatcher = request.getRequestDispatcher("errorPage.jsp");
-            dispatcher.forward(request, response);
-        }
+    public CreateProductServlet() {
+        super();
     }
 
-    // This function uploads the image to Azure Blob Storage
-    private String uploadToAzureBlob(String fileName, InputStream fileInputStream, long fileSize) throws IOException {
-        String connectionString = System.getenv("BLOB_CONNECTION_STRING");
-        BlobServiceClient blobServiceClient = new BlobServiceClientBuilder()
-                .connectionString(connectionString)
-                .buildClient();
-        BlobContainerClient containerClient = blobServiceClient.getBlobContainerClient("product-images");
-        BlobClient blobClient = containerClient.getBlobClient(fileName);
-        blobClient.upload(fileInputStream, fileSize, true);
-        return "https://<your-storage-account-name>.blob.core.windows.net/product-images/" + fileName;
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Retrieve form data
+        String prodName = request.getParameter("prodName");
+        double prodPrice = Double.parseDouble(request.getParameter("prodPrice"));
+        int quantityStock = Integer.parseInt(request.getParameter("quantityStock"));
+        int restockLevel = Integer.parseInt(request.getParameter("restockLevel"));
+        String expiryDateStr = request.getParameter("expiryDate"); // Expecting format 'yyyy-MM-dd'
+        String imagePath = request.getParameter("imagePath");
+        String prodStatus = request.getParameter("prodStatus"); // "Food" or "Drink"
+
+        // Additional fields based on category
+        String packagingType = null;
+        Double weight = null;
+        Double volume = null;
+
+        if ("Food".equalsIgnoreCase(prodStatus)) {
+            packagingType = request.getParameter("packagingType");
+            weight = Double.parseDouble(request.getParameter("weight"));
+        } else if ("Drink".equalsIgnoreCase(prodStatus)) {
+            volume = Double.parseDouble(request.getParameter("volume"));
+        }
+
+        String insertProduct = "INSERT INTO Products (PROD_NAME, PROD_PRICE, QUANTITY_STOCK, " +
+                               "RESTOCK_LEVEL, EXPIRY_DATE, IMAGE_PATH, PROD_STATUS) " +
+                               "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        String insertFood = "INSERT INTO Food (PROD_ID, PACKAGING_TYPE, WEIGHT) VALUES (?, ?, ?)";
+        String insertDrink = "INSERT INTO Drink (PROD_ID, VOLUME) VALUES (?, ?)";
+
+        try (Connection conn = DBConnection.getConnection()) {
+            conn.setAutoCommit(false); // Start transaction
+
+            try (PreparedStatement productStmt = conn.prepareStatement(insertProduct, Statement.RETURN_GENERATED_KEYS)) {
+                productStmt.setString(1, prodName);
+                productStmt.setDouble(2, prodPrice);
+                productStmt.setInt(3, quantityStock);
+                productStmt.setInt(4, restockLevel);
+                productStmt.setDate(5, Date.valueOf(expiryDateStr));
+                productStmt.setString(6, imagePath);
+                productStmt.setString(7, prodStatus);
+
+                int affectedRows = productStmt.executeUpdate();
+                if (affectedRows == 0) {
+                    throw new SQLException("Creating product failed, no rows affected.");
+                }
+
+                // Retrieve the generated PROD_ID
+                int prodId;
+                try (ResultSet generatedKeys = productStmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        prodId = generatedKeys.getInt(1);
+                    } else {
+                        throw new SQLException("Creating product failed, no ID obtained.");
+                    }
+                }
+
+                // Insert into child table based on category
+                if ("Food".equalsIgnoreCase(prodStatus)) {
+                    try (PreparedStatement foodStmt = conn.prepareStatement(insertFood)) {
+                        foodStmt.setInt(1, prodId);
+                        foodStmt.setString(2, packagingType);
+                        foodStmt.setDouble(3, weight);
+                        foodStmt.executeUpdate();
+                    }
+                } else if ("Drink".equalsIgnoreCase(prodStatus)) {
+                    try (PreparedStatement drinkStmt = conn.prepareStatement(insertDrink)) {
+                        drinkStmt.setInt(1, prodId);
+                        drinkStmt.setDouble(2, volume);
+                        drinkStmt.executeUpdate();
+                    }
+                }
+
+                conn.commit(); // Commit transaction
+            } catch (SQLException e) {
+                conn.rollback(); // Rollback transaction on error
+                e.printStackTrace();
+                // Handle exception appropriately
+                response.sendRedirect("error.jsp"); // Redirect to an error page
+                return;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.sendRedirect("error.jsp"); // Redirect to an error page
+            return;
+        }
+
+        response.sendRedirect("ViewProductServlet"); // Redirect to product list
     }
 }

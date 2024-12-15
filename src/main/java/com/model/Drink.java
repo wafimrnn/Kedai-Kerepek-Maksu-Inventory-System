@@ -1,24 +1,34 @@
 package com.model;
 
-import java.sql.Date;
-
 public class Drink extends Product {
-	private Integer volume;
+    private double volume; // Volume of the drink (e.g., in liters or milliliters)
 
-    // Constructor for Drink class, calling the parent constructor with super()
-    public Drink(int productId, String productName, int quantityStock, double price, Date expiryDate,
-                 int restockLevel, String productStatus, String imagePath, Integer volume) {
-        super(productId, productName, quantityStock, price, expiryDate, restockLevel, productStatus, imagePath);  // Call the parent constructor
+    // Default constructor
+    public Drink() {
+        super(); // Calling the constructor of the superclass (Product)
+    }
+
+    // Parameterized constructor
+    public Drink(int prodId, String prodName, double prodPrice, int quantityStock, int restockLevel, Date expiryDate, String imagePath, String prodStatus, double volume) {
+        super(prodId, prodName, prodPrice, quantityStock, restockLevel, expiryDate, imagePath, prodStatus);
         this.volume = volume;
     }
 
-    // Getter and Setter methods
-
+    // Getter and Setter
     public double getVolume() {
         return volume;
     }
 
-    public void setVolume(Integer volume) {
+    public void setVolume(double volume) {
         this.volume = volume;
+    }
+
+    // toString() method to return a string representation of the object
+    @Override
+    public String toString() {
+        return "Drink{" +
+                "volume=" + volume +
+                ", " + super.toString() + // calling toString() from Product class
+                '}';
     }
 }

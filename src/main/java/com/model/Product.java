@@ -1,46 +1,54 @@
-package com.model;
-
 import java.sql.Date;
 
 public class Product {
-	private int productId;
-    private String productName;
+    private int prodId;
+    private String prodName;
+    private double prodPrice;
     private int quantityStock;
-    private double price;
-    private Date expiryDate;
     private int restockLevel;
-    private String productStatus;
-    private String imagePath;  // Added imagePath field
+    private Date expiryDate;
+    private String imagePath;
+    private String prodStatus; // "Active" or "Inactive" (indicates if the product is active)
 
-    // Constructor for Product class
-    public Product(int productId, String productName, int quantityStock, double price, Date expiryDate,
-                   int restockLevel, String productStatus, String imagePath) {
-        this.productId = productId;
-        this.productName = productName;
+    // Default constructor
+    public Product() {
+    }
+
+    // Parameterized constructor
+    public Product(int prodId, String prodName, double prodPrice, int quantityStock, int restockLevel, Date expiryDate, String imagePath, String prodStatus) {
+        this.prodId = prodId;
+        this.prodName = prodName;
+        this.prodPrice = prodPrice;
         this.quantityStock = quantityStock;
-        this.price = price;
-        this.expiryDate = expiryDate;
         this.restockLevel = restockLevel;
-        this.productStatus = productStatus;
-        this.imagePath = imagePath;  // Initialize imagePath
+        this.expiryDate = expiryDate;
+        this.imagePath = imagePath;
+        this.prodStatus = prodStatus;
     }
 
-    // Getter and Setter methods
-
-    public int getProductId() {
-        return productId;
+    // Getters and Setters
+    public int getProdId() {
+        return prodId;
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
+    public void setProdId(int prodId) {
+        this.prodId = prodId;
     }
 
-    public String getProductName() {
-        return productName;
+    public String getProdName() {
+        return prodName;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setProdName(String prodName) {
+        this.prodName = prodName;
+    }
+
+    public double getProdPrice() {
+        return prodPrice;
+    }
+
+    public void setProdPrice(double prodPrice) {
+        this.prodPrice = prodPrice;
     }
 
     public int getQuantityStock() {
@@ -51,28 +59,20 @@ public class Product {
         this.quantityStock = quantityStock;
     }
 
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public Date getExpiryDate() {
-        return expiryDate;
-    }
-
-    public void setExpiryDate(Date string) {
-        this.expiryDate = string;
-    }
-
     public int getRestockLevel() {
         return restockLevel;
     }
 
     public void setRestockLevel(int restockLevel) {
         this.restockLevel = restockLevel;
+    }
+
+    public Date getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(Date expiryDate) {
+        this.expiryDate = expiryDate;
     }
 
     public String getImagePath() {
@@ -83,11 +83,26 @@ public class Product {
         this.imagePath = imagePath;
     }
 
-    public String getProductStatus() {
-        return productStatus;
+    public String getProdStatus() {
+        return prodStatus;
     }
 
-    public void setProductStatus(String productStatus) {
-        this.productStatus = productStatus;
+    public void setProdStatus(String prodStatus) {
+        this.prodStatus = prodStatus;
+    }
+
+    // toString() method to return a string representation of the object
+    @Override
+    public String toString() {
+        return "Product{" +
+                "prodId=" + prodId +
+                ", prodName='" + prodName + '\'' +
+                ", prodPrice=" + prodPrice +
+                ", quantityStock=" + quantityStock +
+                ", restockLevel=" + restockLevel +
+                ", expiryDate=" + expiryDate +
+                ", imagePath='" + imagePath + '\'' +
+                ", prodStatus='" + prodStatus + '\'' +
+                '}';
     }
 }

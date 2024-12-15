@@ -1,29 +1,19 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Kedai Kerepek Maksu - Dashboard</title>
-    <!-- Add any CSS or external libraries -->
-    <link rel="stylesheet" href="style/dashboard.css">
+    <title>Dashboard Home</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .nav { margin: 20px; }
+        .nav a { margin-right: 15px; text-decoration: none; color: blue; }
+    </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <div id="sidebar">
-        <h2>Kedai Kerepek Maksu</h2>
-        <ul>
-            <li><a href="DashboardHome.jsp">Dashboard</a></li>
-            <li><a href="ViewProduct.jsp">Products</a></li>
-            <li><a href="#">Sales</a></li>
-            <li><a href="#">Report</a></li>
-            <li><a href="#">Account</a></li>
-        </ul>
-    </div>
-
-    <!-- Main Content -->
-    <div id="main-content">
-        <h1>Welcome to the Dashboard</h1>
-        <p> summarize feature </p>
+    <h1>Welcome to the Dashboard</h1>
+    <div class="nav">
+        <a href="ViewProductServlet">Products</a>
+        <!-- Add more navigation links as needed -->
     </div>
 </body>
 </html>
