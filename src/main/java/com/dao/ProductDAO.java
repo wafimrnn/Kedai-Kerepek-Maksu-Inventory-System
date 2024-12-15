@@ -12,7 +12,7 @@ public class ProductDAO {
     // Method to get the connection using Azure Service Connector
     private Connection getConnection() throws SQLException {
         // Use the Azure Service Connector to get a connection. Example using connection string:
-        String connectionString = System.getenv("AZURE_CONNECTION_STRING"); // Environment variable or config for connection string
+        String connectionString = System.getenv("AZURE_SQL_CONNECTIONSTRING"); // Environment variable or config for connection string
         return DriverManager.getConnection(connectionString);
     }
 
