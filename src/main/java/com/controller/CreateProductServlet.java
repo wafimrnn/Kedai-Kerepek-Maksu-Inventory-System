@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.*;
 
-@WebServlet("/CreateProductServlet")
+
 public class CreateProductServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 

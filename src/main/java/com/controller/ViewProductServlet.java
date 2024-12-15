@@ -14,7 +14,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet("/ViewProductServlet")
+
 public class ViewProductServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
