@@ -30,7 +30,7 @@ public class ProductDAO {
             productStmt.setDouble(2, product.getPrice());
             productStmt.setInt(3, product.getQuantityStock());
             productStmt.setInt(4, product.getRestockLevel());
-            productStmt.setString(5, product.getExpiryDate());
+            productStmt.setDate(5, product.getExpiryDate());
             productStmt.setString(6, product.getProductStatus());
             productStmt.executeUpdate();
 
@@ -83,13 +83,17 @@ public class ProductDAO {
                         foodStmt.setInt(1, productId);
                         try (ResultSet foodRs = foodStmt.executeQuery()) {
                             if (foodRs.next()) {
-                                Food food = new Food();
+                                Food food = new Food(productId, category, productId, productId, null, productId, category, category, productId, category);
                                 food.setProductId(productId);
                                 food.setProductName(productRs.getString("PROD_NAME"));
                                 food.setPrice(productRs.getDouble("PROD_PRICE"));
                                 food.setQuantityStock(productRs.getInt("QUANTITY_STOCK"));
                                 food.setRestockLevel(productRs.getInt("RESTOCK_LEVEL"));
-                                food.setExpiryDate(productRs.getString("EXPIRY_DATE"));
+                                String expiryDateStr = productRs.getString("EXPIRY_DATE");
+                                if (expiryDateStr != null) {
+                                    Date expiryDate = java.sql.Date.valueOf(expiryDateStr); // Convert String to Date
+                                    food.setExpiryDate(expiryDate); // Set the Date in the food object
+                                }
                                 food.setProductStatus(productRs.getString("PRODUCT_STATUS"));
                                 food.setWeight(foodRs.getDouble("WEIGHT"));
                                 food.setPackagingType(foodRs.getString("PACKAGING_TYPE"));
@@ -102,13 +106,17 @@ public class ProductDAO {
                         drinkStmt.setInt(1, productId);
                         try (ResultSet drinkRs = drinkStmt.executeQuery()) {
                             if (drinkRs.next()) {
-                                Drink drink = new Drink();
+                                Drink drink = new Drink(productId, category, productId, productId, null, productId, category, category, productId);
                                 drink.setProductId(productId);
                                 drink.setProductName(productRs.getString("PROD_NAME"));
                                 drink.setPrice(productRs.getDouble("PROD_PRICE"));
                                 drink.setQuantityStock(productRs.getInt("QUANTITY_STOCK"));
                                 drink.setRestockLevel(productRs.getInt("RESTOCK_LEVEL"));
-                                drink.setExpiryDate(productRs.getString("EXPIRY_DATE"));
+                                String expiryDateStr = productRs.getString("EXPIRY_DATE");
+                                if (expiryDateStr != null) {
+                                    Date expiryDate = java.sql.Date.valueOf(expiryDateStr); // Convert String to Date
+                                    drink.setExpiryDate(expiryDate); // Set the Date in the drink object
+                                }
                                 drink.setProductStatus(productRs.getString("PRODUCT_STATUS"));
                                 drink.setVolume(drinkRs.getDouble("VOLUME"));
                                 products.add(drink);
@@ -147,7 +155,7 @@ public class ProductDAO {
             productStmt.setDouble(2, product.getPrice());
             productStmt.setInt(3, product.getQuantityStock());
             productStmt.setInt(4, product.getRestockLevel());
-            productStmt.setString(5, product.getExpiryDate());
+            productStmt.setDate(5, product.getExpiryDate());
             productStmt.setString(6, product.getProductStatus());
             productStmt.setInt(7, product.getProductId());
             productStmt.executeUpdate();
