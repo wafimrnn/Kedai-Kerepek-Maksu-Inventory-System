@@ -39,7 +39,7 @@ public class CreateProductServlet extends HttpServlet {
         String fileName = UUID.randomUUID().toString() + "-" + filePart.getSubmittedFileName();
         
         // Use the Blob connection string provided by Azure Service Connector
-        String blobConnectionString = System.getenv("BLOB_CONNECTION_STRING");
+        String blobConnectionString = System.getenv("AZURE_STORAGEBLOB_CONNECTIONSTRING");
         
         // Initialize BlobServiceClient using the connection string
         BlobServiceClient blobServiceClient = new BlobServiceClientBuilder()
@@ -87,7 +87,7 @@ public class CreateProductServlet extends HttpServlet {
 
     // Utility method to establish a connection to the database (adjust according to your DB setup)
     private Connection getConnection() throws SQLException {
-        String dbUrl = System.getenv("SQL_CONNECTION_STRING");  // Use the environment variable for SQL connection
+        String dbUrl = System.getenv("AZURE_SQL_CONNECTIONSTRING");  // Use the environment variable for SQL connection
         try {
             return DriverManager.getConnection(dbUrl);  // Establish the connection
         } catch (SQLException e) {

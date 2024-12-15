@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBConnection {
-    private static String dbUrl = System.getenv("SQL_CONNECTION_STRING");
+    private static String dbUrl = System.getenv("AZURE_SQL_CONNECTIONSTRING");
     
     static {
         try {

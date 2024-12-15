@@ -97,6 +97,6 @@ public class UpdateProductServlet extends HttpServlet {
             return;
         }
 
-        response.sendRedirect("ViewProductServlet"); // Redirect to product list
+        response.sendRedirect("ViewProductServlet.java"); // Redirect to product list
     }
 }
