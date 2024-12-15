@@ -35,7 +35,6 @@ public class ViewProductServlet extends HttpServlet {
         List<Product> products = new ArrayList<>();
 
         try (Connection conn = DBConnection.getConnection()) {
-            // Query to fetch active products and their specific child data (Food/Drink)
             String sql = "SELECT p.PROD_ID, p.PROD_NAME, p.PROD_PRICE, p.QUANTITY_STOCK, p.IMAGE_PATH, " +
                          "       f.PACKAGING_TYPE, f.WEIGHT, " +
                          "       d.VOLUME " +
@@ -48,14 +47,19 @@ public class ViewProductServlet extends HttpServlet {
                  ResultSet rs = ps.executeQuery()) {
 
                 while (rs.next()) {
-                    // Check if the product is Food or Drink based on which columns are non-null
+                    String imagePath = rs.getString("IMAGE_PATH");
+                    // Handle null IMAGE_PATH by assigning a default value
+                    if (imagePath == null || imagePath.isEmpty()) {
+                        imagePath = "default-image.png"; // Replace with actual default image path
+                    }
+
                     if (rs.getString("PACKAGING_TYPE") != null || rs.getDouble("WEIGHT") > 0) {
                         Food food = new Food();
                         food.setProdId(rs.getInt("PROD_ID"));
                         food.setProdName(rs.getString("PROD_NAME"));
                         food.setProdPrice(rs.getDouble("PROD_PRICE"));
                         food.setQuantityStock(rs.getInt("QUANTITY_STOCK"));
-                        food.setImagePath(rs.getString("IMAGE_PATH"));
+                        food.setImagePath(imagePath);
                         food.setPackagingType(rs.getString("PACKAGING_TYPE"));
                         food.setWeight(rs.getDouble("WEIGHT"));
                         products.add(food);
@@ -65,16 +69,18 @@ public class ViewProductServlet extends HttpServlet {
                         drink.setProdName(rs.getString("PROD_NAME"));
                         drink.setProdPrice(rs.getDouble("PROD_PRICE"));
                         drink.setQuantityStock(rs.getInt("QUANTITY_STOCK"));
-                        drink.setImagePath(rs.getString("IMAGE_PATH"));
+                        drink.setImagePath(imagePath);
                         drink.setVolume(rs.getDouble("VOLUME"));
                         products.add(drink);
                     }
                 }
             }
         } catch (Exception e) {
+            System.err.println("Error fetching products: " + e.getMessage());
             e.printStackTrace();
         }
 
         return products;
     }
+
 }

@@ -19,47 +19,42 @@
     <h1>Product Catalog</h1>
     
     <form action="CreateProduct.html" method="get">
-    	<button class="add-button">Add Product</button>
-	</form>
+        <button class="add-button">Add Product</button>
+    </form>
     
     <div class="product-catalog">
-        <%
-            // Retrieve the product list from the request
-            List<com.model.Product> products = (List<com.model.Product>) request.getAttribute("products");
-
-            if (products != null && !products.isEmpty()) {
-                for (com.model.Product product : products) {
-        %>
-            <div class="product-card">
-                <img src="<%= product.getImagePath() %>" alt="<%= product.getProdName() %>" onerror="this.src='default-image.jpg'">
-                <h2><%= product.getProdName() %></h2>
-                <p>Price: RM <%= product.getProdPrice() %></p>
-                <p>Stock: <%= product.getQuantityStock() %></p>
-                <%
-                    if (product instanceof com.model.Food) {
-                        com.model.Food food = (com.model.Food) product;
-                %>
-                        <p>Category: Food</p>
-                        <p>Packaging: <%= food.getPackagingType() %></p>
-                        <p>Weight: <%= food.getWeight() %> kg</p>
-                <%
-                    } else if (product instanceof com.model.Drink) {
-                        com.model.Drink drink = (com.model.Drink) product;
-                %>
-                        <p>Category: Drink</p>
-                        <p>Volume: <%= drink.getVolume() %> L</p>
-                <%
-                    }
-                %>
-            </div>
-        <%
-                }
-            } else {
-        %>
-            <p>No products available.</p>
-        <%
+    <%
+        List<Product> products = (List<Product>) request.getAttribute("products");
+        if (products != null && !products.isEmpty()) {
+            for (Product product : products) {
+                String imagePath = product.getImagePath();
+    %>
+                <div class="product-card">
+                    <h3><%= product.getProdName() %></h3>
+                    <p>Price: RM <%= product.getProdPrice() %></p>
+                    <p>Stock: <%= product.getQuantityStock() %></p>
+                    
+                    <%-- Debug image paths in JSP --%>
+                    <p>Image Path: <%= imagePath != null ? imagePath : "Default Image" %></p>
+                    
+                    <% 
+                        if (imagePath != null && !imagePath.isEmpty()) { 
+                    %>
+                        <img src="<%= imagePath %>" alt="<%= product.getProdName() %>">
+                    <% 
+                        } else { 
+                    %>
+                        <img src="img/default-image.jpg" alt="Default Image">
+                    <% } %>
+                </div>
+    <%
             }
-        %>
+        } else {
+    %>
+            <p>No products available.</p>
+    <%
+        }
+    %>
     </div>
 </body>
 </html>
