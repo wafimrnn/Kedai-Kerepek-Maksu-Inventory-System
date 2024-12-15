@@ -1,3 +1,8 @@
+<%@ page import="java.util.List" %>
+<%@ page import="com.model.Product" %>
+<%@ page import="com.model.Food" %>
+<%@ page import="com.model.Drink" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
