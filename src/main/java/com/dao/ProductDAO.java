@@ -130,14 +130,15 @@ public class ProductDAO {
         return products;
     }
 
-    // Helper method to determine category
     private String determineCategory(int productId, Connection conn) throws SQLException {
         String query = "SELECT 1 FROM FOOD WHERE FOOD_ID = ? UNION SELECT 1 FROM DRINK WHERE DRINK_ID = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, productId);
             stmt.setInt(2, productId);
             try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next() ? "FOOD" : "DRINK";
+                String category = rs.next() ? "FOOD" : "DRINK";
+                System.out.println("Category for product ID " + productId + ": " + category); // Debug line
+                return category;
             }
         }
     }

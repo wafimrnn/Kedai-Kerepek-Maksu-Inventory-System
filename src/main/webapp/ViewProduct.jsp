@@ -33,11 +33,20 @@
         <% 
             // Retrieve the list of products from the request
             List<Product> products = (List<Product>) request.getAttribute("productList");
+            
             if (products != null && !products.isEmpty()) {
+                // Debugging to ensure the product list is being passed correctly
+                System.out.println("Product list size: " + products.size());
+                
                 for (Product product : products) {
+                    // Debugging product details
+                    System.out.println("Product Name: " + product.getProductName());
+                    System.out.println("Product Image Path: " + product.getImagePath());
         %>
             <div class="product-card">
-                <img src="<%= product.getImagePath() %>" alt="<%= product.getProductName() %>" class="product-image">
+                <!-- Image Path with a fallback to a default image if not provided -->
+                <img src="<%= (product.getImagePath() != null && !product.getImagePath().isEmpty()) ? product.getImagePath() : "default.jpg" %>" 
+                     alt="<%= product.getProductName() %>" class="product-image">
                 <h2><%= product.getProductName() %></h2>
                 <p>Price: $<%= product.getPrice() %></p>
                 <p>Stock Quantity: <%= product.getQuantityStock() %></p>

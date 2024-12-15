@@ -38,7 +38,12 @@ public class CreateProductServlet extends HttpServlet {
                 double price = Double.parseDouble(request.getParameter("price"));
                 String expiryDate = request.getParameter("expiryDate");
                 int restockLevel = Integer.parseInt(request.getParameter("restockLevel"));
-                String productStatus = request.getParameter("productStatus");
+                // Set default product status to 'ACTIVE'
+                String productStatus = "ACTIVE"; // Default status
+                // If the form has a product status value, use it
+                if (request.getParameter("productStatus") != null) {
+                    productStatus = request.getParameter("productStatus");
+                }
 
                 // Handle category-specific fields
                 Double weight = null;
@@ -66,6 +71,8 @@ public class CreateProductServlet extends HttpServlet {
                 } else if ("DRINK".equalsIgnoreCase(category)) {
                     product = new Drink(0, productName, quantity, price, Date.valueOf(expiryDate), restockLevel, imagePath, productStatus, volume);
                 }
+                
+                
 
                 // Call DAO method to add product to database
                 boolean success = productDAO.addProduct(product);
