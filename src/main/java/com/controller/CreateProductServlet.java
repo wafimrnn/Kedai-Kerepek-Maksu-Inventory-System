@@ -1,97 +1,91 @@
 package com.controller;
 
 import com.azure.storage.blob.*;
+import com.manager.DBConnection;
+
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.*;
-import java.io.*;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.UUID;
-import java.sql.*;
 
 public class CreateProductServlet extends HttpServlet {
-
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Step 1: Retrieve form parameters
-        String productName = request.getParameter("name");
-        double price = Double.parseDouble(request.getParameter("price"));
-        int quantity = Integer.parseInt(request.getParameter("quantity"));
-        String category = request.getParameter("category");
+        System.out.println("Starting CreateProductServlet...");
 
-        // Step 2: Handle image upload (if available)
-        Part filePart = request.getPart("image");
-        String imageUrl = null;
+        // Step 1: Retrieve form data
+        String prodName = request.getParameter("prodName");
+        String prodPrice = request.getParameter("prodPrice");
+        String quantityStock = request.getParameter("quantityStock");
+        Part filePart = request.getPart("image");  // Retrieve the uploaded image file
+        System.out.println("Parameters received: prodName=" + prodName + ", prodPrice=" + prodPrice + ", quantityStock=" + quantityStock);
 
-        if (filePart != null) {
-            imageUrl = uploadImageToBlob(filePart); // Upload the image to Blob Storage
+        if (prodName == null || prodPrice == null || quantityStock == null || filePart == null) {
+            System.out.println("Missing form data.");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing form data.");
+            return;
         }
 
-        if (imageUrl != null) {
-            // Step 3: Save the product to the database, including image URL
-            saveProductToDatabase(productName, price, quantity, category, imageUrl);
-            response.sendRedirect("product-list.jsp"); // Redirect after successful creation
-        } else {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Image file is required.");
+        // Step 2: Upload image to Blob Storage
+        String imageUrl = uploadToBlob(filePart);
+        if (imageUrl == null) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Blob upload failed.");
+            return;
+        }
+        System.out.println("Image successfully uploaded to Blob Storage: " + imageUrl);
+
+        // Step 3: Insert product into SQL database
+        try (Connection conn = DBConnection.getConnection()) {
+            String sql = "INSERT INTO Products (prodName, prodPrice, quantityStock, imagePath) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, prodName);
+                ps.setDouble(2, Double.parseDouble(prodPrice));
+                ps.setInt(3, Integer.parseInt(quantityStock));
+                ps.setString(4, imageUrl);
+
+                int rows = ps.executeUpdate();
+                System.out.println("Rows inserted: " + rows);
+
+                if (rows > 0) {
+                    response.sendRedirect("success.html");  // Redirect to success page
+                } else {
+                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to insert product.");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error: " + e.getMessage());
         }
     }
 
-    // Step 4: Upload the image to Azure Blob Storage and return the image URL
-    private String uploadImageToBlob(Part filePart) throws IOException {
-        String fileName = UUID.randomUUID().toString() + "-" + filePart.getSubmittedFileName();
-        
-        // Use the Blob connection string provided by Azure Service Connector
+    private String uploadToBlob(Part filePart) {
         String blobConnectionString = System.getenv("AZURE_STORAGEBLOB_CONNECTIONSTRING");
-        
-        // Initialize BlobServiceClient using the connection string
-        BlobServiceClient blobServiceClient = new BlobServiceClientBuilder()
-            .connectionString(blobConnectionString)
-            .buildClient();
+        String containerName = "product-images";  // Replace with your actual container name
+        String fileName = UUID.randomUUID().toString() + "-" + filePart.getSubmittedFileName();
 
-        // Define your container name (ensure the container exists in Blob Storage)
-        String containerName = "your-container-name"; // Replace with your actual container name
-        BlobContainerClient containerClient = blobServiceClient.getBlobContainerClient(containerName);
-
-        // Create a BlobClient to represent the new image file in the container
-        BlobClient blobClient = containerClient.getBlobClient(fileName);
-
-        // Upload the file to Blob Storage
-        try (InputStream inputStream = filePart.getInputStream()) {
-            blobClient.upload(inputStream, filePart.getSize(), true);  // Overwrite if the blob already exists
-        }
-
-        // Return the URL of the uploaded image
-        return blobClient.getBlobUrl().toString();
-    }
-
-    // Step 5: Save product details to the database (including image URL)
-    private void saveProductToDatabase(String productName, double price, int quantity, String category, String imageUrl) {
-        // SQL query to insert product data
-        String sql = "INSERT INTO Products (PROD_NAME, PROD_PRICE, QUANTITY_STOCK, PROD_STATUS, IMAGE_PATH) VALUES (?, ?, ?, ?, ?)";
-
-        try (Connection conn = getConnection(); // Database connection
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-             
-            // Set parameters for the SQL query
-            ps.setString(1, productName);
-            ps.setDouble(2, price);
-            ps.setInt(3, quantity);
-            ps.setString(4, "Active");  // Default product status
-            ps.setString(5, imageUrl);  // Save image URL to the database
-
-            // Execute the insert statement
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();  // Log the exception
-        }
-    }
-
-    // Utility method to establish a connection to the database (adjust according to your DB setup)
-    private Connection getConnection() throws SQLException {
-        String dbUrl = System.getenv("AZURE_SQL_CONNECTIONSTRING");  // Use the environment variable for SQL connection
         try {
-            return DriverManager.getConnection(dbUrl);  // Establish the connection
-        } catch (SQLException e) {
-            throw new SQLException("Error connecting to the database", e);
+            BlobServiceClient blobServiceClient = new BlobServiceClientBuilder()
+                .connectionString(blobConnectionString)
+                .buildClient();
+            BlobContainerClient containerClient = blobServiceClient.getBlobContainerClient(containerName);
+            BlobClient blobClient = containerClient.getBlobClient(fileName);
+
+            try (InputStream inputStream = filePart.getInputStream()) {
+                blobClient.upload(inputStream, filePart.getSize(), true);
+            }
+            return blobClient.getBlobUrl();  // Return the URL of the uploaded image
+        } catch (Exception e) {
+            System.err.println("Blob upload failed: " + e.getMessage());
+            e.printStackTrace();
+            return null;
         }
     }
 }
