@@ -1,77 +1,77 @@
-// DeleteProductServlet.java
 package com.controller;
 
 import com.manager.DBConnection;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.sql.*;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class DeleteProductServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    public DeleteProductServlet() {
-        super();
-    }
-
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int prodId = Integer.parseInt(request.getParameter("prodId"));
+        String prodIdParam = request.getParameter("prodId");
 
-        String getStatus = "SELECT PROD_STATUS FROM Products WHERE PROD_ID = ?";
-        String deleteFood = "DELETE FROM Food WHERE PROD_ID = ?";
-        String deleteDrink = "DELETE FROM Drink WHERE PROD_ID = ?";
-        String deleteProduct = "DELETE FROM Products WHERE PROD_ID = ?";
+        if (prodIdParam == null || prodIdParam.isEmpty()) {
+            request.setAttribute("error", "Product ID is missing.");
+            request.getRequestDispatcher("ViewProductServlet").forward(request, response);
+            return;
+        }
 
         try (Connection conn = DBConnection.getConnection()) {
             conn.setAutoCommit(false); // Start transaction
 
-            String prodStatus = null;
-            try (PreparedStatement statusStmt = conn.prepareStatement(getStatus)) {
-                statusStmt.setInt(1, prodId);
-                try (ResultSet rs = statusStmt.executeQuery()) {
-                    if (rs.next()) {
-                        prodStatus = rs.getString("PROD_STATUS");
-                    } else {
-                        throw new SQLException("Product not found with PROD_ID: " + prodId);
-                    }
-                }
+            int prodId = Integer.parseInt(prodIdParam);
+
+            // Update Product to inactive
+            String updateProductSQL = "UPDATE Products SET PROD_STATUS = 'INACTIVE' WHERE PROD_ID = ?";
+
+            try (PreparedStatement ps = conn.prepareStatement(updateProductSQL)) {
+                ps.setInt(1, prodId);
+                ps.executeUpdate();
             }
 
-            // Delete from child table based on category
-            if ("Food".equalsIgnoreCase(prodStatus)) {
-                try (PreparedStatement deleteFoodStmt = conn.prepareStatement(deleteFood)) {
-                    deleteFoodStmt.setInt(1, prodId);
-                    deleteFoodStmt.executeUpdate();
-                }
-            } else if ("Drink".equalsIgnoreCase(prodStatus)) {
-                try (PreparedStatement deleteDrinkStmt = conn.prepareStatement(deleteDrink)) {
-                    deleteDrinkStmt.setInt(1, prodId);
-                    deleteDrinkStmt.executeUpdate();
-                }
+            // Delete Food or Drink based on category
+            String deleteChildSQL;
+            if (isFoodProduct(prodId, conn)) { // Assuming `isFoodProduct` is a helper method
+                deleteChildSQL = "DELETE FROM Food WHERE PROD_ID = ?";
+            } else {
+                deleteChildSQL = "DELETE FROM Drink WHERE PROD_ID = ?";
             }
 
-            // Delete from Products table
-            try (PreparedStatement deleteProductStmt = conn.prepareStatement(deleteProduct)) {
-                deleteProductStmt.setInt(1, prodId);
-                deleteProductStmt.executeUpdate();
+            try (PreparedStatement ps = conn.prepareStatement(deleteChildSQL)) {
+                ps.setInt(1, prodId);
+                ps.executeUpdate();
             }
 
             conn.commit(); // Commit transaction
-
-        } catch (SQLException e) {
+            response.sendRedirect("ViewProductServlet");
+        } catch (Exception e) {
             e.printStackTrace();
-            // Handle exception appropriately
-            response.sendRedirect("error.jsp"); // Redirect to an error page
-            return;
+            request.setAttribute("error", "Error deleting product.");
+            request.getRequestDispatcher("ViewProductServlet").forward(request, response);
         }
+    }
 
-        response.sendRedirect("ViewProductServlet.java"); // Redirect to product list
+    private boolean isFoodProduct(int prodId, Connection conn) throws SQLException {
+        String query = "SELECT COUNT(*) FROM Food WHERE PROD_ID = ?";
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, prodId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
     }
 }

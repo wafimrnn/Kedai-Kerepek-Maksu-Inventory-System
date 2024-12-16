@@ -194,19 +194,26 @@
             for (Product product : products) {
     %>
                 <div class="product-card">
+                    <%-- Display Image or Default Image --%>
                     <%
                         String imagePath = product.getImagePath();
                         if (imagePath == null || imagePath.isEmpty()) {
-                            imagePath = "default-image.jpg"; // Use a default image if no imagePath is provided
+                            imagePath = "default-image.jpg"; // Default image path
                         }
                     %>
-                    <img src="<%= imagePath %>" alt="<%= product.getProdName() %>" width="200" height="200">
+                    <img src="<%= imagePath %>" alt="<%= product.getProdName() %>">
                     <h3><%= product.getProdName() %></h3>
                     <p>Price: RM <%= product.getProdPrice() %></p>
                     <p>Stock: <%= product.getQuantityStock() %></p>
                     <div class="button-group">
-                        <button class="update-btn" onclick="location.href='UpdateProductServlet?prodId=<%= product.getProdId() %>'">Update</button>
-                        <button class="delete-btn" onclick="location.href='DeleteProductServlet?prodId=<%= product.getProdId() %>'">Delete</button>
+                        <button class="update-btn" 
+                                onclick="location.href='UpdateProductServlet?prodId=<%= product.getProdId() %>'">
+                            Update
+                        </button>
+                        <button class="delete-btn" 
+                                onclick="confirmDelete('<%= product.getProdId() %>')">
+                            Delete
+                        </button>
                     </div>
                 </div>
     <%
@@ -217,7 +224,15 @@
     <%
         }
     %>
-	</div>
+</div>
+
+<script>
+    function confirmDelete(prodId) {
+        if (confirm("Are you sure you want to delete this product? This action cannot be undone.")) {
+            location.href = 'DeleteProductServlet?prodId=' + prodId;
+        }
+    }
+</script>
     </div>
 </body>
 </html>

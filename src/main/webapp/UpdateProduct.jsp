@@ -1,144 +1,176 @@
-<%@ page import="com.manager.DBConnection" %>
-<%@ page import="com.model.Product" %>
-<%@ page import="com.model.Food" %>
-<%@ page import="com.model.Drink" %>
-<%@ page import="java.sql.*" %>
+<%@ page import="com.model.Product, com.model.Food, com.model.Drink" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Product</title>
     <style>
-        body { font-family: Arial, sans-serif; }
-        .form-container { width: 50%; margin: auto; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; }
-        input, select { width: 100%; padding: 8px; }
-        .submit-button { background-color: orange; color: white; padding: 10px 15px; border: none; cursor: pointer; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #f4f4f9;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 220px;
+            background-color: #343a40;
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            border-bottom: 1px solid #495057;
+            padding-bottom: 10px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+
+        .sidebar a.active, .sidebar a:hover {
+            background-color: #007BFF;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .cancel-button {
+            background-color: #dc3545;
+        }
     </style>
     <script>
         function toggleCategoryFields() {
-            var category = document.getElementById("prodStatus").value;
-            if (category === "Food") {
-                document.getElementById("foodFields").style.display = "block";
-                document.getElementById("drinkFields").style.display = "none";
-            } else if (category === "Drink") {
-                document.getElementById("foodFields").style.display = "none";
-                document.getElementById("drinkFields").style.display = "block";
-            } else {
-                document.getElementById("foodFields").style.display = "none";
-                document.getElementById("drinkFields").style.display = "none";
-            }
+            const category = document.getElementById("prodStatus").value;
+            document.getElementById("foodFields").style.display = category === "Food" ? "block" : "none";
+            document.getElementById("drinkFields").style.display = category === "Drink" ? "block" : "none";
         }
+
+        window.onload = toggleCategoryFields;
     </script>
 </head>
 <body>
-    <div class="form-container">
-        <h2>Update Product</h2>
-        <%
-            String prodIdParam = request.getParameter("prodId");
-            if (prodIdParam == null) {
-        %>
-            <p>Product ID is missing.</p>
-        <%
-            } else {
-                int prodId = Integer.parseInt(prodIdParam);
-                String query = "SELECT p.*, f.PACKAGING_TYPE, f.WEIGHT, d.VOLUME " +
-                               "FROM Products p " +
-                               "LEFT JOIN Food f ON p.PROD_ID = f.PROD_ID " +
-                               "LEFT JOIN Drink d ON p.PROD_ID = d.PROD_ID " +
-                               "WHERE p.PROD_ID = ?";
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Dashboard</h2>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="ViewProductServlet" class="active">Product</a>
+        <a href="#">Sales</a>
+        <a href="#">Report</a>
+        <a href="#">Account</a>
+    </div>
 
-                try (Connection conn = DBConnection.getConnection();
-                     PreparedStatement stmt = conn.prepareStatement(query)) {
-                    stmt.setInt(1, prodId);
-                    try (ResultSet rs = stmt.executeQuery()) {
-                        if (rs.next()) {
-                            String prodName = rs.getString("PROD_NAME");
-                            double prodPrice = rs.getDouble("PROD_PRICE");
-                            int quantityStock = rs.getInt("QUANTITY_STOCK");
-                            int restockLevel = rs.getInt("RESTOCK_LEVEL");
-                            Date expiryDate = rs.getDate("EXPIRY_DATE");
-                            String imagePath = rs.getString("IMAGE_PATH");
-                            String prodStatus = rs.getString("PROD_STATUS");
-                            String packagingType = rs.getString("PACKAGING_TYPE");
-                            Double weight = rs.getDouble("WEIGHT");
-                            if (rs.wasNull()) weight = null;
-                            Double volume = rs.getDouble("VOLUME");
-                            if (rs.wasNull()) volume = null;
-        %>
-        <form action="UpdateProductServlet" method="post">
-            <input type="hidden" name="prodId" value="<%= prodId %>"/>
-            <div class="form-group">
-                <label for="prodName">Product Name:</label>
-                <input type="text" id="prodName" name="prodName" value="<%= prodName %>" required/>
-            </div>
-            <div class="form-group">
-                <label for="prodPrice">Price:</label>
-                <input type="number" step="0.01" id="prodPrice" name="prodPrice" value="<%= prodPrice %>" required/>
-            </div>
-            <div class="form-group">
-                <label for="quantityStock">Quantity in Stock:</label>
-                <input type="number" id="quantityStock" name="quantityStock" value="<%= quantityStock %>" required/>
-            </div>
-            <div class="form-group">
-                <label for="restockLevel">Restock Level:</label>
-                <input type="number" id="restockLevel" name="restockLevel" value="<%= restockLevel %>" required/>
-            </div>
-            <div class="form-group">
-                <label for="expiryDate">Expiry Date:</label>
-                <input type="date" id="expiryDate" name="expiryDate" value="<%= expiryDate %>" required/>
-            </div>
-            <div class="form-group">
-                <label for="imagePath">Image URL:</label>
-                <input type="text" id="imagePath" name="imagePath" value="<%= imagePath != null ? imagePath : "" %>"/>
-            </div>
-            <div class="form-group">
-                <label for="prodStatus">Category:</label>
-                <select id="prodStatus" name="prodStatus" onchange="toggleCategoryFields()" required>
-                    <option value="">Select Category</option>
-                    <option value="Food" <%= "Food".equalsIgnoreCase(prodStatus) ? "selected" : "" %>>Food</option>
-                    <option value="Drink" <%= "Drink".equalsIgnoreCase(prodStatus) ? "selected" : "" %>>Drink</option>
-                </select>
-            </div>
-            <div id="foodFields" style="display:<%= "Food".equalsIgnoreCase(prodStatus) ? "block" : "none" %>;">
+    <!-- Main Content -->
+    <div class="main-content">
+        <h2>Update Product</h2>
+        <div class="form-container">
+            <%
+                Product product = (Product) request.getAttribute("product");
+                if (product == null) {
+            %>
+                <p style="color:red;">Product not found.</p>
+            <% } else { %>
+            <form action="UpdateProductServlet" method="post">
+                <input type="hidden" name="prodId" value="<%= product.getProdId() %>">
+
                 <div class="form-group">
-                    <label for="packagingType">Packaging Type:</label>
-                    <input type="text" id="packagingType" name="packagingType" value="<%= packagingType != null ? packagingType : "" %>"/>
+                    <label for="prodName">Product Name:</label>
+                    <input type="text" id="prodName" name="prodName" value="<%= product.getProdName() %>" required>
                 </div>
+
                 <div class="form-group">
-                    <label for="weight">Weight (kg):</label>
-                    <input type="number" step="0.01" id="weight" name="weight" value="<%= weight != null ? weight : "" %>"/>
+                    <label for="prodPrice">Price:</label>
+                    <input type="number" id="prodPrice" name="prodPrice" step="0.01" value="<%= product.getProdPrice() %>" required>
                 </div>
-            </div>
-            <div id="drinkFields" style="display:<%= "Drink".equalsIgnoreCase(prodStatus) ? "block" : "none" %>;">
+
                 <div class="form-group">
-                    <label for="volume">Volume (L):</label>
-                    <input type="number" step="0.01" id="volume" name="volume" value="<%= volume != null ? volume : "" %>"/>
+                    <label for="quantityStock">Stock:</label>
+                    <input type="number" id="quantityStock" name="quantityStock" value="<%= product.getQuantityStock() %>" required>
                 </div>
-            </div>
-            <button type="submit" class="submit-button">Update Product</button>
-        </form>
-        <script>
-            // Initialize category fields on page load
-            window.onload = function() {
-                toggleCategoryFields();
-            };
-        </script>
-        <%
-                        } else {
-        %>
-            <p>Product not found.</p>
-        <%
-                        }
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-        %>
-            <p>Error retrieving product details.</p>
-        <%
-                }
-            }
-        %>
+
+                <div class="form-group">
+                    <label for="prodStatus">Category:</label>
+                    <select id="prodStatus" name="prodStatus" onchange="toggleCategoryFields()">
+                        <option value="Food" <%= "Food".equals(product.getProdStatus()) ? "selected" : "" %>>Food</option>
+                        <option value="Drink" <%= "Drink".equals(product.getProdStatus()) ? "selected" : "" %>>Drink</option>
+                    </select>
+                </div>
+
+                <div id="foodFields" style="display:none;">
+                    <div class="form-group">
+                        <label for="packagingType">Packaging Type:</label>
+                        <input type="text" id="packagingType" name="packagingType" value="<%= product instanceof Food ? ((Food) product).getPackagingType() : "" %>">
+                    </div>
+                    <div class="form-group">
+                        <label for="weight">Weight (kg):</label>
+                        <input type="number" id="weight" name="weight" step="0.01" value="<%= product instanceof Food ? ((Food) product).getWeight() : "" %>">
+                    </div>
+                </div>
+
+                <div id="drinkFields" style="display:none;">
+                    <div class="form-group">
+                        <label for="volume">Volume (L):</label>
+                        <input type="number" id="volume" name="volume" step="0.01" value="<%= product instanceof Drink ? ((Drink) product).getVolume() : "" %>">
+                    </div>
+                </div>
+
+                <button type="submit">Update Product</button>
+                <button type="button" class="cancel-button" onclick="window.location.href='ViewProductServlet'">Cancel</button>
+            </form>
+            <% } %>
+        </div>
     </div>
 </body>
 </html>

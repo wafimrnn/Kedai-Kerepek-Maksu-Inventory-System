@@ -4,7 +4,7 @@ import java.sql.Date;
 
 public class Food extends Product {
     private String packagingType;
-    private double weight;
+    private Double weight;
 
     // Default constructor
     public Food() {

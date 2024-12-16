@@ -3,7 +3,7 @@ package com.model;
 import java.sql.Date;
 
 public class Drink extends Product {
-    private double volume; // Volume of the drink (e.g., in liters or milliliters)
+    private Double volume; // Volume of the drink (e.g., in liters or milliliters)
 
     // Default constructor
     public Drink() {
