@@ -82,7 +82,7 @@
         <h2>Kedai Kerepek Maksu</h2>
         <div class="nav-links">
             <a href="DashboardHome.jsp" class="active">Dashboard</a>
-            <a href="/Kedai-Kerepek-Maksu-Inventory-System/ViewProductServlet">Product</a>
+            <a href="ViewProductServlet.java">Product</a>
             <a href="#">Sales</a>
             <a href="#">Report</a>
             <a href="#">Account</a>
