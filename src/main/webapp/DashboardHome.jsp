@@ -83,7 +83,7 @@
         <div class="nav-links">
             <a href="DashboardHome.jsp" class="active">Dashboard</a>
             <a href="ViewProductServlet">Product</a>
-            <a href="#">Sales</a>
+            <a href="CreateSales.html">Sales</a>
             <a href="#">Report</a>
             <a href="#">Account</a>
         </div>
