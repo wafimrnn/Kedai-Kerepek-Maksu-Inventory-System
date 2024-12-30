@@ -3,202 +3,237 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Product</title>
+    <title>Create Product</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        /* General Styling */
+        * {
             margin: 0;
             padding: 0;
-            background-color: #f5f5f5;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
         }
 
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #f4f4f9;
+        }
+
+        /* Sidebar Styling */
         .sidebar {
-            width: 250px;
-            background-color: #2c2c2c;
+            width: 220px;
+            background-color: #343a40;
             color: white;
-            position: fixed;
-            height: 100%;
+            display: flex;
+            flex-direction: column;
             padding: 20px;
         }
 
         .sidebar h2 {
-            margin: 0;
-            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 20px;
+            border-bottom: 1px solid #495057;
+            padding-bottom: 10px;
         }
 
-        .sidebar ul {
-            list-style-type: none;
-            padding: 0;
-            margin-top: 20px;
+        .nav-links {
+            display: flex;
+            flex-direction: column;
         }
 
-        .sidebar ul li {
-            margin: 10px 0;
-        }
-
-        .sidebar ul li a {
+        .nav-links a {
             text-decoration: none;
             color: white;
-            font-size: 1em;
-            display: block;
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        .sidebar ul li a:hover, .sidebar ul li a.active {
-            background-color: #444;
-        }
-
-        .content {
-            margin-left: 270px;
-            padding: 20px;
-        }
-
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .top-bar button {
-            background-color: #ffc107;
-            border: none;
             padding: 10px 15px;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
+            margin: 5px 0;
+            border-radius: 4px;
+            transition: background 0.3s ease;
         }
 
-        .top-bar button:hover {
-            background-color: #e0a800;
+        .nav-links a:hover {
+            background-color: #495057;
         }
 
-        .form-container {
+        .nav-links a.active {
+            background-color: #007BFF;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px;
             background-color: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            margin: 0 auto;
         }
 
-        .form-container h3 {
+        .header {
             margin-bottom: 20px;
-            font-size: 1.5em;
-            text-align: center;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #343a40;
+        }
+
+        /* Form Styling */
+        .form-container {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .form-group {
-            display: flex;
-            justify-content: space-between;
             margin-bottom: 15px;
         }
 
         .form-group label {
-            flex: 1;
-            margin-right: 10px;
+            display: block;
             font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
         }
 
-        .form-group input, .form-group select {
-            flex: 2;
+        .form-group input,
+        .form-group select {
+            width: 100%;
             padding: 8px;
+            font-size: 14px;
             border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 4px;
         }
 
-        .form-group input:focus, .form-group select:focus {
-            outline: none;
-            border-color: #ffc107;
+        .form-group input[type="file"] {
+            border: none;
         }
 
-        .form-actions {
-            text-align: center;
+        .form-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
         }
 
-        .form-actions button {
-            padding: 10px 20px;
-            background-color: #000;
-            color: white;
+        .form-buttons button {
+            padding: 10px 15px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-weight: bold;
+            font-size: 14px;
+            transition: background 0.3s ease;
         }
 
-        .form-actions button:hover {
-            background-color: #e0a800;
+        .form-buttons .submit-btn {
+            background-color: #007BFF;
+            color: white;
         }
-        
-		        .black-button {
-		    padding: 10px 20px;
-		    background-color: #e0a800;
-		    color: white;
-		    border: none;
-		    border-radius: 5px;
-		    cursor: pointer;
-		    font-weight: bold;
-		    text-transform: uppercase;
-		}
 
-			.black-button:hover {
-			    background-color: #444;
-		}
-			        
+        .form-buttons .submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .form-buttons .cancel-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .form-buttons .cancel-btn:hover {
+            background-color: #c82333;
+        }
     </style>
 </head>
 <body>
+    <!-- Sidebar -->
     <div class="sidebar">
         <h2>Kedai Kerepek Maksu</h2>
-        <ul>
-            <li><a href="Index.jsp" class="active">Dashboard</a></li>
-            <li><a href="#">Inventories</a></li>
-            <li><a href="#">Reports</a></li>
-            <li><a href="#">Profile Account</a></li>
-            <li><a href="#">Log Out</a></li>
-        </ul>
+        <div class="nav-links">
+            <a href="DashboardHome.jsp">Dashboard</a>
+            <a href="ViewProductServlet" class="active">Product</a>
+            <a href="#">Sales</a>
+            <a href="#">Report</a>
+            <a href="#">Account</a>
+        </div>
     </div>
 
-   <div class="content">
-        <div class="top-bar">
-            <a href="CreateProd.html" class="black-button">Add Product</a>
-            <a href="#" class="black-button">Create Sale</a>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h1>Create Product</h1>
         </div>
 
+        <!-- Product Form -->
         <div class="form-container">
-            <h3>Add Product</h3>
-            <form action="#" method="post">
+            <form action="CreateProductServlet" method="post" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label for="product-name">Product Name</label>
-                    <input type="text" id="product-name" name="product-name" placeholder="Kerepek Bawang">
+                    <label for="prodName">Product Name:</label>
+                    <input type="text" id="prodName" name="prodName" required>
                 </div>
+
                 <div class="form-group">
-                    <label for="category">Category</label>
-                    <select id="category" name="category">
-                        <option value="">--Select Category--</option>
-                        <option value="snacks">Snacks</option>
-                        <option value="drinks">Drinks</option>
-                        <option value="others">Others</option>
+                    <label for="prodPrice">Price (RM):</label>
+                    <input type="number" step="0.01" id="prodPrice" name="prodPrice" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="quantityStock">Stock Quantity:</label>
+                    <input type="number" id="quantityStock" name="quantityStock" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="restockLevel">Restock Level:</label>
+                    <input type="number" id="restockLevel" name="restockLevel" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="expiryDate">Expiry Date:</label>
+                    <input type="date" id="expiryDate" name="expiryDate">
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category:</label>
+                    <select id="category" name="category" required onchange="toggleFields()">
+                        <option value="">Select</option>
+                        <option value="Food">Food</option>
+                        <option value="Drink">Drink</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="product-id">Product ID</label>
-                    <input type="text" id="product-id" name="product-id" placeholder="0001">
+
+                <div class="form-group" id="foodFields" style="display: none;">
+                    <label for="packagingType">Packaging Type:</label>
+                    <input type="text" id="packagingType" name="packagingType">
+                    <label for="weight">Weight (kg):</label>
+                    <input type="number" step="0.01" id="weight" name="weight">
                 </div>
-                <div class="form-group">
-                    <label for="quantity">Quantity Stock</label>
-                    <input type="number" id="quantity" name="quantity" placeholder="3">
+
+                <div class="form-group" id="drinkFields" style="display: none;">
+                    <label for="volume">Volume (L):</label>
+                    <input type="number" step="0.01" id="volume" name="volume">
                 </div>
+
                 <div class="form-group">
-                    <label for="price">Price</label>
-                    <input type="text" id="price" name="price" placeholder="RM12.00">
+                    <label for="image">Product Image:</label>
+                    <input type="file" id="image" name="image" accept="image/*">
                 </div>
-                <div class="form-actions">
-                   <a href="ViewProd.html" class="black-button">Add Product</a>
+
+                <div class="form-buttons">
+                    <button type="submit" class="submit-btn">Add Product</button>
+                    <button type="button" class="cancel-btn" onclick="window.location.replace('ViewProductServlet');">Cancel</button>
                 </div>
             </form>
         </div>
     </div>
+
+    <script>
+        // Toggle visibility of additional fields based on category
+        function toggleFields() {
+            const category = document.getElementById('category').value;
+            document.getElementById('foodFields').style.display = (category === 'Food') ? 'block' : 'none';
+            document.getElementById('drinkFields').style.display = (category === 'Drink') ? 'block' : 'none';
+        }
+    </script>
 </body>
 </html>
