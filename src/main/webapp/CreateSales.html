@@ -152,6 +152,7 @@
         <div class="form-section">
             <h2>Create New Sale</h2>
             <form id="salesForm">
+                <input type="text" id="productId" placeholder="Product ID" required>
                 <input type="text" id="productName" placeholder="Product Name" required>
                 <input type="number" id="quantity" placeholder="Quantity" required>
                 <input type="number" id="price" placeholder="Price" required>
@@ -165,7 +166,7 @@
             <table id="salesTable">
                 <thead>
                     <tr>
-                        <th>Sale ID</th>
+                        <th>Product ID</th>
                         <th>Product Name</th>
                         <th>Quantity</th>
                         <th>Price</th>
@@ -184,8 +185,8 @@
 
         // Mock Data (You would replace this with server-side data fetching)
         const salesData = [
-            { id: 1, productName: 'Potato Chips', quantity: 10, price: 5 },
-            { id: 2, productName: 'Banana Chips', quantity: 5, price: 3 }
+            { plu: 'P001', productName: 'Potato Chips', quantity: 10, price: 5 },
+            { plu: 'P002', productName: 'Banana Chips', quantity: 5, price: 3 }
         ];
 
         // Populate Sales Table
@@ -194,13 +195,13 @@
             salesData.forEach(sale => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${sale.id}</td>
+                    <td>${sale.plu}</td>
                     <td>${sale.productName}</td>
                     <td>${sale.quantity}</td>
                     <td>${sale.price}</td>
                     <td class="action-buttons">
-                        <button class="btn-edit" onclick="editSale(${sale.id})">Edit</button>
-                        <button class="btn-delete" onclick="deleteSale(${sale.id})">Delete</button>
+                        <button class="btn-edit" onclick="editSale('${sale.plu}')">Edit</button>
+                        <button class="btn-delete" onclick="deleteSale('${sale.plu}')">Delete</button>
                     </td>
                 `;
                 salesTable.appendChild(row);
@@ -211,12 +212,13 @@
         document.getElementById('salesForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
+            const plu = document.getElementById('productPLU').value;
             const productName = document.getElementById('productName').value;
             const quantity = document.getElementById('quantity').value;
             const price = document.getElementById('price').value;
 
             const newSale = {
-                id: salesData.length + 1,
+                plu,
                 productName,
                 quantity,
                 price
@@ -228,9 +230,10 @@
         });
 
         // Edit Sale
-        function editSale(id) {
-            const sale = salesData.find(s => s.id === id);
+        function editSale(plu) {
+            const sale = salesData.find(s => s.plu === plu);
             if (sale) {
+                document.getElementById('productPLU').value = sale.plu;
                 document.getElementById('productName').value = sale.productName;
                 document.getElementById('quantity').value = sale.quantity;
                 document.getElementById('price').value = sale.price;
@@ -241,8 +244,8 @@
         }
 
         // Delete Sale
-        function deleteSale(id) {
-            const index = salesData.findIndex(s => s.id === id);
+        function deleteSale(plu) {
+            const index = salesData.findIndex(s => s.plu === plu);
             if (index !== -1) {
                 salesData.splice(index, 1);
                 loadSalesData();
