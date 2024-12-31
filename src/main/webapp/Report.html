@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Management</title>
+    <style>
+        /* General Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #f4f4f9;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 220px;
+            background-color: #343a40;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 20px;
+            border-bottom: 1px solid #495057;
+            padding-bottom: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            padding: 10px 15px;
+            margin: 5px 0;
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: #495057;
+        }
+
+        .nav-links a.active {
+            background-color: #007BFF;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .main-content h1 {
+            font-size: 28px;
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+
+        .view-section {
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+        }
+
+        .view-section table {
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ccc;
+        }
+
+        table th {
+            background-color: #007BFF;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Kedai Kerepek Maksu</h2>
+        <div class="nav-links">
+            <a href="DashboardHome.jsp">Dashboard</a>
+            <a href="ViewProductServlet">Product</a>
+            <a href="CreateSales.html" class="active">Sales</a>
+            <a href="#">Report</a>
+            <a href="#">Account</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>Sales Management</h1>
+
+        <!-- Report Table Section -->
+        <div class="view-section">
+            <h2>Sales Report</h2>
+            <table id="reportTable">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Total Quantity</th>
+                        <th>Total Revenue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dynamic data will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const reportTable = document.getElementById('reportTable').querySelector('tbody');
+
+        // Mock Sales Data
+        const salesData = [
+            { productName: 'Potato Chips', quantity: 10, price: 5 },
+            { productName: 'Banana Chips', quantity: 5, price: 3 },
+            { productName: 'Potato Chips', quantity: 8, price: 5 },
+            { productName: 'Banana Chips', quantity: 7, price: 3 },
+        ];
+
+        // Generate Report Function
+        function generateReport() {
+            const report = {};
+
+            // Aggregate Data
+            salesData.forEach(sale => {
+                if (!report[sale.productName]) {
+                    report[sale.productName] = {
+                        totalQuantity: 0,
+                        totalRevenue: 0,
+                    };
+                }
+                report[sale.productName].totalQuantity += sale.quantity;
+                report[sale.productName].totalRevenue += sale.quantity * sale.price;
+            });
+
+            // Populate Report Table
+            reportTable.innerHTML = ''; // Clear table content
+            Object.keys(report).forEach(productName => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${productName}</td>
+                    <td>${report[productName].totalQuantity}</td>
+                    <td>${report[productName].totalRevenue.toFixed(2)}</td>
+                `;
+                reportTable.appendChild(row);
+            });
+        }
+
+        // Generate Report on Page Load
+        generateReport();
+    </script>
+</body>
+</html>
