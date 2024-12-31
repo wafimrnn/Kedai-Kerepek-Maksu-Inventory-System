@@ -165,6 +165,11 @@
                         <input type="number" id="volume" name="volume" step="0.01" value="<%= product instanceof Drink ? ((Drink) product).getVolume() : "" %>">
                     </div>
                 </div>
+                <div class="form-group">
+			        <label for="image">Product Image:</label>
+			        <input type="file" id="image" name="image">
+			        <small>Upload a new image or leave blank to keep the current image.</small>
+    			</div>
 
                 <button type="submit">Update Product</button>
                 <button type="button" class="cancel-button" onclick="window.location.href='ViewProductServlet'">Cancel</button>
