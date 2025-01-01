@@ -129,6 +129,42 @@
         .btn-delete {
             background-color: #dc3545;
         }
+
+        /* Product Grid Styling */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px 0;
+        }
+
+        .product-card {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+
+        .product-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .product-card h3 {
+            font-size: 18px;
+            color: #343a40;
+            margin-bottom: 10px;
+        }
+
+        .product-card p {
+            font-size: 14px;
+            color: #6c757d;
+        }
     </style>
 </head>
 <body>
@@ -156,8 +192,27 @@
                 <input type="text" id="productName" placeholder="Product Name" required>
                 <input type="number" id="quantity" placeholder="Quantity" required>
                 <input type="number" id="price" placeholder="Price" required>
+                <select id="category" required>
+                    <option value="" disabled selected>Select Category</option>
+                    <option value="Food">Food</option>
+                    <option value="Drink">Drink</option>
+                </select>
                 <button type="submit">Add Sale</button>
             </form>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="product-grid" id="productGrid">
+            <div class="product-card" id="potatoChips">
+                <img src="https://via.placeholder.com/150" alt="Product Image" class="product-img">
+                <h3>Potato Chips</h3>
+                <p>Price: $5</p>
+            </div>
+            <div class="product-card" id="bananaChips">
+                <img src="https://via.placeholder.com/150" alt="Product Image" class="product-img">
+                <h3>Banana Chips</h3>
+                <p>Price: $3</p>
+            </div>
         </div>
 
         <!-- View Sales Table -->
@@ -170,6 +225,7 @@
                         <th>Product Name</th>
                         <th>Quantity</th>
                         <th>Price</th>
+                        <th>Category</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -182,11 +238,12 @@
 
     <script>
         const salesTable = document.getElementById('salesTable').querySelector('tbody');
+        const productGrid = document.getElementById('productGrid');
 
         // Mock Data (You would replace this with server-side data fetching)
         const salesData = [
-            { plu: 'P001', productName: 'Potato Chips', quantity: 10, price: 5 },
-            { plu: 'P002', productName: 'Banana Chips', quantity: 5, price: 3 }
+            { plu: 'P001', productName: 'Potato Chips', quantity: 10, price: 5, category: 'Food', image: 'https://via.placeholder.com/150' },
+            { plu: 'P002', productName: 'Banana Chips', quantity: 5, price: 3, category: 'Food', image: 'https://via.placeholder.com/150' }
         ];
 
         // Populate Sales Table
@@ -199,6 +256,7 @@
                     <td>${sale.productName}</td>
                     <td>${sale.quantity}</td>
                     <td>${sale.price}</td>
+                    <td>${sale.category}</td>
                     <td class="action-buttons">
                         <button class="btn-edit" onclick="editSale('${sale.plu}')">Edit</button>
                         <button class="btn-delete" onclick="deleteSale('${sale.plu}')">Delete</button>
@@ -208,24 +266,43 @@
             });
         }
 
+        // Update Product Image Dynamically
+        function updateProductImage(productId, imageUrl) {
+            const productCard = document.getElementById(productId);
+            const productImage = productCard.querySelector('.product-img');
+            productImage.src = imageUrl;
+        }
+
         // Add Sale
         document.getElementById('salesForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
-            const plu = document.getElementById('productPLU').value;
+            const plu = document.getElementById('productId').value;
             const productName = document.getElementById('productName').value;
             const quantity = document.getElementById('quantity').value;
             const price = document.getElementById('price').value;
+            const category = document.getElementById('category').value;
+            const image = 'https://via.placeholder.com/150'; // Set the image URL dynamically
 
             const newSale = {
                 plu,
                 productName,
                 quantity,
-                price
+                price,
+                category,
+                image
             };
 
             salesData.push(newSale);
             loadSalesData();
+
+            // Update the product image based on the new sale
+            if (category === 'Food') {
+                updateProductImage('potatoChips', image); // Example for Food category
+            } else if (category === 'Drink') {
+                updateProductImage('bananaChips', image); // Example for Drink category
+            }
+
             this.reset();
         });
 
@@ -233,11 +310,12 @@
         function editSale(plu) {
             const sale = salesData.find(s => s.plu === plu);
             if (sale) {
-                document.getElementById('productPLU').value = sale.plu;
+                document.getElementById('productId').value = sale.plu;
                 document.getElementById('productName').value = sale.productName;
                 document.getElementById('quantity').value = sale.quantity;
                 document.getElementById('price').value = sale.price;
-                
+                document.getElementById('category').value = sale.category;
+
                 salesData.splice(salesData.indexOf(sale), 1);
                 loadSalesData();
             }
