@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales Management</title>
+    <title>Report Sales</title>
     <style>
         /* General Styling */
         * {
@@ -104,6 +104,21 @@
             background-color: #007BFF;
             color: white;
         }
+
+        .action-btn {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .action-btn:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -129,59 +144,98 @@
             <table id="reportTable">
                 <thead>
                     <tr>
+                        <th>Date</th>
+                        <th>Product ID</th>
                         <th>Product Name</th>
-                        <th>Total Quantity</th>
-                        <th>Total Revenue</th>
+                        <th>Total Sale</th>
                     </tr>
                 </thead>
                 <tbody>
                     <!-- Dynamic data will be inserted here -->
                 </tbody>
             </table>
+            <!-- Save Report Button -->
+            <button class="action-btn" id="saveReportBtn">Save Report</button>
         </div>
     </div>
 
     <script>
         const reportTable = document.getElementById('reportTable').querySelector('tbody');
+        const saveReportBtn = document.getElementById('saveReportBtn');
 
         // Mock Sales Data
         const salesData = [
-            { productName: 'Potato Chips', quantity: 10, price: 5 },
-            { productName: 'Banana Chips', quantity: 5, price: 3 },
-            { productName: 'Potato Chips', quantity: 8, price: 5 },
-            { productName: 'Banana Chips', quantity: 7, price: 3 },
+            { date: '2024-12-30', productName: 'Potato Chips', quantity: 10, price: 5 },
+            { date: '2024-12-30', productName: 'Banana Chips', quantity: 5, price: 3 },
+            { date: '2024-12-31', productName: 'Potato Chips', quantity: 8, price: 5 },
+            { date: '2024-12-31', productName: 'Banana Chips', quantity: 7, price: 3 },
         ];
 
-        // Generate Report Function
         function generateReport() {
             const report = {};
 
-            // Aggregate Data
             salesData.forEach(sale => {
-                if (!report[sale.productName]) {
-                    report[sale.productName] = {
+                const key = `${sale.date}_${sale.productName}`; // Unique key for grouping
+                if (!report[key]) {
+                    report[key] = {
+                        date: sale.date,
+                        productName: sale.productName,
                         totalQuantity: 0,
                         totalRevenue: 0,
                     };
                 }
-                report[sale.productName].totalQuantity += sale.quantity;
-                report[sale.productName].totalRevenue += sale.quantity * sale.price;
+                report[key].totalQuantity += sale.quantity;
+                report[key].totalRevenue += sale.quantity * sale.price;
             });
 
-            // Populate Report Table
             reportTable.innerHTML = ''; // Clear table content
-            Object.keys(report).forEach(productName => {
+
+            Object.values(report).forEach(entry => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${productName}</td>
-                    <td>${report[productName].totalQuantity}</td>
-                    <td>${report[productName].totalRevenue.toFixed(2)}</td>
+                    <td>${entry.date}</td>
+                    <td>${entry.productName}</td>
+                    <td>${entry.totalQuantity}</td>
+                    <td>${entry.totalRevenue.toFixed(2)}</td>
                 `;
                 reportTable.appendChild(row);
             });
         }
 
-        // Generate Report on Page Load
+        function downloadCSV(data, filename = 'sales_report.csv') {
+            const csvRows = [
+                ['Date', 'Product ID', 'Total Quantity', 'Total Revenue'], // Headers
+                ...data.map(item => [
+                    item.date,
+                    item.productName,
+                    item.totalQuantity,
+                    item.totalRevenue.toFixed(2),
+                ]),
+            ];
+
+            const csvContent = csvRows.map(row => row.join(',')).join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        saveReportBtn.addEventListener('click', () => {
+            const reportData = Object.values(salesData).map(sale => ({
+                date: sale.date,
+                productName: sale.productName,
+                totalQuantity: sale.quantity,
+                totalRevenue: sale.quantity * sale.price,
+            }));
+            downloadCSV(reportData);
+        });
+
+        // Generate the report on page load
         generateReport();
     </script>
 </body>
