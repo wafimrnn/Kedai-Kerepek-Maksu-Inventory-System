@@ -232,6 +232,42 @@
         .payment-details button:hover {
             background-color: #27ae60;
         }
+
+        /* Product Grid Styling */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px 0;
+        }
+
+        .product-card {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+
+        .product-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .product-card h3 {
+            font-size: 18px;
+            color: #343a40;
+            margin-bottom: 10px;
+        }
+
+        .product-card p {
+            font-size: 14px;
+            color: #6c757d;
+        }
     </style>
 </head>
 <body>
