@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales Management</title>
+    <title>POS System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* General Styling */
         * {
@@ -59,111 +60,177 @@
             background-color: #007BFF;
         }
 
-        /* Main Content Area */
         .main-content {
             flex: 1;
+            display: flex;
+            flex-direction: row;
+            background-color: #ecf0f1;
             padding: 20px;
-            background-color: white;
+            overflow-y: auto;
+        }
+        
+        /* Head Bar Styling */
+		.head-bar {
+		    width: calc(100% - 220px); /* Full width minus the sidebar width */
+		    height: 60px;
+		    background-color: #007BFF;
+		    color: white;
+		    display: flex;
+		    justify-content: space-between;
+		    align-items: center;
+		    padding: 0 20px;
+		    position: fixed;
+		    top: 0;
+		    left: 220px; /* Push the head bar right to align with the sidebar */
+		    z-index: 1000; /* Ensure it stays on top */
+		    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+		}
+		
+		.head-bar .title {
+		    font-size: 20px;
+		    font-weight: bold;
+		}
+		
+		.head-bar .icons {
+		    display: flex;
+		    align-items: center;
+		    gap: 15px;
+		}
+		
+		.head-bar .icons i {
+		    font-size: 20px;
+		    cursor: pointer;
+		    transition: color 0.3s ease;
+		}
+		
+		.head-bar .icons i:hover {
+		    color: #ddd;
+		}
+
+        /* Product List */
+        .product-list {
+            flex: 2;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            margin-right: 20px;
+            margin-top: 60px; /* Push content below the head bar */
         }
 
-        .main-content h1 {
-            font-size: 28px;
-            color: #343a40;
-            margin-bottom: 20px;
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
         }
 
-        .form-section, .view-section {
-            width: 100%;
-            max-width: 800px;
-            margin-bottom: 20px;
-        }
-
-        .form-section form, .view-section table {
-            width: 100%;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            padding: 20px;
-            background-color: #f9f9f9;
-        }
-
-        form input, form select, form button {
-            width: 100%;
+        .product-item {
+            background-color: #fff;
             padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border-radius: 5px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        table {
+        .product-item img {
             width: 100%;
-            border-collapse: collapse;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 10px;
         }
 
-        table th, table td {
-            padding: 10px;
-            text-align: left;
-            border: 1px solid #ccc;
-        }
-
-        table th {
-            background-color: #007BFF;
+        .product-item button {
+            background-color: #3498db;
             color: white;
-        }
-
-        .action-buttons button {
-            margin: 0 5px;
-            padding: 5px 10px;
             border: none;
-            border-radius: 4px;
-            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
             cursor: pointer;
         }
 
-        .btn-edit {
-            background-color: #28a745;
+        .product-item button:hover {
+            background-color: #2980b9;
         }
 
-        .btn-delete {
-            background-color: #dc3545;
+        /* Order & Calculation Section */
+        .order-calculation {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin-top: 60px; /* Push content below the head bar */
         }
 
-        /* Product Grid Styling */
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+        .order-details table {
             width: 100%;
-            max-width: 800px;
-            margin: 20px 0;
+            border-collapse: collapse;
+            margin-bottom: 20px;
         }
 
-        .product-card {
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            padding: 15px;
-            background-color: #f9f9f9;
-            text-align: center;
+        .order-details table th, .order-details table td {
+            text-align: left;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
         }
 
-        .product-card img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 4px;
+        .totals {
+            margin-bottom: 20px;
+        }
+
+        .payment-method {
+            margin-bottom: 15px;
+        }
+
+        .payment-method button {
+            width: 48%;
+            padding: 10px;
+            margin-right: 2%;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .payment-method button:hover {
+            background-color: #2980b9;
+        }
+
+        .payment-method button:last-child {
+            margin-right: 0;
+        }
+
+        .payment-details {
+            display: none;
+        }
+
+        .payment-details.active {
+            display: block;
+        }
+
+        .payment-details input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
             margin-bottom: 10px;
         }
 
-        .product-card h3 {
-            font-size: 18px;
-            color: #343a40;
-            margin-bottom: 10px;
+        .payment-details button {
+            width: 100%;
+            padding: 10px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
-        .product-card p {
-            font-size: 14px;
-            color: #6c757d;
+        .payment-details button:hover {
+            background-color: #27ae60;
         }
     </style>
 </head>
@@ -179,159 +246,128 @@
             <a href="#">Account</a>
         </div>
     </div>
+    
+    <!-- Head Bar -->
+	<div class="head-bar">
+	    <div class="title">Sales</div>
+	    <div class="icons">
+	        <i class="fas fa-bell" title="Notifications"></i>
+	        <i class="fas fa-user-circle" title="Account"></i>
+	    </div>
+	</div>
 
-    <!-- Main Content -->
     <div class="main-content">
-        <h1>Sales Management</h1>
-
-        <!-- Create Sales Form -->
-        <div class="form-section">
-            <h2>Create New Sale</h2>
-            <form id="salesForm">
-                <input type="text" id="productId" placeholder="Product ID" required>
-                <input type="text" id="productName" placeholder="Product Name" required>
-                <input type="number" id="quantity" placeholder="Quantity" required>
-                <input type="number" id="price" placeholder="Price" required>
-                <select id="category" required>
-                    <option value="" disabled selected>Select Category</option>
-                    <option value="Food">Food</option>
-                    <option value="Drink">Drink</option>
-                </select>
-                <button type="submit">Add Sale</button>
-            </form>
-        </div>
-
-        <!-- Product Grid -->
-        <div class="product-grid" id="productGrid">
-            <div class="product-card" id="potatoChips">
-                <img src="https://via.placeholder.com/150" alt="Product Image" class="product-img">
-                <h3>Potato Chips</h3>
-                <p>Price: $5</p>
-            </div>
-            <div class="product-card" id="bananaChips">
-                <img src="https://via.placeholder.com/150" alt="Product Image" class="product-img">
-                <h3>Banana Chips</h3>
-                <p>Price: $3</p>
+        <div class="product-list">
+            <h3>Product List</h3>
+            <div class="product-grid">
+                <div class="product-item">
+                    <img src="https://via.placeholder.com/150" alt="Product">
+                    <div>Potato Chips - RM5</div>
+                    <button>Add to Order</button>
+                </div>
+                <div class="product-item">
+                    <img src="https://via.placeholder.com/150" alt="Product">
+                    <div>Banana Chips - RM3</div>
+                    <button>Add to Order</button>
+                </div>
             </div>
         </div>
 
-        <!-- View Sales Table -->
-        <div class="view-section">
-            <h2>Sales Records</h2>
-            <table id="salesTable">
-                <thead>
-                    <tr>
-                        <th>Product ID</th>
-                        <th>Product Name</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Category</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Data rows will be appended here dynamically -->
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <script>
-        const salesTable = document.getElementById('salesTable').querySelector('tbody');
-        const productGrid = document.getElementById('productGrid');
-
-        // Mock Data (You would replace this with server-side data fetching)
-        const salesData = [
-            { plu: 'P001', productName: 'Potato Chips', quantity: 10, price: 5, category: 'Food', image: 'https://via.placeholder.com/150' },
-            { plu: 'P002', productName: 'Banana Chips', quantity: 5, price: 3, category: 'Food', image: 'https://via.placeholder.com/150' }
-        ];
-
-        // Populate Sales Table
-        function loadSalesData() {
-            salesTable.innerHTML = '';
-            salesData.forEach(sale => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${sale.plu}</td>
-                    <td>${sale.productName}</td>
-                    <td>${sale.quantity}</td>
-                    <td>${sale.price}</td>
-                    <td>${sale.category}</td>
-                    <td class="action-buttons">
-                        <button class="btn-edit" onclick="editSale('${sale.plu}')">Edit</button>
-                        <button class="btn-delete" onclick="deleteSale('${sale.plu}')">Delete</button>
-                    </td>
-                `;
-                salesTable.appendChild(row);
-            });
-        }
-
-        // Update Product Image Dynamically
-        function updateProductImage(productId, imageUrl) {
-            const productCard = document.getElementById(productId);
-            const productImage = productCard.querySelector('.product-img');
-            productImage.src = imageUrl;
-        }
-
-        // Add Sale
-        document.getElementById('salesForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            const plu = document.getElementById('productId').value;
-            const productName = document.getElementById('productName').value;
-            const quantity = document.getElementById('quantity').value;
-            const price = document.getElementById('price').value;
-            const category = document.getElementById('category').value;
-            const image = 'https://via.placeholder.com/150'; // Set the image URL dynamically
-
-            const newSale = {
-                plu,
-                productName,
-                quantity,
-                price,
-                category,
-                image
-            };
-
-            salesData.push(newSale);
-            loadSalesData();
-
-            // Update the product image based on the new sale
-            if (category === 'Food') {
-                updateProductImage('potatoChips', image); // Example for Food category
-            } else if (category === 'Drink') {
-                updateProductImage('bananaChips', image); // Example for Drink category
-            }
-
-            this.reset();
-        });
-
-        // Edit Sale
-        function editSale(plu) {
-            const sale = salesData.find(s => s.plu === plu);
-            if (sale) {
-                document.getElementById('productId').value = sale.plu;
-                document.getElementById('productName').value = sale.productName;
-                document.getElementById('quantity').value = sale.quantity;
-                document.getElementById('price').value = sale.price;
-                document.getElementById('category').value = sale.category;
-
-                salesData.splice(salesData.indexOf(sale), 1);
-                loadSalesData();
-            }
-        }
-
-        // Delete Sale
-        function deleteSale(plu) {
-            const index = salesData.findIndex(s => s.plu === plu);
-            if (index !== -1) {
-                salesData.splice(index, 1);
-                loadSalesData();
-            }
-        }
-
-        // Initial Load
-        loadSalesData();
-    </script>
+        <!-- Updated Order Calculation Section -->
+		<div class="order-calculation">
+		    <div class="order-details">
+		        <h3>Order Details</h3>
+		        <table>
+		            <thead>
+		                <tr>
+		                    <th>Item</th>
+		                    <th>Qty</th>
+		                    <th>Subtotal</th>
+		                </tr>
+		            </thead>
+		            <tbody id="order-items">
+		                <!-- Order items will be added dynamically here -->
+		            </tbody>
+		        </table>
+		        <div class="totals">
+		            <p>Subtotal: <span id="subtotal">RM 0</span></p>
+		            <p><strong>Total: <span id="total">RM 0</span></strong></p>
+		        </div>
+		    </div>
+		
+		    <div class="payment-method">
+		        <button onclick="togglePayment('cash')">Cash</button>
+		        <button onclick="togglePayment('qr')">QR Payment</button>
+		    </div>
+		
+		    <div id="cash" class="payment-details">
+		        <h3>Cash Payment</h3>
+		        <input type="text" id="money-received" placeholder="Money Received" oninput="calculateChange()">
+		        <input type="text" id="change" placeholder="Change" disabled>
+		        <button onclick="completeOrder()">Complete Order</button>
+		    </div>
+		
+		    <div id="qr" class="payment-details">
+		        <h3>QR Payment</h3>
+		        <button onclick="completeOrder()">Confirm Payment</button>
+		    </div>
+		</div>
+		
+		<script>
+		    let orderItems = [
+		        { name: "Potato Chips", price: 5, qty: 1 },
+		        { name: "Banana Chips", price: 3, qty: 2 }
+		    ];
+		
+		    // Function to update the order details dynamically
+		    function updateOrder() {
+		        const orderItemsContainer = document.getElementById('order-items');
+		        let subtotal = 0;
+		        orderItemsContainer.innerHTML = ''; // Clear current order items
+		        
+		        orderItems.forEach(item => {
+		            const row = document.createElement('tr');
+		            row.innerHTML = `
+		                <td>${item.name}</td>
+		                <td>${item.qty}</td>
+		                <td>RM ${item.price * item.qty}</td>
+		            `;
+		            orderItemsContainer.appendChild(row);
+		            subtotal += item.price * item.qty;
+		        });
+		
+		        // Update the totals
+		        document.getElementById('subtotal').textContent = `RM ${subtotal}`;
+		        document.getElementById('total').textContent = `RM ${subtotal}`;
+		    }
+		
+		    // Function to toggle payment method
+		    function togglePayment(method) {
+		        document.querySelectorAll('.payment-details').forEach(section => {
+		            section.classList.remove('active');
+		        });
+		        document.getElementById(method).classList.add('active');
+		    }
+		
+		    // Function to calculate change for cash payment
+		    function calculateChange() {
+		        const moneyReceived = parseFloat(document.getElementById('money-received').value);
+		        const total = parseFloat(document.getElementById('total').textContent.slice(3)); // Remove 'RM' symbol
+		        if (moneyReceived >= total) {
+		            document.getElementById('change').value = (moneyReceived - total).toFixed(2);
+		        } else {
+		            document.getElementById('change').value = '';
+		        }
+		    }
+		
+		    // Function to complete the order
+		    function completeOrder() {
+		        alert("Order Completed!");
+		        // Optionally, clear the form or reset the data here
+		    }
+		
+		    // Initialize the order when the page loads
+		    updateOrder();
+		</script>
 </body>
 </html>
