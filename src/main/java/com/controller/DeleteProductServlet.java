@@ -23,55 +23,69 @@ public class DeleteProductServlet extends HttpServlet {
 
         if (prodIdParam == null || prodIdParam.isEmpty()) {
             request.setAttribute("error", "Product ID is missing.");
-            request.getRequestDispatcher("ViewProductServlet").forward(request, response);
+            request.getRequestDispatcher("ViewProduct.jsp").forward(request, response);
+            return;
+        }
+
+        int prodId;
+        try {
+            prodId = Integer.parseInt(prodIdParam);
+        } catch (NumberFormatException e) {
+            request.setAttribute("error", "Invalid Product ID format.");
+            request.getRequestDispatcher("ViewProduct.jsp").forward(request, response);
             return;
         }
 
         try (Connection conn = DBConnection.getConnection()) {
             conn.setAutoCommit(false); // Start transaction
 
-            int prodId = Integer.parseInt(prodIdParam);
-
-            // Update Product to inactive
-            String updateProductSQL = "UPDATE Products SET PROD_STATUS = 'INACTIVE' WHERE PROD_ID = ?";
-
-            try (PreparedStatement ps = conn.prepareStatement(updateProductSQL)) {
-                ps.setInt(1, prodId);
-                ps.executeUpdate();
+            if (!updateProductStatusToInactive(conn, prodId)) {
+                request.setAttribute("error", "Failed to update product status.");
+                conn.rollback();
+                request.getRequestDispatcher("ViewProduct.jsp").forward(request, response);
+                return;
             }
 
-            // Delete Food or Drink based on category
-            String deleteChildSQL;
-            if (isFoodProduct(prodId, conn)) { // Assuming `isFoodProduct` is a helper method
-                deleteChildSQL = "DELETE FROM Food WHERE PROD_ID = ?";
-            } else {
-                deleteChildSQL = "DELETE FROM Drink WHERE PROD_ID = ?";
-            }
-
-            try (PreparedStatement ps = conn.prepareStatement(deleteChildSQL)) {
-                ps.setInt(1, prodId);
-                ps.executeUpdate();
+            if (!deleteChildRecord(conn, prodId)) {
+                request.setAttribute("error", "Failed to delete associated records.");
+                conn.rollback();
+                request.getRequestDispatcher("ViewProduct.jsp").forward(request, response);
+                return;
             }
 
             conn.commit(); // Commit transaction
-            response.sendRedirect("ViewProductServlet");
+            response.sendRedirect("ViewProduct.jsp");
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Error deleting product.");
-            request.getRequestDispatcher("ViewProductServlet").forward(request, response);
+            request.getRequestDispatcher("ViewProduct.jsp").forward(request, response);
         }
     }
 
-    private boolean isFoodProduct(int prodId, Connection conn) throws SQLException {
-        String query = "SELECT COUNT(*) FROM Food WHERE PROD_ID = ?";
-        try (PreparedStatement ps = conn.prepareStatement(query)) {
+    private boolean updateProductStatusToInactive(Connection conn, int prodId) throws SQLException {
+        String sql = "UPDATE Products SET PROD_STATUS = 'INACTIVE' WHERE PROD_ID = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, prodId);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    private boolean deleteChildRecord(Connection conn, int prodId) throws SQLException {
+        String table = isFoodProduct(conn, prodId) ? "Food" : "Drink";
+        String sql = "DELETE FROM " + table + " WHERE PROD_ID = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, prodId);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    private boolean isFoodProduct(Connection conn, int prodId) throws SQLException {
+        String sql = "SELECT 1 FROM Food WHERE PROD_ID = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, prodId);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt(1) > 0;
-                }
+                return rs.next();
             }
         }
-        return false;
     }
 }
