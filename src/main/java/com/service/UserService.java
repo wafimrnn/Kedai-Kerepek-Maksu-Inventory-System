@@ -1,5 +1,6 @@
 package com.service;
 import com.model.User;
+import com.service.UserRepository;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
