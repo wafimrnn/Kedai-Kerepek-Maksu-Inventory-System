@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome Page</title>
+<style>
+    /* Page Styling */
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f4f4f9;
+      background-image: url('your-background-image.jpg'); /* Replace with your background image path */
+      background-size: cover;
+      background-position: center;
+    }
+
+    /* Main Content Styling */
+    .content {
+      text-align: center;
+      color: black; /* Ensure visibility on light backgrounds */
+    }
+
+    /* WELCOME TO Heading */
+    .content h2 {
+      font-size: 15px; /* Matches the PDF */
+      letter-spacing: 10px; /* Add space between letters */
+      margin-bottom: 80px;
+      font-weight: bold;
+    }
+
+    /* Kedai Kerepek Maksu Heading */
+    .content h1 {
+      font-size: 60px;
+      font-weight: bold;
+      margin-bottom: 90px;
+    }
+
+    /* Button Container */
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      gap: 70px;
+    }
+
+    /* Button Styling */
+    button {
+      background-color: #007bff; /* Blue color for buttons */
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+      padding: 15px 40px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3; /* Darker blue on hover */
+      transform: scale(1.05);
+    }
+
+    button:active {
+      transform: scale(0.95);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .btn-container {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      button {
+        width: 100%; /* Buttons stretch full width on smaller screens */
+      }
+    }
+  </style>
+</head>
+<body>
+	<div class="content">
+    <!-- Welcome Message -->
+    <h2>WELCOME TO</h2>
+    <h1>Kedai Kerepek Maksu</h1>
+    <!-- Buttons -->
+    <div class="btn-container">
+      <button onclick="navigateToSignUp()">SIGN UP</button>
+      <button onclick="navigateToLogin()">LOG IN</button>
+    </div>
+  </div>
+
+  <script>
+    // Placeholder navigation functions
+    function navigateToSignUp() {
+      alert("Redirecting to Sign Up...");
+      // Example: window.location.href = "signup.html";
+    }
+
+    function navigateToLogin() {
+      alert("Redirecting to Log In...");
+      // Example: window.location.href = "login.html";
+    }
+  </script>
+
+</body>
+</html>
