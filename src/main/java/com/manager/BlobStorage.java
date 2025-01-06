@@ -34,7 +34,7 @@ public class BlobStorage {
     }
     
     //update image
-    private static final String CONNECTION_STRING = System.getenv("BLOB_CONNECTION_STRING");
+    private static final String CONNECTION_STRING = System.getenv("AZURE_STORAGEBLOB_CONNECTIONSTRING");
 
     public String uploadImage(Part imagePart, String containerName) throws Exception {
         BlobContainerClient containerClient = new BlobContainerClientBuilder()

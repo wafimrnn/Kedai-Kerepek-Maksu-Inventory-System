@@ -1,7 +1,10 @@
 package com.controller;
 
 import com.manager.DBConnection;
+import com.dao.ProductDAO;
 import com.manager.BlobStorage;
+import com.model.Drink;
+import com.model.Food;
 import com.model.Product;
 
 import jakarta.servlet.ServletException;
@@ -62,10 +65,9 @@ public class UpdateProductServlet extends HttpServlet {
             String prodName = request.getParameter("prodName");
             double prodPrice = Double.parseDouble(request.getParameter("prodPrice"));
             int quantityStock = Integer.parseInt(request.getParameter("quantityStock"));
-            String prodStatus = request.getParameter("prodStatus"); // Availability status
-            String category = request.getParameter("category"); // Category (Food/Drink)
+            String category = request.getParameter("prodStatus"); // Food or Drink
 
-            // Handle existing/new image
+            // Handle image upload
             Part imagePart = request.getPart("image");
             String imageUrl = request.getParameter("existingImageUrl");
             if (imagePart != null && imagePart.getSize() > 0) {
@@ -73,19 +75,28 @@ public class UpdateProductServlet extends HttpServlet {
                 imageUrl = blobManager.uploadImage(imagePart, "product-images");
             }
 
-            // Update the product in the database
-            try (Connection conn = DBConnection.getConnection()) {
-                String updateSQL = "UPDATE Products SET PROD_NAME = ?, PROD_PRICE = ?, QUANTITY_STOCK = ?, PROD_STATUS = ?, IMAGE_PATH = ? WHERE PROD_ID = ?";
-                try (PreparedStatement ps = conn.prepareStatement(updateSQL)) {
-                    ps.setString(1, prodName);
-                    ps.setDouble(2, prodPrice);
-                    ps.setInt(3, quantityStock);
-                    ps.setString(4, prodStatus); // Correctly update the availability status
-                    ps.setString(5, imageUrl);
-                    ps.setInt(6, prodId);
-                    ps.executeUpdate();
-                }
+            // Determine category and update
+            Product product;
+            if ("Food".equalsIgnoreCase(category)) {
+                product = new Food();
+                ((Food) product).setPackagingType(request.getParameter("packagingType"));
+                ((Food) product).setWeight(Double.parseDouble(request.getParameter("weight")));
+            } else if ("Drink".equalsIgnoreCase(category)) {
+                product = new Drink();
+                ((Drink) product).setVolume(Double.parseDouble(request.getParameter("volume")));
+            } else {
+                product = new Product(); // Default to base class if no specific type
             }
+
+            // Set common fields
+            product.setProdId(prodId);
+            product.setProdName(prodName);
+            product.setProdPrice(prodPrice);
+            product.setQuantityStock(quantityStock);
+            product.setImagePath(imageUrl);
+
+            // Update using DAO
+            ProductDAO.updateProduct(product);
 
             response.sendRedirect("ViewProductServlet");
         } catch (Exception e) {

@@ -83,4 +83,38 @@ public class ProductDAO {
         throw new SQLException("Failed to insert product and retrieve generated ID.");
     }
     
+    public static void updateProduct(Product product) throws Exception {
+        try (Connection conn = DBConnection.getConnection()) {
+            String updateSQL = "UPDATE Products SET PROD_NAME = ?, PROD_PRICE = ?, QUANTITY_STOCK = ?, IMAGE_PATH = ? WHERE PROD_ID = ?";
+            try (PreparedStatement ps = conn.prepareStatement(updateSQL)) {
+                ps.setString(1, product.getProdName());
+                ps.setDouble(2, product.getProdPrice());
+                ps.setInt(3, product.getQuantityStock());
+                ps.setString(4, product.getImagePath());
+                ps.setInt(5, product.getProdId());
+                ps.executeUpdate();
+            }
+
+            // Update specific fields for Food or Drink
+            if (product instanceof Food) {
+                Food food = (Food) product;
+                String updateFoodSQL = "UPDATE Foods SET PACKAGING_TYPE = ?, WEIGHT = ? WHERE PROD_ID = ?";
+                try (PreparedStatement ps = conn.prepareStatement(updateFoodSQL)) {
+                    ps.setString(1, food.getPackagingType());
+                    ps.setDouble(2, food.getWeight());
+                    ps.setInt(3, food.getProdId());
+                    ps.executeUpdate();
+                }
+            } else if (product instanceof Drink) {
+                Drink drink = (Drink) product;
+                String updateDrinkSQL = "UPDATE Drinks SET VOLUME = ? WHERE PROD_ID = ?";
+                try (PreparedStatement ps = conn.prepareStatement(updateDrinkSQL)) {
+                    ps.setDouble(1, drink.getVolume());
+                    ps.setInt(2, drink.getProdId());
+                    ps.executeUpdate();
+                }
+            }
+        }
+    }
+    
 }
