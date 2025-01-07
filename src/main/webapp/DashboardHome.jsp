@@ -123,7 +123,7 @@
         <div class="nav-links">
             <a href="DashboardHome.jsp" class="active">Dashboard</a>
             <a href="ViewProductServlet">Product</a>
-            <a href="CreateSales.html">Sales</a>
+            <a href="CreateSales.jsp">Sales</a>
             <a href="Report.html">Report</a>
             <a href="#">Account</a>
         </div>
