@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Sales</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* General Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #f4f4f9;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 220px;
+            background-color: #343a40;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 20px;
+            border-bottom: 1px solid #495057;
+            padding-bottom: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            padding: 10px 15px;
+            margin: 5px 0;
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: #495057;
+        }
+
+        .nav-links a.active {
+            background-color: #007BFF;
+        }
+        
+        /* Head Bar Styling */
+		.head-bar {
+		    width: calc(100% - 220px); /* Full width minus the sidebar width */
+		    height: 60px;
+		    background-color: #007BFF;
+		    color: white;
+		    display: flex;
+		    justify-content: space-between;
+		    align-items: center;
+		    padding: 0 20px;
+		    position: fixed;
+		    top: 0;
+		    left: 220px; /* Push the head bar right to align with the sidebar */
+		    z-index: 1000; /* Ensure it stays on top */
+		    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+		}
+		
+		.head-bar .title {
+		    font-size: 20px;
+		    font-weight: bold;
+		}
+		
+		.head-bar .icons {
+		    display: flex;
+		    align-items: center;
+		    gap: 15px;
+		}
+		
+		.head-bar .icons i {
+		    font-size: 20px;
+		    cursor: pointer;
+		    transition: color 0.3s ease;
+		}
+		
+		.head-bar .icons i:hover {
+		    color: #ddd;
+		}
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 60px; /* Push content below the head bar */
+        }
+
+        .main-content h1 {
+            font-size: 28px;
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+
+        .view-section {
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+        }
+
+        .view-section table {
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ccc;
+        }
+
+        table th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .action-btn {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .action-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Kedai Kerepek Maksu</h2>
+        <div class="nav-links">
+            <a href="DashboardHome.jsp">Dashboard</a>
+            <a href="ViewProductServlet">Product</a>
+            <a href="CreateSales.jsp">Sales</a>
+            <a href="#" class="active">Report</a>
+            <a href="#">Account</a>
+        </div>
+    </div>
+    <!-- Head Bar -->
+	<div class="head-bar">
+	    <div class="title">Sales</div>
+	    <div class="icons">
+	        <i class="fas fa-bell" title="Notifications"></i>
+	        <i class="fas fa-user-circle" title="Account"></i>
+	    </div>
+	</div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>Sales Management</h1>
+
+        <!-- Report Table Section -->
+        <div class="view-section">
+            <h2>Sales Report</h2>
+            <table id="reportTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Product ID</th>
+                        <th>Product Name</th>
+                        <th>Total Sale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dynamic data will be inserted here -->
+                </tbody>
+            </table>
+            <!-- Save Report Button -->
+            <button class="action-btn" id="saveReportBtn">Save Report</button>
+        </div>
+    </div>
+
+    <script>
+        const reportTable = document.getElementById('reportTable').querySelector('tbody');
+        const saveReportBtn = document.getElementById('saveReportBtn');
+
+        // Mock Sales Data
+        const salesData = [
+            { date: '2024-12-30', productName: 'Potato Chips', quantity: 10, price: 5 },
+            { date: '2024-12-30', productName: 'Banana Chips', quantity: 5, price: 3 },
+            { date: '2024-12-31', productName: 'Potato Chips', quantity: 8, price: 5 },
+            { date: '2024-12-31', productName: 'Banana Chips', quantity: 7, price: 3 },
+        ];
+
+        function generateReport() {
+            const report = {};
+
+            salesData.forEach(sale => {
+                const key = `${sale.date}_${sale.productName}`; // Unique key for grouping
+                if (!report[key]) {
+                    report[key] = {
+                        date: sale.date,
+                        productName: sale.productName,
+                        totalQuantity: 0,
+                        totalRevenue: 0,
+                    };
+                }
+                report[key].totalQuantity += sale.quantity;
+                report[key].totalRevenue += sale.quantity * sale.price;
+            });
+
+            reportTable.innerHTML = ''; // Clear table content
+
+            Object.values(report).forEach(entry => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${entry.date}</td>
+                    <td>${entry.productName}</td>
+                    <td>${entry.totalQuantity}</td>
+                    <td>${entry.totalRevenue.toFixed(2)}</td>
+                `;
+                reportTable.appendChild(row);
+            });
+        }
+
+        function downloadCSV(data, filename = 'sales_report.csv') {
+            const csvRows = [
+                ['Date', 'Product ID', 'Total Quantity', 'Total Revenue'], // Headers
+                ...data.map(item => [
+                    item.date,
+                    item.productName,
+                    item.totalQuantity,
+                    item.totalRevenue.toFixed(2),
+                ]),
+            ];
+
+            const csvContent = csvRows.map(row => row.join(',')).join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        saveReportBtn.addEventListener('click', () => {
+            const reportData = Object.values(salesData).map(sale => ({
+                date: sale.date,
+                productName: sale.productName,
+                totalQuantity: sale.quantity,
+                totalRevenue: sale.quantity * sale.price,
+            }));
+            downloadCSV(reportData);
+        });
+
+        // Generate the report on page load
+        generateReport();
+    </script>
+</body>
+</html>
