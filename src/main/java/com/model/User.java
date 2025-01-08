@@ -1,14 +1,40 @@
 package com.model;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+
+@Entity
+@Table(name = "users")
 public class User {
-	
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
+
+    @Column(nullable = false, unique = true)
+    @NotBlank(message = "Username is mandatory")
     private String userName;
-    private String userRole;
+
+    @Column(nullable = false)
+    @NotBlank(message = "Password is mandatory")
+    @Size(min = 6, message = "Password must be at least 6 characters")
     private String userPass;
+
+    @Column(nullable = false)
+    @NotBlank(message = "User role is mandatory")
+    private String userRole;
+
+    @Column(nullable = true)
     private String userPhone;
+
+    @Column(nullable = true)
     private String userAddress;
+
+    @Column(nullable = false)
+    @NotBlank(message = "Account status is mandatory")
     private String accStatus;
+
+    @Column(nullable = true)
     private int ownerId;
 
     public int getUserId() {

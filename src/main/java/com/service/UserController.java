@@ -1,5 +1,9 @@
 package com.service;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.model.User;
 
 @RestController
 @RequestMapping("/api/users")
@@ -13,18 +17,17 @@ public class UserController {
 
     // Signup endpoint
     @PostMapping("/signup")
-    public String signup(@RequestParam String userName,
-                         @RequestParam String userPass,
-                         @RequestParam String userRole) {
-        boolean result = userService.signup(userName, userPass, userRole);
-        return result ? "Signup successful" : "Signup failed. Only owner can create accounts.";
+    public ResponseEntity<String> signup(@RequestBody User user) {
+        boolean result = userService.signup(user.getUserName(), user.getUserPass(), user.getUserRole());
+        return result ? ResponseEntity.status(HttpStatus.CREATED).body("Signup successful")
+                      : ResponseEntity.status(HttpStatus.FORBIDDEN).body("Signup failed. Only owner can create accounts.");
     }
 
     // Login endpoint
     @PostMapping("/login")
-    public String login(@RequestParam String userName,
-                        @RequestParam String userPass) {
-        boolean result = userService.login(userName, userPass);
-        return result ? "Login successful" : "Invalid username or password.";
+    public ResponseEntity<String> login(@RequestBody User user) {
+        boolean result = userService.login(user.getUserName(), user.getUserPass());
+        return result ? ResponseEntity.ok("Login successful")
+                      : ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password.");
     }
 }

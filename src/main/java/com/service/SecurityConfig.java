@@ -17,13 +17,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable() // Disable CSRF for testing; enable in production.
+        http.csrf().disable() // Disable CSRF for simplicity.
             .authorizeRequests()
-            .antMatchers("/api/users/signup").hasAuthority("Owner") // Only 'Owner' role can access signup.
-            .antMatchers("/api/users/login").permitAll() // Anyone can access login.
+            .requestMatchers("/api/users/signup").hasAuthority("Owner") // Restrict signup to Owner.
+            .requestMatchers("/api/users/login").permitAll() // Allow public access to login.
             .anyRequest().authenticated() // All other requests require authentication.
             .and()
-            .httpBasic(); // Use basic HTTP authentication for simplicity.
+            .oauth2ResourceServer().jwt(); // Enable JWT support.
 
         return http.build();
     }
