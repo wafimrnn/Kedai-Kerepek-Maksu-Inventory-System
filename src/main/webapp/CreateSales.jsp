@@ -243,23 +243,6 @@
 		    background-color: #27ae60;
 		}
     </style>
-    <script>
-        function addToOrder(name, price) {
-            const orderItems = document.getElementById("order-items");
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${name}</td>
-                <td>1</td>
-                <td>RM ${price}</td>
-            `;
-            orderItems.appendChild(row);
-        }
-
-        function togglePayment(method) {
-            document.getElementById("cash").style.display = method === 'cash' ? 'block' : 'none';
-            document.getElementById("qr").style.display = method === 'qr' ? 'block' : 'none';
-        }
-    </script>
 </head>
 <body>
     <!-- Sidebar -->
@@ -311,12 +294,13 @@
 	            <h3>Order Details</h3>
 	            <table>
 	                <thead>
-	                    <tr>
-	                        <th>Item</th>
-	                        <th>Qty</th>
-	                        <th>Subtotal</th>
-	                    </tr>
-	                </thead>
+					    <tr>
+					        <th>Item</th>
+					        <th>Qty</th>
+					        <th>Subtotal</th>
+					        <th>Action</th>
+					    </tr>
+					</thead>
 	                <tbody id="order-items">
 	                    <!-- Order items will be added dynamically here -->
 	                </tbody>
@@ -346,60 +330,84 @@
     	</div>
 	</div>	
     <script>
-        let orderItems = [];
-
-        function addToOrder(name, price) {
-            let existingItem = orderItems.find(item => item.name === name);
-            if (existingItem) {
-                existingItem.qty++;
-            } else {
-                orderItems.push({ name, price, qty: 1 });
-            }
-            updateOrder();
-        }
-
-        function updateOrder() {
-            const orderItemsContainer = document.getElementById('order-items');
-            let subtotal = 0;
-            orderItemsContainer.innerHTML = '';
-
-            orderItems.forEach(item => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${item.name}</td>
-                    <td>${item.qty}</td>
-                    <td>RM ${item.price * item.qty}</td>
-                `;
-                orderItemsContainer.appendChild(row);
-                subtotal += item.price * item.qty;
-            });
-
-            document.getElementById('subtotal').textContent = `RM ${subtotal}`;
-            document.getElementById('total').textContent = `RM ${subtotal}`;
-        }
-
-        function togglePayment(method) {
-            document.querySelectorAll('.payment-details').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.getElementById(method).classList.add('active');
-        }
-
-        function calculateChange() {
-            const moneyReceived = parseFloat(document.getElementById('money-received').value);
-            const total = parseFloat(document.getElementById('total').textContent.slice(3));
-            if (moneyReceived >= total) {
-                document.getElementById('change').value = (moneyReceived - total).toFixed(2);
-            } else {
-                document.getElementById('change').value = '';
-            }
-        }
-
-        function completeOrder() {
-            alert("Order Completed!");
-            orderItems = [];
-            updateOrder();
-        }
-    </script>
+	    let orderItems = [];
+	
+	    function addToOrder(name, price) {
+	        let existingItem = orderItems.find(item => item.name === name);
+	        if (existingItem) {
+	            existingItem.qty++;
+	        } else {
+	            orderItems.push({ name, price, qty: 1 });
+	        }
+	        updateOrder();
+	    }
+	
+	    function updateOrder() {
+	        const orderItemsContainer = document.getElementById('order-items');
+	        let subtotal = 0;
+	        orderItemsContainer.innerHTML = '';
+	
+	        orderItems.forEach((item, index) => {
+	            const row = document.createElement('tr');
+	            row.innerHTML = `
+	                <td>${item.name}</td>
+	                <td>
+	                    <input type="number" value="${item.qty}" min="1" style="width: 50px;" 
+	                           onchange="updateQuantity(${index}, this.value)">
+	                </td>
+	                <td>RM ${(item.price * item.qty).toFixed(2)}</td>
+	                <td>
+	                    <button onclick="removeFromOrder(${index})" style="color: red;">X</button>
+	                </td>
+	            `;
+	            orderItemsContainer.appendChild(row);
+	            subtotal += item.price * item.qty;
+	        });
+	
+	        document.getElementById('subtotal').textContent = `RM ${subtotal.toFixed(2)}`;
+	        document.getElementById('total').textContent = `RM ${subtotal.toFixed(2)}`;
+	    }
+	
+	    function updateQuantity(index, qty) {
+	        if (qty < 1) {
+	            alert("Quantity must be at least 1.");
+	            return;
+	        }
+	        orderItems[index].qty = parseInt(qty);
+	        updateOrder();
+	    }
+	
+	    function removeFromOrder(index) {
+	        orderItems.splice(index, 1);
+	        updateOrder();
+	    }
+	
+	    function togglePayment(method) {
+	        document.querySelectorAll('.payment-details').forEach(section => {
+	            section.classList.remove('active');
+	        });
+	        document.getElementById(method).classList.add('active');
+	    }
+	
+	    function calculateChange() {
+	        const moneyReceived = parseFloat(document.getElementById('money-received').value);
+	        const total = parseFloat(document.getElementById('total').textContent.replace('RM ', ''));
+	        if (!isNaN(moneyReceived) && moneyReceived >= total) {
+	            document.getElementById('change').value = (moneyReceived - total).toFixed(2);
+	        } else {
+	            document.getElementById('change').value = '';
+	        }
+	    }
+	
+	    function completeOrder() {
+	        if (orderItems.length === 0) {
+	            alert("No items in the order. Add products to proceed.");
+	            return;
+	        }
+	        alert("Order Completed!");
+	        orderItems = [];
+	        updateOrder();
+	    }
+	</script>
 </body>
 </html>
