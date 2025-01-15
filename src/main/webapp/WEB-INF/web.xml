@@ -62,5 +62,14 @@
     <servlet-name>DeleteProductServlet</servlet-name>
     <url-pattern>/DeleteProductServlet</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>CompleteSaleServlet</servlet-name>
+    <servlet-class>com.controller.CompleteSaleServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>CompleteSaleServlet</servlet-name>
+    <url-pattern>/complete-sale</url-pattern>
+</servlet-mapping>
 
 </web-app>

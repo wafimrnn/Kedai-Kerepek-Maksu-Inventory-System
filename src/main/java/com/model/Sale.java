@@ -1,15 +1,15 @@
 package com.model;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 public class Sale {
-    private int saleId;
-    private Date saleDate;
-    private double totalAmount;
-    private String paymentMethod;
-    private int userId;
-    private List<SaleItem> items;
+    private int saleId; // Auto-incremented primary key
+    private Date saleDate; // Matches the DATE type in the database
+    private double totalAmount; // Total amount for the sale
+    private String paymentMethod; // Payment method used ("cash", "qr", etc.)
+    private int userId; // References USER_ID from the users table
+    private List<SaleItem> items; // Associated sale items
 
     // Getters and Setters
     public int getSaleId() {

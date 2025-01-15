@@ -17,6 +17,9 @@ public class DBConnection {
     }
 
     public static Connection getConnection() throws SQLException {
+        if (dbUrl == null || dbUrl.isEmpty()) {
+            throw new IllegalStateException("Database connection string is not set in environment variables.");
+        }
         return DriverManager.getConnection(dbUrl);
     }
     

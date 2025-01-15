@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.dao.ProductDAO" %>
 <%@ page import="com.model.Product" %>
@@ -9,7 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>POS System</title>
+    <title>Sales</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* General Styling */
@@ -173,21 +174,57 @@
 		}
 		
 		/* Order Details Styling */
-		.order-details table {
-		    width: 100%;
-		    border-collapse: collapse;
-		    margin-bottom: 20px;
-		}
-		
-		.order-details table th, .order-details table td {
-		    text-align: left;
-		    padding: 10px;
-		    border-bottom: 1px solid #ddd;
-		}
+        .order-details table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            table-layout: fixed; /* Prevent table from overflowing */
+        }
+
+        .order-details table th, .order-details table td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px; /* Smaller font size for compact layout */
+            word-wrap: break-word; /* Allow text wrapping */
+        }
+
+        .order-details table th.qty, .order-details table td.qty {
+            width: 50px; /* Adjusted smaller width for quantity */
+            text-align: center;
+        }
+
+        .order-details table th.action, .order-details table td.action {
+            width: 60px; /* Adjusted width for action buttons */
+            text-align: center;
+        }
+
+        .order-details input {
+            width: 40px; /* Smaller fixed width for quantity input */
+            text-align: center;
+            font-size: 14px;
+            padding: 2px;
+        }
+
+        .order-details button {
+            padding: 2px 6px; /* Smaller buttons for compact design */
+            font-size: 12px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .order-details button:hover {
+            background-color: #c0392b;
+        }
 		
 		.totals {
-		    margin-bottom: 20px;
-		    font-size: 16px;
+		    margin-bottom: 15px;
+		    font-size: 14px; /* Smaller font for totals */
+		    display: flex;
+		    justify-content: space-between;
 		}
 		
 		.payment-method {
@@ -245,7 +282,7 @@
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
+    <!-- Sidebar Section -->
     <div class="sidebar">
         <h2>Kedai Kerepek Maksu</h2>
         <div class="nav-links">
@@ -257,7 +294,7 @@
         </div>
     </div>
 
-    <!-- Head Bar -->
+    <!-- Head Bar Section -->
     <div class="head-bar">
         <div class="title">Sales</div>
         <div class="icons">
@@ -267,147 +304,82 @@
     </div>
 
     <div class="main-content">
-	    <!-- Product List -->
-	    <div class="product-list">
-	        <div class="header">
-	            <h1>Create Sales</h1>
-	        </div>
-	        <div id="product-grid" class="product-grid">
-	            <%
-	                ProductDAO productDAO = new ProductDAO();
-	                List<Product> productList = productDAO.getAllActiveProducts();
-	                for (Product product : productList) {
-	            %>
-	            <div class="product-item">
-	                <img src="<%= product.getImagePath() %>" alt="<%= product.getProdName() %>">
-	                <h4><%= product.getProdName() %></h4>
-	                <p>Price: RM <%= product.getProdPrice() %></p>
-	                <button onclick="addToOrder('<%= product.getProdName() %>', <%= product.getProdPrice() %>)">Add to Order</button>
-	            </div>
-	            <% } %>
-	        </div>
-	    </div>
+        <!-- Product List Section -->
+        <div class="product-list">
+            <div class="header">
+                <h1>Create Sales</h1>
+            </div>
+            <div id="product-grid" class="product-grid">
+                <%
+                    ProductDAO productDAO = new ProductDAO();
+                    List<Product> productList = productDAO.getAllActiveProducts();
+                    for (Product product : productList) {
+                %>
+                <div class="product-item">
+                    <img src="<%= product.getImagePath() %>" alt="<%= product.getProdName() %>">
+                    <h4><%= product.getProdName() %></h4>
+                    <p>Price: RM <%= product.getProdPrice() %></p>
+                    <button class="add-to-order" 
+                            data-prodId="<%= product.getProdId() %>" 
+                            data-prodName="<%= product.getProdName() %>" 
+                            data-prodPrice="<%= product.getProdPrice() %>">
+                        Add to Order
+                    </button>
+                </div>
+                <% } %>
+            </div>
+        </div>
 
-	    <!-- Order Calculation -->
-	    <div class="order-calculation">
-	        <div class="order-details">
-	            <h3>Order Details</h3>
-	            <table>
-	                <thead>
-					    <tr>
-					        <th>Item</th>
-					        <th>Qty</th>
-					        <th>Subtotal</th>
-					        <th>Action</th>
-					    </tr>
-					</thead>
-	                <tbody id="order-items">
-	                    <!-- Order items will be added dynamically here -->
-	                </tbody>
-	            </table>
-	            <div class="totals">
-	                <p>Subtotal: <span id="subtotal">RM 0</span></p>
-	                <p><strong>Total: <span id="total">RM 0</span></strong></p>
-	            </div>
-	        </div>
-	
-	        <div class="payment-method">
-	            <button onclick="togglePayment('cash')">Cash</button>
-	            <button onclick="togglePayment('qr')">QR Payment</button>
-	        </div>
-	
-	        <div id="cash" class="payment-details">
-	            <h3>Cash Payment</h3>
-	            <input type="text" id="money-received" placeholder="Money Received" oninput="calculateChange()">
-	            <input type="text" id="change" placeholder="Change" disabled>
-	            <button onclick="completeOrder()">Complete Order</button>
-	        </div>
-	
-	        <div id="qr" class="payment-details">
-	            <h3>QR Payment</h3>
-	            <button onclick="completeOrder()">Confirm Payment</button>
-        	</div>
-    	</div>
-	</div>	
-    <script>
-	    let orderItems = [];
-	
-	    function addToOrder(name, price) {
-	        let existingItem = orderItems.find(item => item.name === name);
-	        if (existingItem) {
-	            existingItem.qty++;
-	        } else {
-	            orderItems.push({ name, price, qty: 1 });
-	        }
-	        updateOrder();
-	    }
-	
-	    function updateOrder() {
-	        const orderItemsContainer = document.getElementById('order-items');
-	        let subtotal = 0;
-	        orderItemsContainer.innerHTML = '';
-	
-	        orderItems.forEach((item, index) => {
-	            const row = document.createElement('tr');
-	            row.innerHTML = `
-	                <td>${item.name}</td>
-	                <td>
-	                    <input type="number" value="${item.qty}" min="1" style="width: 50px;" 
-	                           onchange="updateQuantity(${index}, this.value)">
-	                </td>
-	                <td>RM ${(item.price * item.qty).toFixed(2)}</td>
-	                <td>
-	                    <button onclick="removeFromOrder(${index})" style="color: red;">X</button>
-	                </td>
-	            `;
-	            orderItemsContainer.appendChild(row);
-	            subtotal += item.price * item.qty;
-	        });
-	
-	        document.getElementById('subtotal').textContent = `RM ${subtotal.toFixed(2)}`;
-	        document.getElementById('total').textContent = `RM ${subtotal.toFixed(2)}`;
-	    }
-	
-	    function updateQuantity(index, qty) {
-	        if (qty < 1) {
-	            alert("Quantity must be at least 1.");
-	            return;
-	        }
-	        orderItems[index].qty = parseInt(qty);
-	        updateOrder();
-	    }
-	
-	    function removeFromOrder(index) {
-	        orderItems.splice(index, 1);
-	        updateOrder();
-	    }
-	
-	    function togglePayment(method) {
-	        document.querySelectorAll('.payment-details').forEach(section => {
-	            section.classList.remove('active');
-	        });
-	        document.getElementById(method).classList.add('active');
-	    }
-	
-	    function calculateChange() {
-	        const moneyReceived = parseFloat(document.getElementById('money-received').value);
-	        const total = parseFloat(document.getElementById('total').textContent.replace('RM ', ''));
-	        if (!isNaN(moneyReceived) && moneyReceived >= total) {
-	            document.getElementById('change').value = (moneyReceived - total).toFixed(2);
-	        } else {
-	            document.getElementById('change').value = '';
-	        }
-	    }
-	
-	    function completeOrder() {
-	        if (orderItems.length === 0) {
-	            alert("No items in the order. Add products to proceed.");
-	            return;
-	        }
-	        alert("Order Completed!");
-	        orderItems = [];
-	        updateOrder();
-	    }
-	</script>
+        <!-- Order Calculation Section -->
+        <div class="order-calculation">
+            <div class="order-details">
+                <h3>Order Details</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Qty</th>
+                            <th>Subtotal</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="order-items">
+                        <!-- Dynamically added order items will appear here -->
+                    </tbody>
+                </table>
+                <div class="totals">
+                    <p>Subtotal: <span id="subtotal">RM 0</span></p>
+                    <p><strong>Total: <span id="total">RM 0</span></strong></p>
+                </div>
+            </div>
+
+            <div class="payment-method">
+                <button onclick="togglePayment('cash')">Cash</button>
+                <button onclick="togglePayment('qr')">QR Payment</button>
+            </div>
+
+            <div id="cash" class="payment-details">
+                <h3>Cash Payment</h3>
+                <input type="text" id="money-received" placeholder="Money Received" oninput="calculateChange()">
+                <input type="hidden" id="total-amount" value="0">
+                <input type="hidden" id="payment-method" value="cash">
+                <input type="text" id="change" placeholder="Change" disabled>
+                <button onclick="completeOrder()">Complete Order</button>
+            </div>
+
+            <div id="qr" class="payment-details">
+                <h3>QR Payment</h3>
+                <input type="hidden" id="total-amount" value="0">
+                <input type="hidden" id="payment-method" value="qr">
+                <button onclick="completeOrder()">Confirm Payment</button>
+            </div>
+
+            <div id="response-message" style="display: none; margin-top: 10px; font-size: 16px;">
+                Order Completed Successfully!
+            </div>
+        </div>
+    </div>
+
+    <script src="pos.js"></script>
 </body>
 </html>

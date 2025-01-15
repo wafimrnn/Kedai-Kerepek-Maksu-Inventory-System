@@ -1,59 +1,53 @@
 package com.dao;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
+
+import com.manager.DBConnection;
 import com.model.Sale;
 import com.model.SaleItem;
-import com.manager.DBConnection;
-import java.sql.SQLException;
 
 public class SaleDAO {
-    private Connection connection;
 
-    public SaleDAO() throws SQLException {
-        connection = DBConnection.getConnection();
+    // Insert a new sale and return the generated sale ID
+    public int insertSale(Sale sale) throws SQLException {
+        String sql = "INSERT INTO sales (sale_Date, total_Amount, payment_Method, user_Id) VALUES (?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            
+            stmt.setDate(1, sale.getSaleDate());
+            stmt.setDouble(2, sale.getTotalAmount());
+            stmt.setString(3, sale.getPaymentMethod());
+            stmt.setInt(4, sale.getUserId());
+            stmt.executeUpdate();
+
+            // Retrieve the generated sale ID
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getInt(1); // Return the auto-incremented SALE_ID
+                }
+            }
+        }
+        throw new SQLException("Failed to insert sale.");
     }
 
-    public int createSale(Sale sale) throws SQLException {
-        String insertSaleQuery = "INSERT INTO SALES (SALE_DATE, TOTAL_AMOUNT, PAYMENT_METHOD, USER_ID) VALUES (?, ?, ?, ?)";
-        PreparedStatement pstmt = connection.prepareStatement(insertSaleQuery, Statement.RETURN_GENERATED_KEYS);
-        pstmt.setTimestamp(1, new Timestamp(sale.getSaleDate().getTime()));
-        pstmt.setDouble(2, sale.getTotalAmount());
-        pstmt.setString(3, sale.getPaymentMethod());
-        pstmt.setInt(4, sale.getUserId());
-        pstmt.executeUpdate();
-
-        ResultSet generatedKeys = pstmt.getGeneratedKeys();
-        if (generatedKeys.next()) {
-            return generatedKeys.getInt(1);
-        } else {
-            throw new SQLException("Failed to create sale, no ID obtained.");
+    // Insert sale items
+    public void insertSaleItems(List<SaleItem> saleItems) throws SQLException {
+        String sql = "INSERT INTO salesitems (sale_Id, prod_Id, quantity, sub_total) VALUES (?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            for (SaleItem item : saleItems) {
+                stmt.setInt(1, item.getSaleId());
+                stmt.setInt(2, item.getProductId());
+                stmt.setInt(3, item.getQuantity());
+                stmt.setDouble(4, item.getSubtotal());
+                stmt.addBatch();
+            }
+            stmt.executeBatch(); // Execute all insertions as a batch
         }
-    }
-
-    public void addSaleItems(int saleId, List<SaleItem> items) throws SQLException {
-        String insertSaleItemsQuery = "INSERT INTO SALEITEMS (SALE_ID, PROD_ID, QUANTITY, SUB_TOTAL) VALUES (?, ?, ?, ?)";
-        PreparedStatement pstmt = connection.prepareStatement(insertSaleItemsQuery);
-
-        for (SaleItem item : items) {
-            pstmt.setInt(1, saleId);
-            pstmt.setInt(2, item.getProductId());
-            pstmt.setInt(3, item.getQuantity());
-            pstmt.setDouble(4, item.getSubtotal());
-            pstmt.addBatch();
-        }
-        pstmt.executeBatch();
-    }
-
-    public void updateProductStock(List<SaleItem> items) throws SQLException {
-        String updateStockQuery = "UPDATE PRODUCTS SET QUANTITY_STOCK = QUANTITY_STOCK - ? WHERE PROD_ID = ?";
-        PreparedStatement pstmt = connection.prepareStatement(updateStockQuery);
-
-        for (SaleItem item : items) {
-            pstmt.setInt(1, item.getQuantity());
-            pstmt.setInt(2, item.getProductId());
-            pstmt.addBatch();
-        }
-        pstmt.executeBatch();
     }
 }

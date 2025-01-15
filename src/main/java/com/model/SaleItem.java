@@ -1,10 +1,10 @@
 package com.model;
 
 public class SaleItem {
-    private int saleId;
-    private int productId;
-    private int quantity;
-    private double subtotal;
+    private int saleId; // References SALE_ID in the sale_items table
+    private int productId; // References PROD_ID in the sale_items table
+    private int quantity; // Quantity of the product sold
+    private double subtotal; // Subtotal for this product in the sale
 
     // Getters and Setters
     public int getSaleId() {
