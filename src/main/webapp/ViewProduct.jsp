@@ -246,7 +246,7 @@
                     <%
                         String imagePath = product.getImagePath();
                         if (imagePath == null || imagePath.isEmpty()) {
-                            imagePath = "default-image.jpg"; // Default image path
+                            imagePath = "img/default-image.jpg"; // Default image path
                         }
                     %>
                     <img src="<%= imagePath %>" alt="<%= product.getProdName() %>">

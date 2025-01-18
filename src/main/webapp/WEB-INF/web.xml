@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-         xmlns="https://jakarta.ee/xml/ns/jakartaee" 
-         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd" 
-         version="5.0">
-  
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:web="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd" version="5.0">
   <display-name>Kedai Kerepek Maksu Inventory System</display-name>
-
   <welcome-file-list>
-      <welcome-file>DashboardHome.jsp</welcome-file>  <!-- Make sure this is the correct welcome page -->
+    <welcome-file>DashboardHome.jsp</welcome-file>
   </welcome-file-list>
-
-  <!-- Servlet Definitions -->
   <servlet>
     <description>Handles the creation of new products</description>
     <display-name>CreateProductServlet</display-name>
@@ -18,12 +11,10 @@
     <servlet-class>com.controller.CreateProductServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
-
   <servlet-mapping>
     <servlet-name>CreateProductServlet</servlet-name>
     <url-pattern>/CreateProductServlet</url-pattern>
   </servlet-mapping>
-
   <servlet>
     <description>Displays a list of products</description>
     <display-name>ViewProductServlet</display-name>
@@ -31,12 +22,10 @@
     <servlet-class>com.controller.ViewProductServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
-
   <servlet-mapping>
     <servlet-name>ViewProductServlet</servlet-name>
     <url-pattern>/ViewProductServlet</url-pattern>
   </servlet-mapping>
-
   <servlet>
     <description>Handles product updates</description>
     <display-name>UpdateProductServlet</display-name>
@@ -44,12 +33,10 @@
     <servlet-class>com.controller.UpdateProductServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
-
   <servlet-mapping>
     <servlet-name>UpdateProductServlet</servlet-name>
     <url-pattern>/UpdateProductServlet</url-pattern>
   </servlet-mapping>
-
   <servlet>
     <description>Handles product deletion</description>
     <display-name>DeleteProductServlet</display-name>
@@ -57,19 +44,26 @@
     <servlet-class>com.controller.DeleteProductServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
-
   <servlet-mapping>
     <servlet-name>DeleteProductServlet</servlet-name>
     <url-pattern>/DeleteProductServlet</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>CompleteSaleServlet</servlet-name>
     <servlet-class>com.controller.CompleteSaleServlet</servlet-class>
-</servlet>
-<servlet-mapping>
+  </servlet>
+  <servlet-mapping>
     <servlet-name>CompleteSaleServlet</servlet-name>
     <url-pattern>/complete-sale</url-pattern>
-</servlet-mapping>
-
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ReportController</display-name>
+    <servlet-name>ReportController</servlet-name>
+    <servlet-class>com.controller.ReportController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ReportController</servlet-name>
+    <url-pattern>/ReportController</url-pattern>
+  </servlet-mapping>
 </web-app>

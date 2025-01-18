@@ -289,7 +289,7 @@
             <a href="DashboardHome.jsp">Dashboard</a>
             <a href="ViewProductServlet">Product</a>
             <a href="CreateSales.jsp" class="active">Sales</a>
-            <a href="Report.jsp">Report</a>
+            <a href="Report.html">Report</a>
             <a href="#">Account</a>
         </div>
     </div>
@@ -316,7 +316,7 @@
                     for (Product product : productList) {
                 %>
                 <div class="product-item">
-                    <img src="<%= product.getImagePath() %>" alt="<%= product.getProdName() %>">
+                    <img src="<%= product.getImagePath()%>" alt="<%= product.getProdName() %>">
                     <h4><%= product.getProdName() %></h4>
                     <p>Price: RM <%= product.getProdPrice() %></p>
                     <button class="add-to-order" 
