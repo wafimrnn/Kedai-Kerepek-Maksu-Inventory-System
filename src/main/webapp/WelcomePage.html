@@ -67,33 +67,32 @@
     }
 
     /* Button Styling */
-	button {
-  		background-color: #e5e764; /* Solid yellow-green background */
-  		color: rgb(10, 1, 1); /* Dark text */
-  		font-size: 20px;
-  		font-weight: bold;
-  		padding: 15px 40px;
-  		border: none;
-  		border-radius: 30px;
-  		cursor: pointer;
-  		transition: background-color 0.3s ease, transform 0.2s ease;
-  		position: relative; /* Required for stacking isolation */
-  		z-index: 2; /* Ensure it's above any pseudo-element background */
-	}
+    button {
+      background-color: #e5e764; /* Solid yellow-green background */
+      color: rgb(10, 1, 1); /* Dark text */
+      font-size: 20px;
+      font-weight: bold;
+      padding: 15px 40px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      position: relative; /* Required for stacking isolation */
+      z-index: 2; /* Ensure it's above any pseudo-element background */
+    }
 
-	/* Ensure no interaction with the ::before pseudo-element on hover */
-	button:hover, button:active {
-  		background-color: #dab203; /* Solid blue on hover/click */
-  		color: rgb(255, 255, 255);
-  		transform: scale(1.05);
-  		z-index: 3; /* Keep it firmly above all layers */
-	}
+    /* Ensure no interaction with the ::before pseudo-element on hover */
+    button:hover, button:active {
+      background-color: #dab203; /* Solid blue on hover/click */
+      color: rgb(255, 255, 255);
+      transform: scale(1.05);
+      z-index: 3; /* Keep it firmly above all layers */
+    }
 
-	/* Explicitly disable pseudo-element background on buttons */
-	button::before, button::after {
-  		content: none; /* Ensure buttons don’t inherit pseudo-elements */
-	}
-
+    /* Explicitly disable pseudo-element background on buttons */
+    button::before, button::after {
+      content: none; /* Ensure buttons don’t inherit pseudo-elements */
+    }
 
     /* Responsive Design */
     @media (max-width: 768px) {
@@ -109,7 +108,7 @@
 </style>
 </head>
 <body>
-	<div class="content">
+  <div class="content">
     <!-- Welcome Message -->
     <h2>WELCOME TO</h2>
     <h1>Kedai Kerepek Maksu</h1>
@@ -121,15 +120,14 @@
   </div>
 
   <script>
-    // Placeholder navigation functions
+    // Navigate to Sign Up page
     function navigateToSignUp() {
-      alert("Redirecting to Sign Up...");
-      // Example: window.location.href = "signup.html";
+      window.location.href = "Signup.html";  // Replace with the actual path of your signup page
     }
 
+    // Navigate to Login page
     function navigateToLogin() {
-      alert("Redirecting to Log In...");
-      // Example: window.location.href = "login.html";
+      window.location.href = "Login.html";  // Replace with the actual path of your login page
     }
   </script>
 </body>
