@@ -138,22 +138,24 @@
       <h1>Kedai Kerepek Maksu</h1>
     </div>
 
-    <!-- Right Section -->
+     <!-- Right Section -->
     <div class="right-section">
-      <!-- Login Form -->
-      <div class="form-box active" id="login-form">
-        <h1>Welcome</h1>
+      <div class="form-box">
+        <h1>Create Account</h1>
         <h2>Please Enter Your Details</h2>
-        <form action="/api/users" method="POST">
+        <form>
+          <input type="text" placeholder="Staff ID" required>
           <input type="email" placeholder="Email" required>
+          <input type="text" placeholder="Username" required>
           <input type="password" placeholder="Password" required>
-          <button type="submit">Log In</button>
+          <button type="submit">Create Account</button>
         </form>
         <div class="link">
-          <p>New here? <a href="SignUp.html" onclick="toggleForm('signup')">Create an account</a></p>
+          <p>Already have an account? <a href="Login.html" onclick="toggleForm('signup')">Login</a></p>
         </div>
       </div>
-
+    </div>
+  </div>
 
   <script>
     function toggleForm(formType) {
