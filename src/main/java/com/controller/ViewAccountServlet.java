@@ -22,7 +22,11 @@ public class ViewAccountServlet extends HttpServlet {
     }
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes
 =======
 }
 >>>>>>> Stashed changes
