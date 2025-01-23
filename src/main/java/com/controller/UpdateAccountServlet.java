@@ -49,16 +49,4 @@ public class UpdateAccountServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to update account");
         }
     }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 }
-=======
-}
->>>>>>> Stashed changes
-=======
-}
->>>>>>> Stashed changes
-=======
-}
->>>>>>> Stashed changes
