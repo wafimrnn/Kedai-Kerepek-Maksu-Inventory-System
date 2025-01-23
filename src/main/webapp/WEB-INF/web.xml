@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:web="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd" version="5.0">
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xmlns="https://jakarta.ee/xml/ns/jakartaee" 
+         xmlns:web="http://xmlns.jcp.org/xml/ns/javaee" 
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd" 
+         version="5.0">
   <display-name>Kedai Kerepek Maksu Inventory System</display-name>
+
+  <!-- Welcome file -->
   <welcome-file-list>
     <welcome-file>DashboardHome.jsp</welcome-file>
   </welcome-file-list>
+
+  <!-- CreateProductServlet -->
   <servlet>
     <description>Handles the creation of new products</description>
     <display-name>CreateProductServlet</display-name>
@@ -15,6 +23,8 @@
     <servlet-name>CreateProductServlet</servlet-name>
     <url-pattern>/CreateProductServlet</url-pattern>
   </servlet-mapping>
+
+  <!-- ViewProductServlet -->
   <servlet>
     <description>Displays a list of products</description>
     <display-name>ViewProductServlet</display-name>
@@ -26,6 +36,8 @@
     <servlet-name>ViewProductServlet</servlet-name>
     <url-pattern>/ViewProductServlet</url-pattern>
   </servlet-mapping>
+
+  <!-- UpdateProductServlet -->
   <servlet>
     <description>Handles product updates</description>
     <display-name>UpdateProductServlet</display-name>
@@ -37,6 +49,8 @@
     <servlet-name>UpdateProductServlet</servlet-name>
     <url-pattern>/UpdateProductServlet</url-pattern>
   </servlet-mapping>
+
+  <!-- DeleteProductServlet -->
   <servlet>
     <description>Handles product deletion</description>
     <display-name>DeleteProductServlet</display-name>
@@ -48,6 +62,8 @@
     <servlet-name>DeleteProductServlet</servlet-name>
     <url-pattern>/DeleteProductServlet</url-pattern>
   </servlet-mapping>
+
+  <!-- CompleteSaleServlet -->
   <servlet>
     <servlet-name>CompleteSaleServlet</servlet-name>
     <servlet-class>com.controller.CompleteSaleServlet</servlet-class>
@@ -56,6 +72,8 @@
     <servlet-name>CompleteSaleServlet</servlet-name>
     <url-pattern>/complete-sale</url-pattern>
   </servlet-mapping>
+
+  <!-- ReportController -->
   <servlet>
     <description></description>
     <display-name>ReportController</display-name>
@@ -66,4 +84,18 @@
     <servlet-name>ReportController</servlet-name>
     <url-pattern>/ReportController</url-pattern>
   </servlet-mapping>
+
+  <!-- ViewAccountServlet -->
+  <servlet>
+    <description>Displays a list of accounts</description>
+    <display-name>ViewAccountServlet</display-name>
+    <servlet-name>ViewAccountServlet</servlet-name>
+    <servlet-class>com.controller.ViewAccountServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ViewAccountServlet</servlet-name>
+    <url-pattern>/ViewAccountServlet</url-pattern>
+  </servlet-mapping>
+
 </web-app>
