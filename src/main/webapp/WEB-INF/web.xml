@@ -8,7 +8,7 @@
 
   <!-- Welcome file -->
   <welcome-file-list>
-    <welcome-file>DashboardHome.jsp</welcome-file>
+    <welcome-file>Login.html</welcome-file>
   </welcome-file-list>
 
   <!-- CreateProductServlet -->
@@ -97,5 +97,23 @@
     <servlet-name>ViewAccountServlet</servlet-name>
     <url-pattern>/ViewAccountServlet</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>com.controller.LoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/LoginServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>SignUpServlet</servlet-name>
+        <servlet-class>com.controller.SignUpServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SignUpServlet</servlet-name>
+        <url-pattern>/SignUpServlet</url-pattern>
+    </servlet-mapping>
 
 </web-app>
