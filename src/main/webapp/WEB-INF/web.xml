@@ -8,7 +8,7 @@
 
   <!-- Welcome file -->
   <welcome-file-list>
-    <welcome-file>Login.html</welcome-file>
+    <welcome-file>DashboardHome.jsp</welcome-file>
   </welcome-file-list>
 
   <!-- CreateProductServlet -->
