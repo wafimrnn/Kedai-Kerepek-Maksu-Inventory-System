@@ -117,7 +117,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             margin-top: 60px; /* Push content below the head bar */
             overflow: hidden; /* Prevent overflow */
         }
@@ -127,14 +127,28 @@
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
+            width: 100%;
+            height: 100%;
             background-image: url('img/pisangImage.jpg'); /* Path to your image */
             background-size: cover; /* Cover the entire area */
             background-position: center; /* Center the image */
             background-repeat: no-repeat; /* Prevent the image from repeating */
+            
             filter: blur(1px); /* Adjust blur intensity */
             z-index: -1; /* Push background below all content */
+        }
+        
+        .blurred-box {
+            position: relative;
+            z-index: 1;
+            padding: 40px;
+            background: rgba(255, 250, 171, 0.62);
+            backdrop-filter: blur(8px); /* Ensure this is applied correctly */
+            border-radius: 10px;
+            margin-top: 20px; /* Set a height to center vertically */
+            width: 80%;
+            text-align: center;
+            
         }
 
         .header {
@@ -150,7 +164,7 @@
             font-size: 28px;
             color: #343a40;
         }
-
+        
         .add-btn {
             background-color: #007BFF;
             color: white;
@@ -239,7 +253,7 @@
     <h2>Kedai Kerepek Maksu</h2>
     <div class="nav-links">
         <a href="DashboardHome.jsp">Dashboard</a>
-        <a href="ViewProductServlet">Product</a>
+        <a href="ViewProduct.jsp">Product</a>
         <a href="CreateSales.jsp">Sales</a>
         <a href="Report.html">Report</a>
         <a href="ViewAccount.jsp" class="active">Account</a>
@@ -257,6 +271,7 @@
 
 <!-- Main Content -->
 <div class="main-content">
+<div class="blurred-box">
     <!-- Account Table -->
     <div class="table-container">
         <h2>Account List</h2>
@@ -303,6 +318,7 @@
             }
         %>
     </div>
+</div>
 </div>
 </body>
 </html>

@@ -8,6 +8,10 @@
     body {
       font-family: Arial, sans-serif;
       background-color: #f4f4f9;
+      background-image: url('img/pisangImage.jpg');
+      background-size: cover; /* Cover the entire area */
+      background-position: center; /* Center the image */
+      background-repeat: no-repeat; /* Prevent the image from repeating */
       margin: 0;
       padding: 0;
       height: 100vh;
@@ -22,10 +26,12 @@
       align-items: center;
       width: 90%;
       max-width: 1200px;
-      background-color: white;
+      background-color:rgba(236, 238, 151, 0.8);
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       overflow: hidden;
+      backdrop-filter: blur(1px);
+      -webkit-backdrop-filter: blur(1px);
     }
 
     .left-section {

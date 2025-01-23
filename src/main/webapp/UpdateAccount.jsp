@@ -133,6 +133,48 @@
             filter: blur(1px); /* Adjust blur intensity */
             z-index: -1; /* Push background below all content */
         }
+        
+        .blurred-box {
+            position: relative;
+            z-index: 1;
+            padding: 40px;
+            background: rgba(255, 250, 171, 0.62);
+            backdrop-filter: blur(8px); /* Ensure this is applied correctly */
+            border-radius: 10px;
+            margin-top: 20px; /* Set a height to center vertically */
+            width: 80%;
+            text-align: center;
+            
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #343a40;
+        }
+
+        .add-btn {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .add-btn:hover {
+            background-color: #0056b3;
+        }
 
         .form-container {
             max-width: 600px;
@@ -178,11 +220,14 @@
 <body>
     <!-- Sidebar -->
     <div class="sidebar">
-        <h2>Dashboard</h2>
-        <a href="ViewAccountServlet" class="active">Account</a>
-        <a href="ViewProductServlet">Product</a>
-        <a href="CreateSales.jsp">Sales</a>
-        <a href="Report.html">Report</a>
+        <h2>Kedai Kerepek Maksu</h2>
+        <div class="nav-links">
+            <a href="DashboardHome.jsp" class="active">Dashboard</a>
+            <a href="ViewProduct.jsp">Product</a>
+            <a href="CreateSales.jsp">Sales</a>
+            <a href="Report.html">Report</a>
+            <a href="ViewAccount.jsp">Account</a>
+        </div>
     </div>
     <!-- Head Bar -->
     <div class="head-bar">
@@ -191,6 +236,7 @@
 
     <!-- Main Content -->
     <div class="main-content">
+    <div class="blurred-box">
         <h2>Update Account</h2>
         <div class="form-container">
             <%
@@ -230,6 +276,7 @@
             </form>
             <% } %>
         </div>
+    </div>
     </div>
 </body>
 </html>

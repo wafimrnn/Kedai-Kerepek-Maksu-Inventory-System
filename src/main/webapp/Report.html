@@ -17,17 +17,21 @@
         body {
             display: flex;
             min-height: 100vh;
-            background-color: #f4f4f9;
+            background-image: url('img/pisangImage.jpg'); /* Background image */
+            background-size: cover; /* Cover the entire area */
+            background-position: center; /* Center the image */
+            position: relative;
         }
 
         /* Sidebar Styling */
         .sidebar {
             width: 220px;
-            background-color: #343a40;
+            background-color: rgba(241, 241, 109, 0.62); /* Semi-transparent background color */
             color: white;
             display: flex;
             flex-direction: column;
             padding: 20px;
+            backdrop-filter: blur(10px); /* Apply blur effect to the background */
         }
 
         .sidebar h2 {
@@ -45,7 +49,7 @@
 
         .nav-links a {
             text-decoration: none;
-            color: white;
+            color: white; /* Default font color */
             padding: 10px 15px;
             margin: 5px 0;
             border-radius: 4px;
@@ -57,56 +61,105 @@
         }
 
         .nav-links a.active {
-            background-color: #007BFF;
+            background-color: #f1ea82; /* Background color for active link */
+            color: #5c5c52; /* Font color for active link */
         }
         
         /* Head Bar Styling */
-		.head-bar {
-		    width: calc(100% - 220px); /* Full width minus the sidebar width */
-		    height: 60px;
-		    background-color: #007BFF;
-		    color: white;
-		    display: flex;
-		    justify-content: space-between;
-		    align-items: center;
-		    padding: 0 20px;
-		    position: fixed;
-		    top: 0;
-		    left: 220px; /* Push the head bar right to align with the sidebar */
-		    z-index: 1000; /* Ensure it stays on top */
-		    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-		}
-		
-		.head-bar .title {
-		    font-size: 20px;
-		    font-weight: bold;
-		}
-		
-		.head-bar .icons {
-		    display: flex;
-		    align-items: center;
-		    gap: 15px;
-		}
-		
-		.head-bar .icons i {
-		    font-size: 20px;
-		    cursor: pointer;
-		    transition: color 0.3s ease;
-		}
-		
-		.head-bar .icons i:hover {
-		    color: #ddd;
-		}
+        .head-bar {
+            width: calc(100% - 220px); /* Full width minus the sidebar width */
+            height: 60px;
+            background-color: rgba(227, 227, 80, 0.62); /* Semi-transparent background color */
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            position: fixed;
+            top: 0;
+            left: 220px; /* Push the head bar right to align with the sidebar */
+            z-index: 1000; /* Ensure it stays on top */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px); /* Apply blur effect to the background */
+        }
+        
+        .head-bar .title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+        
+        .head-bar .icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #ffffff;
+        }
+        
+        .head-bar .icons i {
+            font-size: 20px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .head-bar .icons i:hover {
+            color: #ddd;
+        }
 
         /* Main Content Area */
         .main-content {
             flex: 1;
             padding: 20px;
-            background-color: white;
+            position: relative; /* Position relative for the overlay */
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: flex-start;
             margin-top: 60px; /* Push content below the head bar */
+            overflow: hidden; /* Prevent overflow */
+        }
+        
+        .main-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('img/pisangImage.jpg'); /* Path to your image */
+            background-size: cover; /* Cover the entire area */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Prevent the image from repeating */
+            
+            filter: blur(1px); /* Adjust blur intensity */
+            z-index: -1; /* Push background below all content */
+        }
+        
+        .blurred-box {
+            position: relative;
+            z-index: 1;
+            padding: 40px;
+            background: rgba(255, 250, 171, 0.62);
+            backdrop-filter: blur(8px); /* Ensure this is applied correctly */
+            border-radius: 10px;
+            margin-top: 20px; /* Set a height to center vertically */
+            width: 80%;
+            text-align: center;
+            
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #343a40;
         }
 
         .main-content h1 {
@@ -114,6 +167,8 @@
             color: #343a40;
             margin-bottom: 20px;
         }
+        
+        
 
         .report-form {
 		    width: 100%;
@@ -166,15 +221,15 @@
         <h2>Kedai Kerepek Maksu</h2>
         <div class="nav-links">
             <a href="DashboardHome.jsp">Dashboard</a>
-            <a href="ViewProductServlet">Product</a>
+            <a href="ViewProduct.jsp">Product</a>
             <a href="CreateSales.jsp">Sales</a>
-            <a href="#" class="active">Report</a>
-            <a href="#">Account</a>
+            <a href="Report.html" class="active">Report</a>
+            <a href="ViewAccount.jsp">Account</a>
         </div>
     </div>
     <!-- Head Bar -->
 	<div class="head-bar">
-	    <div class="title">Sales</div>
+	    <div class="title">Report</div>
 	    <div class="icons">
 	        <i class="fas fa-bell" title="Notifications"></i>
 	        <i class="fas fa-user-circle" title="Account"></i>
@@ -183,6 +238,7 @@
 
     <!-- Main Content -->
     <div class="main-content">
+    <div class="blurred-box">
         <h1>Generate Sales Report</h1>
 
         <!-- Report Table Section -->
@@ -202,6 +258,7 @@
 		
 		        <button type="submit">Generate Report</button>
 		    </form>
+		</div>
 		</div>
     </div>
 </body>
