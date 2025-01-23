@@ -14,7 +14,10 @@
             font-family: Arial, sans-serif;
         }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         body {
@@ -23,7 +26,10 @@
             background-color: #f4f4f9;
         }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         /* Sidebar */
@@ -34,7 +40,10 @@
             padding: 20px;
         }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         .sidebar h2 {
@@ -43,7 +52,10 @@
             padding-bottom: 10px;
         }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         .sidebar a {
@@ -55,7 +67,10 @@
             transition: 0.3s;
         }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         .sidebar a.active, .sidebar a:hover {
@@ -84,7 +99,10 @@
             font-weight: bold;
         }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         .main-content {
@@ -93,7 +111,10 @@
             margin-top: 60px; /* Push content below the head bar */
         }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         .form-container {
@@ -105,11 +126,17 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
         .form-group {
             margin-bottom: 15px;
         }
 
+=======
+        .form-group {
+            margin-bottom: 15px;
+        }
+>>>>>>> Stashed changes
 =======
         .form-group {
             margin-bottom: 15px;
@@ -121,7 +148,10 @@
             font-weight: bold;
         }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         input, select {
@@ -132,7 +162,10 @@
             border-radius: 4px;
         }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         button {
@@ -144,7 +177,10 @@
             cursor: pointer;
         }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         .cancel-button {

@@ -21,7 +21,11 @@ public class ViewAccountServlet extends HttpServlet {
         request.getRequestDispatcher("ViewAccount.jsp").forward(request, response);
     }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes
 =======
 }
 >>>>>>> Stashed changes

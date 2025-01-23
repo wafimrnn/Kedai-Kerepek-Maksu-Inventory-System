@@ -1,7 +1,10 @@
 <%@ page import="com.model.Account" %>
 <%@ page import="java.util.List" %>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 <%@ page import="com.dao.AccountDAO" %>
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 <!DOCTYPE html>
@@ -10,7 +13,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     <title>View Account</title>
+=======
+    <title>View Accounts</title>
+>>>>>>> Stashed changes
 =======
     <title>View Accounts</title>
 >>>>>>> Stashed changes
@@ -73,7 +80,11 @@
         /* Head Bar Styling */
         .head-bar {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             width: calc(100% - 220px); /* Full width minus the sidebar width */
+=======
+            width: calc(100% - 220px);
+>>>>>>> Stashed changes
 =======
             width: calc(100% - 220px);
 >>>>>>> Stashed changes
@@ -87,8 +98,13 @@
             position: fixed;
             top: 0;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             left: 220px; /* Push the head bar right to align with the sidebar */
             z-index: 1000; /* Ensure it stays on top */
+=======
+            left: 220px;
+            z-index: 1000;
+>>>>>>> Stashed changes
 =======
             left: 220px;
             z-index: 1000;
@@ -102,12 +118,15 @@
         }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         .head-bar .icons {
             display: flex;
             align-items: center;
             gap: 15px;
         }
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         .head-bar .icons i {
@@ -126,7 +145,11 @@
             padding: 20px;
             background-color: white;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             margin-top: 60px; /* Push content below the head bar */
+=======
+            margin-top: 60px;
+>>>>>>> Stashed changes
 =======
             margin-top: 60px;
 >>>>>>> Stashed changes
@@ -147,6 +170,7 @@
         }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         .add-btn {
             background-color: #007BFF;
             color: white;
@@ -166,10 +190,14 @@
 =======
         /* Table Styling */
 >>>>>>> Stashed changes
+=======
+        /* Table Styling */
+>>>>>>> Stashed changes
         .table-container {
             margin-top: 20px;
         }
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
         .table-container h2 {
             font-size: 24px;
@@ -186,16 +214,22 @@
         table, th, td {
             border: 1px solid #ccc;
 =======
+=======
+>>>>>>> Stashed changes
         table {
             width: 100%;
             border-collapse: collapse;
             background-color: white;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         }
 
         th, td {
             padding: 10px;
             text-align: left;
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
         }
 
@@ -211,6 +245,8 @@
             text-decoration: none;
             transition: background 0.3s ease;
 =======
+=======
+>>>>>>> Stashed changes
             border-bottom: 1px solid #ddd;
         }
 
@@ -227,6 +263,9 @@
             border-radius: 4px;
             cursor: pointer;
             text-decoration: none;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         }
 
@@ -236,6 +275,7 @@
     </style>
 </head>
 <body>
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 
 <!-- Sidebar -->
@@ -310,6 +350,8 @@
 </div>
 
 =======
+=======
+>>>>>>> Stashed changes
     <!-- Sidebar -->
     <div class="sidebar">
         <h2>Kedai Kerepek Maksu</h2>
@@ -379,6 +421,9 @@
             %>
         </div>
     </div>
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 </body>
 </html>
