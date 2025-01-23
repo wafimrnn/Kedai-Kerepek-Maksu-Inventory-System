@@ -13,45 +13,63 @@
             box-sizing: border-box;
             font-family: Arial, sans-serif;
         }
-        
+
         body {
             display: flex;
             min-height: 100vh;
-            background-color: #f4f4f9;
+            background-image: url('img/pisangImage.jpg'); /* Background image */
+            background-size: cover; /* Cover the entire area */
+            background-position: center; /* Center the image */
+            position: relative;
         }
 
-        /* Sidebar */
+        /* Sidebar Styling */
         .sidebar {
             width: 220px;
-            background-color: #343a40;
+            background-color: rgba(241, 241, 109, 0.62); /* Semi-transparent background color */
             color: white;
+            display: flex;
+            flex-direction: column;
             padding: 20px;
+            backdrop-filter: blur(10px); /* Apply blur effect to the background */
         }
 
         .sidebar h2 {
+            margin-bottom: 20px;
             text-align: center;
+            font-size: 20px;
             border-bottom: 1px solid #495057;
             padding-bottom: 10px;
         }
 
-        .sidebar a {
-            display: block;
-            color: white;
-            text-decoration: none;
-            padding: 10px;
-            border-radius: 4px;
-            transition: 0.3s;
+        .nav-links {
+            display: flex;
+            flex-direction: column;
         }
 
-        .sidebar a.active, .sidebar a:hover {
-            background-color: #007BFF;
+        .nav-links a {
+            text-decoration: none;
+            color: white; /* Default font color */
+            padding: 10px 15px;
+            margin: 5px 0;
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: #495057;
+        }
+
+        .nav-links a.active {
+            background-color: #f1ea82; /* Background color for active link */
+            color: #5c5c52; /* Font color for active link */
         }
         
         /* Head Bar Styling */
         .head-bar {
             width: calc(100% - 220px); /* Full width minus the sidebar width */
             height: 60px;
-            background-color: #007BFF;
+            background-color: rgba(227, 227, 80, 0.62); /* Semi-transparent background color */
             color: white;
             display: flex;
             justify-content: space-between;
@@ -62,17 +80,58 @@
             left: 220px; /* Push the head bar right to align with the sidebar */
             z-index: 1000; /* Ensure it stays on top */
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px); /* Apply blur effect to the background */
         }
         
         .head-bar .title {
             font-size: 20px;
             font-weight: bold;
+            color: #ffffff;
+        }
+        
+        .head-bar .icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #ffffff;
+        }
+        
+        .head-bar .icons i {
+            font-size: 20px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .head-bar .icons i:hover {
+            color: #ddd;
         }
 
+        /* Main Content Area */
         .main-content {
             flex: 1;
             padding: 20px;
+            position: relative; /* Position relative for the overlay */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             margin-top: 60px; /* Push content below the head bar */
+            overflow: hidden; /* Prevent overflow */
+        }
+        
+        .main-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('img/pisangImage.jpg'); /* Path to your image */
+            background-size: cover; /* Cover the entire area */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Prevent the image from repeating */
+            filter: blur(1px); /* Adjust blur intensity */
+            z-index: -1; /* Push background below all content */
         }
 
         .form-container {
