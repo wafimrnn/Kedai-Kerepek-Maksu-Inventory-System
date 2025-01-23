@@ -181,7 +181,7 @@
             <a href="ViewProductServlet">Product</a>
             <a href="CreateSales.jsp">Sales</a>
             <a href="Report.html">Report</a>
-            <a href="#">Account</a>
+            <a href="ViewAccount.jsp">Account</a>
         </div>
     </div>
     <!-- Head Bar -->

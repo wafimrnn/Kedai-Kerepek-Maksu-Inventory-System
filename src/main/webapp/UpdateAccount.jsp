@@ -13,31 +13,13 @@
             box-sizing: border-box;
             font-family: Arial, sans-serif;
         }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+        
         body {
             display: flex;
             min-height: 100vh;
             background-color: #f4f4f9;
         }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         /* Sidebar */
         .sidebar {
             width: 220px;
@@ -45,31 +27,13 @@
             color: white;
             padding: 20px;
         }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         .sidebar h2 {
             text-align: center;
             border-bottom: 1px solid #495057;
             padding-bottom: 10px;
         }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         .sidebar a {
             display: block;
             color: white;
@@ -78,16 +42,7 @@
             border-radius: 4px;
             transition: 0.3s;
         }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         .sidebar a.active, .sidebar a:hover {
             background-color: #007BFF;
         }
@@ -113,31 +68,13 @@
             font-size: 20px;
             font-weight: bold;
         }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         .main-content {
             flex: 1;
             padding: 20px;
             margin-top: 60px; /* Push content below the head bar */
         }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         .form-container {
             max-width: 600px;
             margin: 0 auto;
@@ -146,44 +83,17 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 
         .form-group {
             margin-bottom: 15px;
         }
-
-=======
-        .form-group {
-            margin-bottom: 15px;
-        }
->>>>>>> Stashed changes
-=======
-        .form-group {
-            margin-bottom: 15px;
-        }
->>>>>>> Stashed changes
-=======
-        .form-group {
-            margin-bottom: 15px;
-        }
->>>>>>> Stashed changes
+        
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
         }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         input, select {
             width: 100%;
             padding: 10px;
@@ -191,16 +101,7 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         button {
             padding: 10px 15px;
             background-color: #28a745;
@@ -209,16 +110,7 @@
             border-radius: 4px;
             cursor: pointer;
         }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         .cancel-button {
             background-color: #dc3545;
         }
