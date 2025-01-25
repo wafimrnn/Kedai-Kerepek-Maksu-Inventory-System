@@ -134,6 +134,8 @@
     <div class="right-section">
       <div class="form-box" id="login-form">
         <h1>Login</h1>
+        <!-- Feedback message -->
+      <p id="login-message" style="color: red;"></p>
         <form id="login-form-data" action="/Kedai-Kerepek-Maksu-Inventory-System/LoginServlet" method="POST">
           <input id="login-username" name="userName" type="text" placeholder="Username" required>
           <input id="login-password" name="password" type="password" placeholder="Password" required>
@@ -146,15 +148,13 @@
 
       <div class="form-box" id="signup-form" style="display: none;">
         <h1>Sign Up</h1>
+      <!-- Feedback message -->
+      <p id="signup-message" style="color: red;"></p>
         <form id="signup-form-data" action="/Kedai-Kerepek-Maksu-Inventory-System/SignUpServlet" method="POST">
           <input id="signup-username" name="userName" type="text" placeholder="Username" required>
           <input id="signup-password" name="password" type="password" placeholder="Password" required>
           <input id="signup-phone" name="phone" type="text" placeholder="Phone Number" required>
-          <select id="signup-role" name="role" required>
-            <option value="">Select Role</option>
-            <option value="OWNER">OWNER</option>
-            <option value="STAFF">STAFF</option>
-          </select>
+          <input type="hidden" id="signup-role" name="role" value="OWNER">
           <textarea id="signup-address" name="address" placeholder="Address" rows="3" required></textarea>
           <button type="submit">Sign Up</button>
         </form>

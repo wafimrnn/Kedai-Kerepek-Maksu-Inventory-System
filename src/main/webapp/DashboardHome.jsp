@@ -170,6 +170,36 @@
             align-items: center; /* Center content horizontally */
             text-align: center; /* Center text horizontally */
         }
+        
+        #notification-popup {
+		    position: absolute;
+		    top: 50px; /* Adjust based on your layout */
+		    right: 20px;
+		    background: white;
+		    border: 1px solid #ccc;
+		    border-radius: 5px;
+		    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+		    padding: 10px;
+		    z-index: 1000;
+		    max-width: 300px;
+		    display: none;
+		}
+		
+		#notification-popup ul {
+		    list-style: none;
+		    margin: 0;
+		    padding: 0;
+		}
+		
+		#notification-popup li {
+		    margin: 5px 0;
+		    padding: 5px;
+		    border-bottom: 1px solid #eee;
+		}
+		
+		#notification-popup li:last-child {
+		    border-bottom: none;
+		}
     </style>
 </head>
 <body>
@@ -185,13 +215,13 @@
         </div>
     </div>
     <!-- Head Bar -->
-    <div class="head-bar">
-        <div class="title">Dashboard</div>
-        <div class="icons">
-            <i class="fas fa-bell" title="Notifications"></i>
-            <i class="fas fa-user-circle" title="Account"></i>
-        </div>
-    </div>
+	<div class="head-bar">
+	    <div class="title">Dashboard</div>
+	    <div class="icons">
+	        <i class="fas fa-bell" id="notification-icon" title="Notifications"></i>
+	        <i class="fas fa-user-circle" title="Account"></i>
+	    </div>
+	</div>
 
     <!-- Main Content -->
     <div class="main-content">
@@ -200,5 +230,9 @@
             <h1>KEDAI KEREPEK MAKSU</h1>
         </div>
     </div>
+    
+    <div id="notification-popup" style="display: none;">
+	    <ul id="notification-list"></ul>
+	</div>
 </body>
 </html>

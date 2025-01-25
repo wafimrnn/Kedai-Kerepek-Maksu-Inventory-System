@@ -9,29 +9,24 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
 import com.dao.UserDAO;
+import com.model.User;
 
 public class LoginServlet extends HttpServlet {
-    private final UserDAO userDAO = new UserDAO();
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
-            throws ServletException, IOException {
-        String username = request.getParameter("username");
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String username = request.getParameter("userName");
         String password = request.getParameter("password");
 
-        try {
-            if (userDAO.validateUser(username, password)) {
-                // Create session and set user data
-                HttpSession session = request.getSession();
-                session.setAttribute("username", username);
+        UserDAO userDAO = new UserDAO();
+        User user = userDAO.loginUser(username, password);
 
-                response.getWriter().write("Login successful!");
-            } else {
-                response.getWriter().write("Invalid credentials!");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.getWriter().write("An error occurred: " + e.getMessage());
+        if (user == null) {
+            // Invalid credentials or account doesn't exist
+            response.sendRedirect("Login.html?message=Invalid username or password. Please try again.");
+        } else {
+            // Successful login
+            HttpSession session = request.getSession();
+            session.setAttribute("loggedInUser", user);
+            response.sendRedirect("DashboardHome.jsp");
         }
     }
 }

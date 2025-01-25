@@ -25,3 +25,20 @@ document.getElementById("signup-form-data").addEventListener("submit", function 
     this.submit(); // Directly submit the form
 });
 
+// Display feedback message for login or signup based on the page
+window.onload = function () {
+  const urlParams = new URLSearchParams(window.location.search);
+  const message = urlParams.get('message');
+
+  // Check if the login message element exists
+  const loginMessageElement = document.getElementById('login-message');
+  if (loginMessageElement && message) {
+    loginMessageElement.textContent = message;
+  }
+
+  // Check if the signup message element exists
+  const signupMessageElement = document.getElementById('signup-message');
+  if (signupMessageElement && message) {
+    signupMessageElement.textContent = message;
+  }
+};

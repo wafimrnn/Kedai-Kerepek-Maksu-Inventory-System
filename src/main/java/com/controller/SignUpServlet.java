@@ -11,56 +11,35 @@ import java.io.IOException;
 import com.dao.UserDAO;
 
 public class SignUpServlet extends HttpServlet {
-    private final UserDAO userDAO = new UserDAO();
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
-            throws ServletException, IOException {
-        String username = request.getParameter("username");
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String username = request.getParameter("userName");
         String password = request.getParameter("password");
         String phone = request.getParameter("phone");
-        String role = request.getParameter("role");
         String address = request.getParameter("address");
 
+        UserDAO userDAO = new UserDAO();
+
         try {
-            // Check if any users exist in the database
-            boolean isFirstAccount = userDAO.countUsers() == 0;
+            // Check if username already exists
+            if (userDAO.isUsernameTaken(username)) {
+                response.sendRedirect("Login.html?message=Username is already taken. Please choose another.");
+                return;
+            }
 
-            if (isFirstAccount) {
-                // Allow creating the first owner account without session validation
-                if (!"OWNER".equals(role)) {
-                    response.getWriter().write("Only the first account can be an OWNER!");
-                    return;
-                }
-                if (userDAO.createUser(username, password, phone, role, address, null)) {
-                    response.getWriter().write("First owner account created successfully!");
-                } else {
-                    response.getWriter().write("Failed to create the first owner account!");
-                }
+            // Attempt to create the account
+            boolean accountCreated = userDAO.createOwner(username, password, phone, address);
+
+            if (accountCreated) {
+                // Account created successfully
+                response.sendRedirect("Login.html?message=Account created successfully! Please log in.");
             } else {
-                // Normal account creation process
-                HttpSession session = request.getSession(false);
-                if (session == null || !"OWNER".equals(session.getAttribute("userRole"))) {
-                    response.getWriter().write("Unauthorized access!");
-                    return;
-                }
-
-                int ownerId = (int) session.getAttribute("userId");
-
-                if (userDAO.isUsernameTaken(username)) {
-                    response.getWriter().write("Username already exists!");
-                    return;
-                }
-
-                if (userDAO.createUser(username, password, phone, role, address, ownerId)) {
-                    response.getWriter().write("Account created successfully!");
-                } else {
-                    response.getWriter().write("Failed to create account!");
-                }
+                // Account creation failed
+                response.sendRedirect("Login.html?message=Error creating account. Please try again later.");
             }
         } catch (Exception e) {
+            // Log the exception for debugging
             e.printStackTrace();
-            response.getWriter().write("An error occurred: " + e.getMessage());
+            response.sendRedirect("Login.html?message=An unexpected error occurred. Please try again.");
         }
     }
 }

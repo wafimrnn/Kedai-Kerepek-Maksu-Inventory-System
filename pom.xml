@@ -102,6 +102,16 @@
 	    <artifactId>itextpdf</artifactId>
 	    <version>5.5.13.3</version> <!-- Use the latest compatible version -->
 	</dependency>
+	<dependency>
+    <groupId>jakarta.ws.rs</groupId>
+    <artifactId>jakarta.ws.rs-api</artifactId>
+    <version>3.1.0</version>
+</dependency>
+	<dependency>
+    <groupId>org.mindrot</groupId>
+    <artifactId>jbcrypt</artifactId>
+    <version>0.4</version>
+</dependency>
 
 	 </dependencies>
 
