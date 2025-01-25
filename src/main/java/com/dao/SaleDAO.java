@@ -52,23 +52,6 @@ public class SaleDAO {
         }
     }
     
-    public List<Sale> getAllSales() throws SQLException {
-        List<Sale> salesList = new ArrayList<>();
-        String sql = "SELECT * FROM sales ORDER BY sale_Date DESC"; // Assuming you want all sales ordered by date
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                Sale sale = new Sale();
-                sale.setSaleId(rs.getInt("sale_Id"));
-                sale.setSaleDate(rs.getDate("sale_Date"));
-                sale.setTotalAmount(rs.getDouble("total_Amount"));
-                sale.setPaymentMethod(rs.getString("payment_Method"));
-                sale.setUserId(rs.getInt("user_Id"));
-                salesList.add(sale);
-            }
-        }
-        return salesList;
-    }
+    
+    
 }

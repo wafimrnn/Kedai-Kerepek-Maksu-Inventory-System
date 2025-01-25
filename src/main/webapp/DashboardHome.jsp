@@ -231,33 +231,7 @@
         	<h2>WELCOME TO DASHBOARD</h2>
             <h1>KEDAI KEREPEK MAKSU</h1>
         </div>
-    </div>
-    <!-- Display sales data -->
-	<div class="sales-stats">
-    <h3>Total Sales</h3>
-    <!-- Display the size of sales dynamically -->
-    <p>${sales.size()} sales recorded.</p>
-
-    <!-- Display recent sales -->
-    <h3>Recent Sales:</h3>
-    <table border="1" cellpadding="10">
-        <tr>
-            <th>Sale ID</th>
-            <th>Date</th>
-            <th>Total Amount</th>
-            <th>Payment Method</th>
-        </tr>
-
-        <!-- Iterate through each sale and display in table -->
-        <c:forEach var="sale" items="${sales}">
-            <tr>
-                <td>${sale.saleId}</td>
-                <td>${sale.saleDate}</td>
-                <td>${sale.totalAmount}</td>
-                <td>${sale.paymentMethod}</td>
-            </tr>
-        </c:forEach>
-    </table>
+        
 </div>
     
     <div id="notification-popup" style="display: none;">
