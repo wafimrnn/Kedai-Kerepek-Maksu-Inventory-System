@@ -84,19 +84,6 @@
     <servlet-name>ReportController</servlet-name>
     <url-pattern>/ReportController</url-pattern>
   </servlet-mapping>
-
-  <!-- ViewAccountServlet -->
-  <servlet>
-    <description>Displays a list of accounts</description>
-    <display-name>ViewAccountServlet</display-name>
-    <servlet-name>ViewAccountServlet</servlet-name>
-    <servlet-class>com.controller.ViewAccountServlet</servlet-class>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>ViewAccountServlet</servlet-name>
-    <url-pattern>/ViewAccountServlet</url-pattern>
-  </servlet-mapping>
   
   <servlet>
         <servlet-name>LoginServlet</servlet-name>

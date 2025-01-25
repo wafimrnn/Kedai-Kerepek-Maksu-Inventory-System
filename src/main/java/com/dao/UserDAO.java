@@ -94,4 +94,48 @@ public class UserDAO {
     private boolean checkPassword(String plainPassword, String hashedPassword) {
         return BCrypt.checkpw(plainPassword, hashedPassword); // Compare passwords.
     }
+    
+    private static final String UPDATE_ACCOUNT_QUERY = "UPDATE USERS SET USER_PHONE = ?, USER_ADDRESS = ? WHERE USER_ID = ?";
+
+    public boolean updateUserAccount(int userId, String phone, String address) {
+        boolean isUpdated = false;
+        try (Connection connection = DBConnection.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(UPDATE_ACCOUNT_QUERY);
+            statement.setString(1, phone);
+            statement.setString(2, address);
+            statement.setInt(3, userId);
+
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected > 0) {
+                isUpdated = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isUpdated;
+    }
+    
+    private static final String GET_USER_BY_ID_QUERY = "SELECT * FROM USERS WHERE USER_ID = ?";
+
+    public User getUserById(int userId) {
+        User user = null;
+        try (Connection connection = DBConnection.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(GET_USER_BY_ID_QUERY);
+            statement.setInt(1, userId);
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                // Create a User object and populate it with data from the result set
+                user = new User();
+                user.setId(resultSet.getInt("USER_ID"));
+                user.setName(resultSet.getString("USER_NAME"));
+                user.setRole(resultSet.getString("USER_ROLE"));
+                user.setPhone(resultSet.getString("USER_PHONE"));
+                user.setAddress(resultSet.getString("USER_ADDRESS"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
 }

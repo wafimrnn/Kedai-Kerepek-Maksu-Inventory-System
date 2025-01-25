@@ -1,12 +1,11 @@
-<%@ page import="com.model.Account" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.dao.AccountDAO" %>
+<%@ page import="com.model.User" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Account</title>
+    <title>Account Details</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* General Styling */
@@ -109,7 +108,7 @@
             color: #ddd;
         }
 
-        /* Main Content Area */
+        /* Main Content */
         .main-content {
             flex: 1;
             padding: 20px;
@@ -121,7 +120,7 @@
             margin-top: 60px; /* Push content below the head bar */
             overflow: hidden; /* Prevent overflow */
         }
-        
+
         .main-content::before {
             content: '';
             position: absolute;
@@ -137,18 +136,30 @@
             filter: blur(1px); /* Adjust blur intensity */
             z-index: -1; /* Push background below all content */
         }
-        
+
+        .main-content h1 {
+            font-size: 60px;
+            font-weight: bold;
+            margin-bottom: 90px;
+            position: relative;
+            z-index: 2;
+            color: #545445;
+        }
+
         .blurred-box {
             position: relative;
             z-index: 1;
             padding: 40px;
-            background: rgba(255, 250, 171, 0.62);
-            backdrop-filter: blur(8px); /* Ensure this is applied correctly */
+            background: rgba(255, 250, 171, 0.62); /* Light yellow semi-transparent background */
+            backdrop-filter: blur(8px); /* Blurred effect */
             border-radius: 10px;
-            margin-top: 20px; /* Set a height to center vertically */
-            width: 80%;
-            text-align: center;
-            
+            margin: 20px auto; /* Center the box and add spacing */
+            display: flex; /* Flexbox container */
+            flex-direction: column; /* Stack items vertically */
+            justify-content: center; /* Center vertically */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow for depth */
+            width: calc(100% - 60px); /* Adjust width to fit within padding */
+            max-width: 1200px; /* Ensure it doesn't stretch too much */
         }
 
         .header {
@@ -164,7 +175,7 @@
             font-size: 28px;
             color: #343a40;
         }
-        
+
         .add-btn {
             background-color: #007BFF;
             color: white;
@@ -180,145 +191,77 @@
             background-color: #0056b3;
         }
 
-        /* Account Table Styling */
-        /* Table Styling */
-        .table-container {
+        /* Account Information */
+        .account-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
             margin-top: 20px;
         }
 
-        .table-container h2 {
-            font-size: 24px;
-            margin-bottom: 15px;
-            color: #343a40;
+        .account-info div {
+            font-size: 18px;
+            color: #333;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-
-        table, th, td {
-            border: 1px solid #ccc;
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: white;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f1f1f1;
-        }
-
-        .action-button {
-            background-color: #007BFF;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 5px;
-            text-decoration: none;
-            transition: background 0.3s ease;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #007BFF;
-            color: white;
-        }
-
-        .action-button {
-            padding: 10px 15px;
-            background-color: #007BFF;
+        .account-info button {
+            padding: 10px 20px;
+            background-color: #28a745;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
-            text-decoration: none;
+            transition: background-color 0.3s ease;
         }
 
-        .action-button:hover {
-            background-color: #0056b3;
+        .account-info button:hover {
+            background-color: #218838;
         }
     </style>
 </head>
-<body>
-
-<!-- Sidebar -->
-<div class="sidebar">
-    <h2>Kedai Kerepek Maksu</h2>
-    <div class="nav-links">
-        <a href="DashboardHome.jsp">Dashboard</a>
-        <a href="ViewProduct.jsp">Product</a>
-        <a href="CreateSales.jsp">Sales</a>
-        <a href="Report.html">Report</a>
-        <a href="ViewAccount.jsp" class="active">Account</a>
+<body data-role="<%= session.getAttribute("userRole") %>">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Kedai Kerepek Maksu</h2>
+        <div class="nav-links">
+            <a href="DashboardHome.jsp">Dashboard</a>
+            <a href="ViewProduct.jsp">Product</a>
+            <a href="CreateSales.jsp">Sales</a>
+            <a href="Report.html">Report</a>
+            <a href="ViewAccount.jsp" class="nav-link active">Account</a>
+        </div>
     </div>
-</div>
 
-<!-- Head Bar -->
-<div class="head-bar">
-    <div class="title">Account</div>
-    <div class="icons">
-        <i class="fas fa-bell" title="Notifications"></i>
-        <i class="fas fa-user-circle" title="Account"></i>
+    <!-- Head Bar -->
+    <div class="head-bar">
+        <div class="title">Account Details</div>
+        <div class="icons">
+            <i class="fas fa-bell" title="Notifications"></i>
+            <i class="fas fa-user-circle" title="Account"></i>
+        </div>
     </div>
-</div>
 
-<!-- Main Content -->
-<div class="main-content">
-<div class="blurred-box">
-    <!-- Account Table -->
-    <div class="table-container">
-        <h2>Account List</h2>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="blurred-box">
+            <!-- Account Details Section -->
+            <div class="header">
+                <h1>My Account</h1>
+                <a href="UpdateAccount.jsp" class="add-btn">Update Account</a>
+                <!-- Only show Create Staff Account button if user is an OWNER -->
+                <button id="create-staff-btn" class="add-btn" style="display: none;">Create Staff Account</button>
+            </div>
 
-        <%
-            List<Account> accounts = (List<Account>) request.getAttribute("accounts");
-            if (accounts != null && !accounts.isEmpty()) {
-        %>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Account ID</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <%
-                    for (Account account : accounts) {
-                %>
-                <tr>
-                    <td><%= account.getAccountId() %></td>
-                    <td><%= account.getUsername() %></td>
-                    <td><%= account.getEmail() %></td>
-                    <td><%= account.getStatus() %></td>
-                    <td>
-                        <a href="UpdateAccountServlet?accountId=<%= account.getAccountId() %>" class="action-button">Update Account</a>
-                    </td>
-                </tr>
-                <%
-                    }
-                %>
-            </tbody>
-        </table>
-
-        <%
-            } else {
-        %>
-        <p>No accounts available.</p>
-        <%
-            }
-        %>
+            <!-- Display Account Info -->
+            <div class="account-info">
+                <div>Username: <%= request.getAttribute("userName") %></div>
+                <div>Phone: <%= request.getAttribute("userPhone") %></div>
+                <div>Address: <%= request.getAttribute("userAddress") %></div>
+                <div>Role: <%= request.getAttribute("userRole") %></div>
+                <div>Status: <%= request.getAttribute("accStatus") %></div>
+            </div>
+        </div>
     </div>
-</div>
-</div>
+<script src="account.js"></script>
 </body>
 </html>

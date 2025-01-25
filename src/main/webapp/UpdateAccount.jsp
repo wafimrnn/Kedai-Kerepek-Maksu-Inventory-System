@@ -1,12 +1,12 @@
-<%@ page import="com.model.Account" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Account</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+     /* General Styling */
         * {
             margin: 0;
             padding: 0;
@@ -106,7 +106,7 @@
             color: #ddd;
         }
 
-        /* Main Content Area */
+        /* Main Content */
         .main-content {
             flex: 1;
             padding: 20px;
@@ -114,37 +114,50 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             margin-top: 60px; /* Push content below the head bar */
             overflow: hidden; /* Prevent overflow */
         }
-        
+
         .main-content::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
+            width: 100%;
+            height: 100%;
             background-image: url('img/pisangImage.jpg'); /* Path to your image */
             background-size: cover; /* Cover the entire area */
             background-position: center; /* Center the image */
             background-repeat: no-repeat; /* Prevent the image from repeating */
+            
             filter: blur(1px); /* Adjust blur intensity */
             z-index: -1; /* Push background below all content */
         }
-        
+
+        .main-content h1 {
+            font-size: 60px;
+            font-weight: bold;
+            margin-bottom: 90px;
+            position: relative;
+            z-index: 2;
+            color: #545445;
+        }
+
         .blurred-box {
             position: relative;
             z-index: 1;
             padding: 40px;
-            background: rgba(255, 250, 171, 0.62);
-            backdrop-filter: blur(8px); /* Ensure this is applied correctly */
+            background: rgba(255, 250, 171, 0.62); /* Light yellow semi-transparent background */
+            backdrop-filter: blur(8px); /* Blurred effect */
             border-radius: 10px;
-            margin-top: 20px; /* Set a height to center vertically */
-            width: 80%;
-            text-align: center;
-            
+            margin: 20px auto; /* Center the box and add spacing */
+            display: flex; /* Flexbox container */
+            flex-direction: column; /* Stack items vertically */
+            justify-content: center; /* Center vertically */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow for depth */
+            width: calc(100% - 60px); /* Adjust width to fit within padding */
+            max-width: 1200px; /* Ensure it doesn't stretch too much */
         }
 
         .header {
@@ -176,107 +189,82 @@
             background-color: #0056b3;
         }
 
-        .form-container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        /* Account Information */
+        .account-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
         }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+        .account-info div {
+            font-size: 18px;
+            color: #333;
         }
 
-        input, select {
-            width: 100%;
-            padding: 10px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        button {
-            padding: 10px 15px;
+        .account-info button {
+            padding: 10px 20px;
             background-color: #28a745;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
-        .cancel-button {
-            background-color: #dc3545;
+        .account-info button:hover {
+            background-color: #218838;
         }
     </style>
 </head>
-<body>
+<body data-role="<%= request.getAttribute("userRole") %>">
     <!-- Sidebar -->
     <div class="sidebar">
         <h2>Kedai Kerepek Maksu</h2>
         <div class="nav-links">
-            <a href="DashboardHome.jsp" class="active">Dashboard</a>
+            <a href="DashboardHome.jsp">Dashboard</a>
             <a href="ViewProduct.jsp">Product</a>
             <a href="CreateSales.jsp">Sales</a>
             <a href="Report.html">Report</a>
             <a href="ViewAccount.jsp">Account</a>
         </div>
     </div>
+
     <!-- Head Bar -->
     <div class="head-bar">
-        <div class="title">Account Management</div>
+        <div class="title">Update Account</div>
+        <div class="icons">
+            <i class="fas fa-bell" title="Notifications"></i>
+            <i class="fas fa-user-circle" title="Account"></i>
+        </div>
     </div>
 
     <!-- Main Content -->
     <div class="main-content">
-    <div class="blurred-box">
-        <h2>Update Account</h2>
-        <div class="form-container">
-            <%
-                Account account = (Account) request.getAttribute("account");
-                if (account == null) {
-            %>
-                <p style="color:red;">Account not found.</p>
-            <% } else { %>
-            <form action="UpdateAccountServlet" method="post">
-                <input type="hidden" name="accountId" value="<%= account.getAccountId() %>">
+        <div class="blurred-box">
+            <h1>Update Account</h1>
 
+            <!-- Account Update Form -->
+            <form id="update-form">
                 <div class="form-group">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" value="<%= account.getUsername() %>" required>
+                    <label for="phone">Phone</label>
+                    <input type="text" id="phone" name="phone" value="<%= request.getAttribute("userPhone") %>" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" value="<%= account.getEmail() %>" required>
+                    <label for="address">Address</label>
+                    <input type="text" id="address" name="address" value="<%= request.getAttribute("userAddress") %>" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="status">Account Status:</label>
-                    <select id="status" name="status" required>
-                        <option value="Active" <%= "Active".equals(account.getStatus()) ? "selected" : "" %>>Active</option>
-                        <option value="Inactive" <%= "Inactive".equals(account.getStatus()) ? "selected" : "" %>>Inactive</option>
-                    </select>
+                    <button type="submit" class="submit-btn">Update Account</button>
                 </div>
 
-                <div class="form-group">
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-
-                <button type="submit">Update Account</button>
-                <button type="button" class="cancel-button" onclick="window.location.href='ViewAccountServlet'">Cancel</button>
+                <!-- Feedback message will appear here -->
+                <div id="feedback-message" class="feedback-message"></div>
             </form>
-            <% } %>
         </div>
     </div>
-    </div>
+    <script src="account.js"></script>
 </body>
 </html>
