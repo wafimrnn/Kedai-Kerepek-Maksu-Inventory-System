@@ -30,17 +30,21 @@ public class ViewAccountServlet extends HttpServlet {
         User user = userDAO.getUserById(userId);
 
         if (user != null) {
+            System.out.println("DEBUG: Retrieved user in servlet:");
+            System.out.println("USER_NAME: " + user.getName());
+            System.out.println("USER_PHONE: " + user.getPhone());
+            System.out.println("USER_ADDRESS: " + user.getAddress());
+            System.out.println("USER_ROLE: " + user.getRole());
+
             // Set user details in request attributes
             request.setAttribute("userName", user.getName());
             request.setAttribute("userPhone", user.getPhone());
             request.setAttribute("userAddress", user.getAddress());
             request.setAttribute("userRole", user.getRole());
             request.setAttribute("accStatus", "Active"); // Assuming 'Active' status for now
-
-            // Also forward user role to request scope for JSP
-            request.setAttribute("userRole", user.getRole());
         } else {
             // If user retrieval fails, redirect to error page
+            System.out.println("DEBUG: User object is null");
             response.sendRedirect("Error.jsp?message=Unable to retrieve account details.");
             return;
         }
