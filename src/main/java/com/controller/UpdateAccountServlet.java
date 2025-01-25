@@ -1,7 +1,6 @@
 package com.controller;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,15 +10,24 @@ import java.io.PrintWriter;
 import com.dao.UserDAO;
 
 public class UpdateAccountServlet extends HttpServlet {
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Retrieve user input from the form
+        // Retrieve user inputs
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
-        int userId = (int) request.getSession().getAttribute("userId"); // Assuming user ID is stored in session
+        int userId = Integer.parseInt(request.getParameter("userId"));
+        String userRole = (String) request.getSession().getAttribute("userRole");
+        boolean isUpdated = false;
 
-        // Create DAO object to handle database update
+        // Check if the user is the owner and wants to update the account status
+        if ("OWNER".equalsIgnoreCase(userRole)) {
+            String status = request.getParameter("status"); // Add logic to update status if necessary
+            // Optional: Use a DAO method to update status
+        }
+
+        // Update phone and address
         UserDAO userDAO = new UserDAO();
-        boolean isUpdated = userDAO.updateUserAccount(userId, phone, address);
+        isUpdated = userDAO.updateUserAccount(userId, phone, address);
 
         // Send JSON response with feedback
         response.setContentType("application/json");

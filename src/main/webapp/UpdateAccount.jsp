@@ -1,12 +1,13 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Account</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-     /* General Styling */
+        /* General Styling */
         * {
             margin: 0;
             padding: 0;
@@ -119,165 +120,84 @@
             overflow: hidden; /* Prevent overflow */
         }
 
-        .main-content::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('img/pisangImage.jpg'); /* Path to your image */
-            background-size: cover; /* Cover the entire area */
-            background-position: center; /* Center the image */
-            background-repeat: no-repeat; /* Prevent the image from repeating */
-            
-            filter: blur(1px); /* Adjust blur intensity */
-            z-index: -1; /* Push background below all content */
-        }
-
         .main-content h1 {
             font-size: 60px;
             font-weight: bold;
-            margin-bottom: 90px;
+            margin-bottom: 40px;
             position: relative;
             z-index: 2;
             color: #545445;
         }
 
-        .blurred-box {
-            position: relative;
-            z-index: 1;
-            padding: 40px;
+        .form-container {
             background: rgba(255, 250, 171, 0.62); /* Light yellow semi-transparent background */
-            backdrop-filter: blur(8px); /* Blurred effect */
+            padding: 40px;
             border-radius: 10px;
-            margin: 20px auto; /* Center the box and add spacing */
-            display: flex; /* Flexbox container */
-            flex-direction: column; /* Stack items vertically */
-            justify-content: center; /* Center vertically */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow for depth */
-            width: calc(100% - 60px); /* Adjust width to fit within padding */
-            max-width: 1200px; /* Ensure it doesn't stretch too much */
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #e0e0e0;
-            padding-bottom: 10px;
-        }
-
-        .header h1 {
-            font-size: 28px;
-            color: #343a40;
-        }
-
-        .add-btn {
-            background-color: #007BFF;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: background 0.3s ease;
-        }
-
-        .add-btn:hover {
-            background-color: #0056b3;
-        }
-
-        /* Account Information */
-        .account-info {
+            width: 100%;
+            max-width: 600px; /* Limit the width */
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            margin-top: 20px;
+            gap: 20px;
         }
 
-        .account-info div {
-            font-size: 18px;
-            color: #333;
+        .form-group {
+            display: flex;
+            flex-direction: column;
         }
 
-        .account-info button {
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .form-actions button {
             padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
             border: none;
             border-radius: 5px;
+            font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
 
-        .account-info button:hover {
+        .form-actions button[type="submit"] {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .form-actions button[type="submit"]:hover {
             background-color: #218838;
         }
-        
-        #update-form {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
 
-    .form-group {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
+        .form-actions button[type="button"] {
+            background-color: #dc3545;
+            color: white;
+        }
 
-    .form-group label {
-        font-size: 16px;
-        font-weight: 600;
-        color: #343a40;
-    }
-
-    .form-group input {
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        font-size: 16px;
-        color: #333;
-        transition: all 0.3s ease;
-        background-color: rgba(255, 255, 255, 0.9);
-    }
-
-    .form-group input:focus {
-        border-color: #007BFF;
-        outline: none;
-        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
-        background-color: rgba(255, 255, 255, 1);
-    }
-
-    .submit-btn {
-        background-color: #007BFF;
-        color: white;
-        font-size: 16px;
-        font-weight: bold;
-        padding: 12px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.2s;
-    }
-
-    .submit-btn:hover {
-        background-color: #0056b3;
-        transform: scale(1.02);
-    }
-
-    .feedback-message {
-        font-size: 14px;
-        font-style: italic;
-        color: #28a745;
-        margin-top: 10px;
-    }
-        
+        .form-actions button[type="button"]:hover {
+            background-color: #c82333;
+        }
     </style>
 </head>
-<body data-role="<%= request.getAttribute("userRole") %>">
+<body>
     <!-- Sidebar -->
     <div class="sidebar">
         <h2>Kedai Kerepek Maksu</h2>
@@ -286,7 +206,7 @@
             <a href="ViewProduct.jsp">Product</a>
             <a href="CreateSales.jsp">Sales</a>
             <a href="Report.html">Report</a>
-            <a href="ViewAccount.jsp">Account</a>
+            <a href="ViewAccount.jsp" class="nav-link active">Account</a>
         </div>
     </div>
 
@@ -301,30 +221,36 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <div class="blurred-box">
-            <h1>Update Account</h1>
-
-            <!-- Account Update Form -->
-            <form id="update-form">
+        <h1>Update Account</h1>
+        <div class="form-container">
+            <form action="UpdateAccountServlet" method="post">
                 <div class="form-group">
-                    <label for="phone">Phone</label>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" value="<%= request.getAttribute("userName") %>" readonly>
+                </div><br>
+                <div class="form-group">
+                    <label for="phone">Phone:</label>
                     <input type="text" id="phone" name="phone" value="<%= request.getAttribute("userPhone") %>" required>
-                </div>
-
+                </div><br>
                 <div class="form-group">
-                    <label for="address">Address</label>
-                    <input type="text" id="address" name="address" value="<%= request.getAttribute("userAddress") %>" required>
-                </div>
-
+                    <label for="address">Address:</label>
+                    <textarea id="address" name="address" required><%= request.getAttribute("userAddress") %></textarea>
+                </div><br>
                 <div class="form-group">
-                    <button type="submit" class="submit-btn">Update Account</button>
+                    <label for="role">Role:</label>
+                    <input type="text" id="role" name="role" value="<%= request.getAttribute("userRole") %>" readonly>
+                </div><br>
+                <div class="form-group">
+                    <label for="status">Account Status:</label>
+                    <input type="text" id="status" name="status" value="<%= request.getAttribute("accStatus") %>" readonly>
+                </div><br>
+                <input type="hidden" name="userId" value="<%= session.getAttribute("userId") %>">
+                <div class="form-actions">
+                    <button type="submit">Update</button>
+                    <button type="button" onclick="window.location.href='ViewAccount.jsp'">Cancel</button>
                 </div>
-
-                <!-- Feedback message will appear here -->
-                <div id="feedback-message" class="feedback-message"></div>
             </form>
         </div>
     </div>
-    <script src="account.js"></script>
 </body>
 </html>
