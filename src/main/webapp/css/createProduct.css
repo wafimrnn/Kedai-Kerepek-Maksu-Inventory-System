@@ -11,7 +11,7 @@
         body {
             display: flex;
             min-height: 100vh;
-            background-image: url('img/pisangImage.jpg'); /* Background image */
+            background-image: url('../img/pisangImage.jpg'); /* Background image */
             background-size: cover; /* Cover the entire area */
             background-position: center; /* Center the image */
             position: relative;
@@ -120,7 +120,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-image: url('img/pisangImage.jpg'); /* Path to your image */
+            background-image: url('../img/pisangImage.jpg'); /* Path to your image */
             background-size: cover; /* Cover the entire area */
             background-position: center; /* Center the image */
             background-repeat: no-repeat; /* Prevent the image from repeating */
