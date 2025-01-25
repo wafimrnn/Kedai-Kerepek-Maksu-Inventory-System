@@ -15,12 +15,12 @@ import com.model.User;
 
 public class ViewAccountServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Get the logged-in user's ID from the session
+        // Retrieve the logged-in user's ID from the session
         HttpSession session = request.getSession();
-        Integer userId = (Integer) session.getAttribute("userId"); // Use Integer to handle null safely
+        Integer userId = (Integer) session.getAttribute("userId");
 
         if (userId == null) {
-            System.out.println("User ID not found in session. Redirecting to login page.");
+            // Redirect to login page if no user is logged in
             response.sendRedirect("Login.html?message=Please log in to view your account.");
             return;
         }
@@ -35,11 +35,18 @@ public class ViewAccountServlet extends HttpServlet {
             request.setAttribute("userPhone", user.getPhone());
             request.setAttribute("userAddress", user.getAddress());
             request.setAttribute("userRole", user.getRole());
-            request.setAttribute("accStatus", "Active"); // Assuming status is 'Active'
+            request.setAttribute("accStatus", "Active"); // Assuming 'Active' status for now
+
+            // Also forward user role to request scope for JSP
+            request.setAttribute("userRole", user.getRole());
+        } else {
+            // If user retrieval fails, redirect to error page
+            response.sendRedirect("Error.jsp?message=Unable to retrieve account details.");
+            return;
         }
 
         // Forward the request to viewAccount.jsp
-        RequestDispatcher dispatcher = request.getRequestDispatcher("ViewAccount.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("viewAccount.jsp");
         dispatcher.forward(request, response);
     }
 }

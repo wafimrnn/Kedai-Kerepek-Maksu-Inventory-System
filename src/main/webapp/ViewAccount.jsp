@@ -1,5 +1,6 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.model.User" %>
+<%@ taglib prefix="c" uri="http://jakarta.apache.org/taglibs/standard" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -248,17 +249,19 @@
             <div class="header">
                 <h1>My Account</h1>
                 <a href="UpdateAccount.jsp" class="add-btn">Update Account</a>
-                <!-- Only show Create Staff Account button if user is an OWNER -->
-                <button id="create-staff-btn" class="add-btn" style="display: none;">Create Staff Account</button>
+                <!-- Only show 'Create Staff Account' button for users with 'OWNER' role -->
+			    <c:if test="${userRole == 'OWNER'}">
+			        <button onclick="location.href='CreateStaffAccount.jsp'">Create Staff Account</button>
+			    </c:if>
             </div>
 
             <!-- Display Account Info -->
             <div class="account-info">
-                <div>Username: <%= request.getAttribute("userName") %></div>
-                <div>Phone: <%= request.getAttribute("userPhone") %></div>
-                <div>Address: <%= request.getAttribute("userAddress") %></div>
-                <div>Role: <%= request.getAttribute("userRole") %></div>
-                <div>Status: <%= request.getAttribute("accStatus") %></div>
+                <p><strong>Name:</strong> ${userName}</p>
+			    <p><strong>Phone:</strong> ${userPhone}</p>
+			    <p><strong>Address:</strong> ${userAddress}</p>
+			    <p><strong>Role:</strong> ${userRole}</p>
+			    <p><strong>Status:</strong> ${accStatus}</p>
             </div>
         </div>
     </div>

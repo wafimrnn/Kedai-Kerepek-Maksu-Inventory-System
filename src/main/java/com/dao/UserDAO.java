@@ -122,24 +122,24 @@ public class UserDAO {
     }
     
     public User getUserById(int userId) {
-        User user = null;
         String query = "SELECT * FROM USERS WHERE USER_ID = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, userId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                user = new User();
+                User user = new User();
                 user.setId(rs.getInt("USER_ID"));
                 user.setName(rs.getString("USER_NAME"));
-                user.setRole(rs.getString("USER_ROLE"));
                 user.setPhone(rs.getString("USER_PHONE"));
                 user.setAddress(rs.getString("USER_ADDRESS"));
+                user.setRole(rs.getString("USER_ROLE"));
+                return user;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return user;
+        return null;
     }
 
 }
