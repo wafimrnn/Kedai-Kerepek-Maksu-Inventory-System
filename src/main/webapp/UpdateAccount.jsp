@@ -107,7 +107,7 @@
             color: #ddd;
         }
 
-        /* Main Content */
+        /* Main Content Area */
         .main-content {
             flex: 1;
             padding: 20px;
@@ -121,80 +121,114 @@
         }
 
         .main-content h1 {
-            font-size: 60px;
-            font-weight: bold;
-            margin-bottom: 40px;
-            position: relative;
-            z-index: 2;
-            color: #545445;
-        }
+      		font-size: 60px;
+      		font-weight: bold;
+      		margin-bottom: 90px;
+      		position: relative;
+      		z-index: 2;
+      		color: #545445;
+    	}
 
-        .form-container {
-            background: rgba(255, 250, 171, 0.62); /* Light yellow semi-transparent background */
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow for depth */
-            width: 100%;
-            max-width: 600px; /* Limit the width */
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        .main-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('img/pisangImage.jpg'); /* Path to your image */
+            background-size: cover; /* Cover the entire area */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Prevent the image from repeating */
+            filter: blur(1px); /* Adjust blur intensity */
+            z-index: -1; /* Push background below all content */
         }
+         
+         /* Blurry Box */
+         .blurred-box {
+        position: relative;
+        z-index: 1;
+        padding: 40px 30px;
+        background: rgba(255, 250, 171, 0.62);
+        backdrop-filter: blur(8px);
+        border-radius: 10px;
+        margin-top: 20px;
+        width: 80%;
+        max-width: 600px; /* Constrain max width */
+        text-align: left; /* Left-align content */
+        display: flex;
+        flex-direction: column; /* Stack elements vertically */
+        gap: 20px; /* Add spacing between child elements */
+    }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
+    .blurred-box h1 {
+        text-align: center; /* Center only the heading */
+        font-size: 32px;
+        margin-bottom: 20px;
+        color: #545445;
+    }
 
-        .form-group label {
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
+    /* Form Container Styling */
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px; /* Space between form groups */
+    }
 
-        .form-group input,
-        .form-group textarea {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
+    /* Form Group Styling */
+    .form-group label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+    }
 
-        .form-group textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
+    .form-group input,
+    .form-group textarea {
+        width: 100%; /* Full width of the parent */
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
 
-        .form-actions {
-            display: flex;
-            justify-content: space-between;
-        }
+    .form-group textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
 
-        .form-actions button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+    /* Form Actions */
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
 
-        .form-actions button[type="submit"] {
-            background-color: #28a745;
-            color: white;
-        }
+    .form-actions button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
 
-        .form-actions button[type="submit"]:hover {
-            background-color: #218838;
-        }
+    .form-actions button[type="submit"] {
+        background-color: #28a745;
+        color: white;
+    }
 
-        .form-actions button[type="button"] {
-            background-color: #dc3545;
-            color: white;
-        }
+    .form-actions button[type="submit"]:hover {
+        background-color: #218838;
+    }
 
-        .form-actions button[type="button"]:hover {
-            background-color: #c82333;
-        }
+    .form-actions button[type="button"] {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .form-actions button[type="button"]:hover {
+        background-color: #c82333;
+    }
     </style>
 </head>
 <body>
@@ -223,7 +257,6 @@
     <div class="main-content">
     	<div class="blurred-box">
         <h1>Update Account</h1>
-        </div>
     
         <div class="form-container">
             <form action="UpdateAccountServlet" method="post">
@@ -254,6 +287,7 @@
                 </div>
             </form>
         </div>
+    </div>
     </div>
 </body>
 </html>
