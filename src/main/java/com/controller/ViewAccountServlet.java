@@ -36,12 +36,12 @@ public class ViewAccountServlet extends HttpServlet {
             System.out.println("USER_ADDRESS: " + user.getAddress());
             System.out.println("USER_ROLE: " + user.getRole());
 
-            // Set user details in request attributes
-            request.setAttribute("userName", user.getName());
-            request.setAttribute("userPhone", user.getPhone());
-            request.setAttribute("userAddress", user.getAddress());
-            request.setAttribute("userRole", user.getRole());
-            request.setAttribute("accStatus", "Active"); // Assuming 'Active' status for now
+            // Set user details in session attributes
+            session.setAttribute("userName", user.getName());
+            session.setAttribute("userPhone", user.getPhone());
+            session.setAttribute("userAddress", user.getAddress());
+            session.setAttribute("userRole", user.getRole());
+            session.setAttribute("accStatus", "Active"); // Assuming 'Active' status for now
         } else {
             // If user retrieval fails, redirect to error page
             System.out.println("DEBUG: User object is null");

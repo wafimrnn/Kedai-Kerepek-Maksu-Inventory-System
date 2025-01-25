@@ -47,11 +47,11 @@
 
             <!-- Display Account Info -->
             <div class="account-info">
-                <p><strong>Name:</strong> <%= request.getAttribute("userName") != null ? request.getAttribute("userName") : "No data available" %></p>
-				<p><strong>Phone:</strong> <%= request.getAttribute("userPhone") != null ? request.getAttribute("userPhone") : "No data available" %></p>
-				<p><strong>Address:</strong> <%= request.getAttribute("userAddress") != null ? request.getAttribute("userAddress") : "No data available" %></p>
-				<p><strong>Role:</strong> <%= request.getAttribute("userRole") != null ? request.getAttribute("userRole") : "No data available" %></p>
-				<p><strong>Status:</strong> <%= request.getAttribute("accStatus") != null ? request.getAttribute("accStatus") : "No data available" %></p>
+                <p><strong>Name:</strong> <%= session.getAttribute("userName") != null ? session.getAttribute("userName") : "No data available" %></p>
+				<p><strong>Phone:</strong> <%= session.getAttribute("userPhone") != null ? session.getAttribute("userPhone") : "No data available" %></p>
+				<p><strong>Address:</strong> <%= session.getAttribute("userAddress") != null ? session.getAttribute("userAddress") : "No data available" %></p>
+				<p><strong>Role:</strong> <%= session.getAttribute("userRole") != null ? session.getAttribute("userRole") : "No data available" %></p>
+				<p><strong>Status:</strong> <%= session.getAttribute("accStatus") != null ? session.getAttribute("accStatus") : "No data available" %></p>
             </div>
         </div>
     </div>

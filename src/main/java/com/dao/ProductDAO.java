@@ -14,49 +14,54 @@ import java.util.List;
 
 public class ProductDAO {
 	
-	//view product
-    public List<Product> getAllActiveProducts() {
-        List<Product> products = new ArrayList<>();
+	public List<Product> getAllActiveProducts() {
+	    List<Product> products = new ArrayList<>();
 
-        String sql = "SELECT p.PROD_ID, p.PROD_NAME, p.PROD_PRICE, p.QUANTITY_STOCK, p.IMAGE_PATH, " +
-                     "       f.PACKAGING_TYPE, f.WEIGHT, d.VOLUME " +
-                     "FROM Products p " +
-                     "LEFT JOIN Food f ON p.PROD_ID = f.PROD_ID " +
-                     "LEFT JOIN Drink d ON p.PROD_ID = d.PROD_ID " +
-                     "WHERE p.PROD_STATUS = 'ACTIVE'";
+	    String sql = "SELECT p.PROD_ID, p.PROD_NAME, p.PROD_PRICE, p.QUANTITY_STOCK, p.IMAGE_PATH, " +
+	                 "       f.PACKAGING_TYPE, f.WEIGHT, d.VOLUME " +
+	                 "FROM Products p " +
+	                 "LEFT JOIN Food f ON p.PROD_ID = f.PROD_ID " +
+	                 "LEFT JOIN Drink d ON p.PROD_ID = d.PROD_ID " +
+	                 "WHERE p.PROD_STATUS = 'ACTIVE'";
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+	    try (Connection conn = DBConnection.getConnection();
+	         PreparedStatement ps = conn.prepareStatement(sql);
+	         ResultSet rs = ps.executeQuery()) {
 
-            while (rs.next()) {
-                if (rs.getString("PACKAGING_TYPE") != null) {
-                    Food food = new Food();
-                    food.setProdId(rs.getInt("PROD_ID"));
-                    food.setProdName(rs.getString("PROD_NAME"));
-                    food.setProdPrice(rs.getDouble("PROD_PRICE"));
-                    food.setQuantityStock(rs.getInt("QUANTITY_STOCK"));
-                    food.setImagePath(rs.getString("IMAGE_PATH"));
-                    food.setPackagingType(rs.getString("PACKAGING_TYPE"));
-                    food.setWeight(rs.getDouble("WEIGHT"));
-                    products.add(food);
-                } else if (rs.getDouble("VOLUME") > 0) {
-                    Drink drink = new Drink();
-                    drink.setProdId(rs.getInt("PROD_ID"));
-                    drink.setProdName(rs.getString("PROD_NAME"));
-                    drink.setProdPrice(rs.getDouble("PROD_PRICE"));
-                    drink.setQuantityStock(rs.getInt("QUANTITY_STOCK"));
-                    drink.setImagePath(rs.getString("IMAGE_PATH"));
-                    drink.setVolume(rs.getDouble("VOLUME"));
-                    products.add(drink);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+	        while (rs.next()) {
+	            // Fetch the image path and apply fallback if necessary
+	            String imagePath = rs.getString("IMAGE_PATH");
+	            if (imagePath == null || imagePath.isEmpty()) {
+	                imagePath = "img/default-image.jpg"; // Default image if none provided
+	            }
 
-        return products;
-    }
+	            if (rs.getString("PACKAGING_TYPE") != null) {
+	                Food food = new Food();
+	                food.setProdId(rs.getInt("PROD_ID"));
+	                food.setProdName(rs.getString("PROD_NAME"));
+	                food.setProdPrice(rs.getDouble("PROD_PRICE"));
+	                food.setQuantityStock(rs.getInt("QUANTITY_STOCK"));
+	                food.setImagePath(imagePath);  // Use the fallback image path
+	                food.setPackagingType(rs.getString("PACKAGING_TYPE"));
+	                food.setWeight(rs.getDouble("WEIGHT"));
+	                products.add(food);
+	            } else if (rs.getDouble("VOLUME") > 0) {
+	                Drink drink = new Drink();
+	                drink.setProdId(rs.getInt("PROD_ID"));
+	                drink.setProdName(rs.getString("PROD_NAME"));
+	                drink.setProdPrice(rs.getDouble("PROD_PRICE"));
+	                drink.setQuantityStock(rs.getInt("QUANTITY_STOCK"));
+	                drink.setImagePath(imagePath);  // Use the fallback image path
+	                drink.setVolume(rs.getDouble("VOLUME"));
+	                products.add(drink);
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return products;
+	}
     
     //create product
     public int insertProduct(String name, double price, int quantity, int restockLevel, String expiryDate, String imagePath) throws SQLException {

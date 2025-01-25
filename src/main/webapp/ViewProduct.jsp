@@ -45,38 +45,38 @@
             <!-- Product Catalog -->
 			<div class="product-catalog">
 			    <%
-			        List<Product> products = (List<Product>) request.getAttribute("products");
-			        if (products != null && !products.isEmpty()) {
-			            for (Product product : products) {
-			                String imagePath = product.getImagePath();
-			                if (imagePath == null || imagePath.isEmpty()) {
-			                    imagePath = "img/default-image.jpg"; // Default image path for products without an image
-			                }
-			    %>
-			                <div class="product-card">
-			                    <img src="<%= imagePath %>" alt="<%= product.getProdName() %>">
-			                    <h3><%= product.getProdName() %></h3>
-			                    <p>Price: RM <%= product.getProdPrice() %></p>
-			                    <p>Stock: <%= product.getQuantityStock() %></p>
-			                    <div class="button-group">
-			                        <button class="update-btn" 
-			                                onclick="location.href='UpdateProductServlet?prodId=<%= product.getProdId() %>'">
-			                            Update
-			                        </button>
-			                        <button class="delete-btn" 
-			                                onclick="confirmDelete('<%= product.getProdId() %>')">
-			                            Delete
-			                        </button>
-			                    </div>
-			                </div>
-			    <%
-			            }
-			        } else {
-			    %>
-			            <p>No products available.</p>
-			    <%
-			        }
-			    %>
+				    List<Product> products = (List<Product>) request.getAttribute("products");
+				    if (products != null && !products.isEmpty()) {
+				        out.println("Number of products: " + products.size()); // Debug output
+				        for (Product product : products) {
+				            out.println("Product Name: " + product.getProdName()); // Debug output
+				            String imagePath = product.getImagePath();
+				            if (imagePath == null || imagePath.isEmpty()) {
+				                imagePath = "img/default-image.jpg"; 
+				            }
+				%>
+				            <div class="product-card">
+				                <img src="<%= imagePath %>" alt="<%= product.getProdName() %>">
+				                <h3><%= product.getProdName() %></h3>
+				                <p>Price: RM <%= product.getProdPrice() %></p>
+				                <p>Stock: <%= product.getQuantityStock() %></p>
+				                <div class="button-group">
+				                    <button class="update-btn" onclick="location.href='UpdateProductServlet?prodId=<%= product.getProdId() %>'">
+				                        Update
+				                    </button>
+				                    <button class="delete-btn" onclick="confirmDelete('<%= product.getProdId() %>')">
+				                        Delete
+				                    </button>
+				                </div>
+				            </div>
+				<%
+				        }
+				    } else {
+				%>
+				        <p>No products available.</p>
+				<%
+				    }
+				%>
 			</div>
         </div>
     </div>
