@@ -6,131 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Product</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            display: flex;
-            min-height: 100vh;
-            background-color: #f4f4f9;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 220px;
-            background-color: #343a40;
-            color: white;
-            padding: 20px;
-        }
-
-        .sidebar h2 {
-            text-align: center;
-            border-bottom: 1px solid #495057;
-            padding-bottom: 10px;
-        }
-
-        .sidebar a {
-            display: block;
-            color: white;
-            text-decoration: none;
-            padding: 10px;
-            border-radius: 4px;
-            transition: 0.3s;
-        }
-
-        .sidebar a.active, .sidebar a:hover {
-            background-color: #007BFF;
-        }
-        
-        /* Head Bar Styling */
-		.head-bar {
-		    width: calc(100% - 220px); /* Full width minus the sidebar width */
-		    height: 60px;
-		    background-color: #007BFF;
-		    color: white;
-		    display: flex;
-		    justify-content: space-between;
-		    align-items: center;
-		    padding: 0 20px;
-		    position: fixed;
-		    top: 0;
-		    left: 220px; /* Push the head bar right to align with the sidebar */
-		    z-index: 1000; /* Ensure it stays on top */
-		    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-		}
-		
-		.head-bar .title {
-		    font-size: 20px;
-		    font-weight: bold;
-		}
-		
-		.head-bar .icons {
-		    display: flex;
-		    align-items: center;
-		    gap: 15px;
-		}
-		
-		.head-bar .icons i {
-		    font-size: 20px;
-		    cursor: pointer;
-		    transition: color 0.3s ease;
-		}
-		
-		.head-bar .icons i:hover {
-		    color: #ddd;
-		}
-
-        .main-content {
-            flex: 1;
-            padding: 20px;
-            margin-top: 60px; /* Push content below the head bar */
-        }
-
-        .form-container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 10px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        button {
-            padding: 10px 15px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .cancel-button {
-            background-color: #dc3545;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="css/updateProduct.css">
     <script>
         function toggleCategoryFields() {
             const category = document.getElementById("prodStatus").value;
@@ -155,7 +31,7 @@
 	<div class="head-bar">
 	    <div class="title">Sales</div>
 	    <div class="icons">
-	        <i class="fas fa-bell" title="Notifications"></i>
+	        <i class="fas fa-bell" id="notification-icon" title="Notifications"></i>
 	        <i class="fas fa-user-circle" title="Account"></i>
 	    </div>
 	</div>
@@ -248,5 +124,8 @@
             <% } %>
         </div>
     </div>
+    <div id="notification-popup" style="display: none;">
+	    <ul id="notification-list"></ul>
+	</div>
 </body>
 </html>
