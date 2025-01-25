@@ -1,0 +1,31 @@
+@charset "UTF-8";
+
+#notification-popup {
+		    position: absolute;
+		    top: 50px; /* Adjust based on your layout */
+		    right: 20px;
+		    background: white;
+		    border: 1px solid #ccc;
+		    border-radius: 5px;
+		    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+		    padding: 10px;
+		    z-index: 1000;
+		    max-width: 300px;
+		    display: none;
+		}
+		
+		#notification-popup ul {
+		    list-style: none;
+		    margin: 0;
+		    padding: 0;
+		}
+		
+		#notification-popup li {
+		    margin: 5px 0;
+		    padding: 5px;
+		    border-bottom: 1px solid #eee;
+		}
+		
+		#notification-popup li:last-child {
+		    border-bottom: none;
+		}
