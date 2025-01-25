@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -229,7 +231,8 @@
         	<h2>WELCOME TO DASHBOARD</h2>
             <h1>KEDAI KEREPEK MAKSU</h1>
         </div>
-    </div>
+        
+</div>
     
     <div id="notification-popup" style="display: none;">
 	    <ul id="notification-list"></ul>
