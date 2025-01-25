@@ -58,5 +58,6 @@
 	    <ul id="notification-list"></ul>
 	</div>
 <script src="js/account.js"></script>
+<script src="js/notification.js"></script>
 </body>
 </html>

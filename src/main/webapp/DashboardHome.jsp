@@ -43,5 +43,6 @@
 	    <ul id="notification-list"></ul>
 	</div>
 	<script src="js/dashboard.js"></script>
+	<script src="js/notification.js"></script>
 </body>
 </html>

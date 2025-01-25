@@ -1,5 +1,6 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.model.Product" %>
+<%@ page import="com.dao.ProductDAO" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,6 +22,7 @@
             <a href="ViewAccount.jsp">Account</a>
         </div>
     </div>
+
     <!-- Head Bar -->
 	<div class="head-bar">
 	    <div class="title">Products</div>
@@ -32,64 +34,78 @@
 
     <!-- Main Content -->
     <div class="main-content">
-    <div class="blurred-box">
-        <!-- Header with Title and Add Product Button -->
-        <div class="header">
-            <h1>Products</h1>
-            <a href="CreateProduct.html" class="add-btn">Add Product</a>
-        </div>
+        <div class="blurred-box">
+            <!-- Header with Title and Add Product Button -->
+            <div class="header">
+                <h1>Products</h1>
+                <a href="CreateProduct.html" class="add-btn">Add Product</a>
+            </div>
 
-        <!-- Product Catalog -->
-        <div class="product-catalog">
-    <%
-        List<Product> products = (List<Product>) request.getAttribute("products");
-        if (products != null && !products.isEmpty()) {
-            for (Product product : products) {
-    %>
-                <div class="product-card">
-                    <%-- Display Image or Default Image --%>
-                    <%
-                        String imagePath = product.getImagePath();
-                        if (imagePath == null || imagePath.isEmpty()) {
-                            imagePath = "img/default-image.jpg"; // Default image path
+            <!-- Product Catalog -->
+            <div class="product-catalog">
+                <%
+                    // Retrieve the products list from the request scope
+                    List<Product> products = (List<Product>) request.getAttribute("products");
+
+                    // Debugging: If products are null, fetch directly in JSP (fallback)
+                    if (products == null) {
+                        System.out.println("No products found in request scope. Fetching directly in JSP...");
+                        ProductDAO productDAO = new ProductDAO();
+                        products = productDAO.getAllActiveProducts();
+                    }
+
+                    // Display the products
+                    if (products != null && !products.isEmpty()) {
+                        for (Product product : products) {
+                %>
+                            <div class="product-card">
+                                <%-- Display Image or Default Image --%>
+                                <%
+                                    String imagePath = product.getImagePath();
+                                    if (imagePath == null || imagePath.isEmpty()) {
+                                        imagePath = "img/default-image.jpg"; // Default image path
+                                    }
+                                %>
+                                <img src="<%= imagePath %>" alt="<%= product.getProdName() %>">
+                                <h3><%= product.getProdName() %></h3>
+                                <p>Price: RM <%= product.getProdPrice() %></p>
+                                <p>Stock: <%= product.getQuantityStock() %></p>
+                                <div class="button-group">
+                                    <button class="update-btn" 
+                                            onclick="location.href='UpdateProductServlet?prodId=<%= product.getProdId() %>'">
+                                        Update
+                                    </button>
+                                    <button class="delete-btn" 
+                                            onclick="confirmDelete('<%= product.getProdId() %>')">
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                <%
                         }
-                    %>
-                    <img src="<%= imagePath %>" alt="<%= product.getProdName() %>">
-                    <h3><%= product.getProdName() %></h3>
-                    <p>Price: RM <%= product.getProdPrice() %></p>
-                    <p>Stock: <%= product.getQuantityStock() %></p>
-                    <div class="button-group">
-                        <button class="update-btn" 
-                                onclick="location.href='UpdateProductServlet?prodId=<%= product.getProdId() %>'">
-                            Update
-                        </button>
-                        <button class="delete-btn" 
-                                onclick="confirmDelete('<%= product.getProdId() %>')">
-                            Delete
-                        </button>
-                    </div>
-                </div>
-    <%
-            }
-        } else {
-    %>
-            <p>No products available.</p>
-    <%
-        }
-    %>
-</div>
-
-<script>
-    function confirmDelete(prodId) {
-        if (confirm("Are you sure you want to delete this product? This action cannot be undone.")) {
-            location.href = 'DeleteProductServlet?prodId=' + prodId;
-        }
-    }
-</script>
+                    } else {
+                %>
+                        <p>No products available.</p>
+                <%
+                    }
+                %>
+            </div>
+        </div>
     </div>
-</div>
-<div id="notification-popup" style="display: none;">
-	    <ul id="notification-list"></ul>
-	</div>
+
+    <!-- Notification Script -->
+    <script>
+        function confirmDelete(prodId) {
+            if (confirm("Are you sure you want to delete this product? This action cannot be undone.")) {
+                location.href = 'DeleteProductServlet?prodId=' + prodId;
+            }
+        }
+    </script>
+
+    <!-- Optional: Notification Popup -->
+    <div id="notification-popup" style="display: none;">
+        <ul id="notification-list"></ul>
+    </div>
+    <script src="js/notification.js"></script>
 </body>
 </html>

@@ -69,5 +69,6 @@
     <div id="notification-popup" style="display: none;">
 	    <ul id="notification-list"></ul>
 	</div>
+	<script src="js/notification.js"></script>
 </body>
 </html>
