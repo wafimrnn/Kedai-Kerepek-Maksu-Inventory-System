@@ -116,7 +116,7 @@
         .main-content h2 {
       		font-size: 30px;
       		letter-spacing: 10px;
-      		margin-bottom: 20px;
+      		margin-bottom: 10px 0;;
       		font-weight: bold;
       		position: relative;
       		z-index: 2;
@@ -130,6 +130,7 @@
       		margin-bottom: 90px;
       		position: relative;
       		z-index: 2;
+      		margin: 10px 0;
       		color: #545445;
     	}
 
@@ -150,20 +151,19 @@
          
          /* Blurry Box */
          .blurred-box {
-		    position: relative;
-		    z-index: 1;
-		    padding: 40px;
-		    background: rgba(255, 250, 171, 0.62);
-		    backdrop-filter: blur(8px); /* Ensure this is applied correctly */
-		    border-radius: 10px;
-		    margin-top: 20px; /* Proper semicolon added here */
-		    height: 200px; /* Set a height to center vertically */
-		    margin-bottom: 20px;
-		    display: flex; /* Use flexbox */
-		    flex-direction: column; /* Stack items vertically */
-		    justify-content: center; /* Center content vertically */
-		    align-items: center; /* Center content horizontally */
-		    text-align: center; /* Center text horizontally */
+    		position: absolute; /* Take it out of the document flow */
+    		top: 50%; /* Center it vertically */
+    		left: 50%; /* Center it horizontally */
+    		transform: translate(-50%, -50%); /* Centering transformation */
+    		width: 90%;
+    		max-width: 500px;
+    		padding: 30px;
+    		background: rgba(255, 250, 171, 0.5); /* Transparent background */
+    		backdrop-filter: blur(8px); /* Smooth blur effect */
+    		border-radius: 15px;
+    		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    		text-align: center;
+    		z-index: 2; /* Ensure it overlays the pseudo-element background */
 		}
         
         #notification-popup {
