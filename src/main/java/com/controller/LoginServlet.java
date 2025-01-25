@@ -26,8 +26,8 @@ public class LoginServlet extends HttpServlet {
             // Successful login
             HttpSession session = request.getSession();
             session.setAttribute("loggedInUser", user);
-            session.setAttribute("userId", user.getId()); // Store user ID in session
-            session.setAttribute("userRole", user.getRole()); // Store user role in session
+            session.setAttribute("userId", user.getId());
+            session.setAttribute("userRole", user.getRole());
             response.sendRedirect("DashboardHome.jsp");
         }
     }
