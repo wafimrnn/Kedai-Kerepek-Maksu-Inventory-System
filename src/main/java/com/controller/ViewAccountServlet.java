@@ -20,7 +20,7 @@ public class ViewAccountServlet extends HttpServlet {
         Integer userId = (Integer) session.getAttribute("userId"); // Use Integer to handle null safely
 
         if (userId == null) {
-            // Redirect to login page if no user is logged in
+            System.out.println("User ID not found in session. Redirecting to login page.");
             response.sendRedirect("Login.html?message=Please log in to view your account.");
             return;
         }
@@ -39,7 +39,7 @@ public class ViewAccountServlet extends HttpServlet {
         }
 
         // Forward the request to viewAccount.jsp
-        RequestDispatcher dispatcher = request.getRequestDispatcher("viewAccount.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("ViewAccount.jsp");
         dispatcher.forward(request, response);
     }
 }

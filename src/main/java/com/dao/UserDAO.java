@@ -37,24 +37,30 @@ public class UserDAO {
 	    return false; // Return false if an exception occurs or no rows were inserted
 	}
 
-    public User loginUser(String username, String password) {
-        String query = "SELECT * FROM USERS WHERE USER_NAME = ?";
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, username);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next() && checkPassword(password, rs.getString("USER_PASS"))) {
-                User user = new User();
-                user.setId(rs.getInt("USER_ID"));
-                user.setName(rs.getString("USER_NAME"));
-                user.setRole(rs.getString("USER_ROLE"));
-                return user;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+	public User loginUser(String username, String password) {
+	    String query = "SELECT * FROM USERS WHERE USER_NAME = ?";
+	    try (Connection connection = DBConnection.getConnection();
+	         PreparedStatement stmt = connection.prepareStatement(query)) {
+	        stmt.setString(1, username);
+	        ResultSet rs = stmt.executeQuery();
+
+	        if (rs.next()) {
+	            String storedPasswordHash = rs.getString("USER_PASS"); // Get hashed password from the database
+
+	            // Use BCrypt to compare the input password with the stored hashed password
+	            if (BCrypt.checkpw(password, storedPasswordHash)) {
+	                User user = new User();
+	                user.setId(rs.getInt("USER_ID"));
+	                user.setName(rs.getString("USER_NAME"));
+	                user.setRole(rs.getString("USER_ROLE"));
+	                return user;
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return null; // Return null if no match is found
+	}
 
     public boolean createStaff(String username, String password, String phone, String address, int ownerId) {
         String query = "INSERT INTO USERS (USER_NAME, USER_ROLE, USER_PASS, USER_PHONE, USER_ADDRESS, ACC_STATUS, OWNER_ID) VALUES (?, 'STAFF', ?, ?, ?, 'ACTIVE', ?)";
