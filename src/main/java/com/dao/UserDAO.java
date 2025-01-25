@@ -115,27 +115,25 @@ public class UserDAO {
         return isUpdated;
     }
     
-    private static final String GET_USER_BY_ID_QUERY = "SELECT * FROM USERS WHERE USER_ID = ?";
-
     public User getUserById(int userId) {
         User user = null;
-        try (Connection connection = DBConnection.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(GET_USER_BY_ID_QUERY);
-            statement.setInt(1, userId);
-
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                // Create a User object and populate it with data from the result set
+        String query = "SELECT * FROM USERS WHERE USER_ID = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
                 user = new User();
-                user.setId(resultSet.getInt("USER_ID"));
-                user.setName(resultSet.getString("USER_NAME"));
-                user.setRole(resultSet.getString("USER_ROLE"));
-                user.setPhone(resultSet.getString("USER_PHONE"));
-                user.setAddress(resultSet.getString("USER_ADDRESS"));
+                user.setId(rs.getInt("USER_ID"));
+                user.setName(rs.getString("USER_NAME"));
+                user.setRole(rs.getString("USER_ROLE"));
+                user.setPhone(rs.getString("USER_PHONE"));
+                user.setAddress(rs.getString("USER_ADDRESS"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return user;
     }
+
 }
