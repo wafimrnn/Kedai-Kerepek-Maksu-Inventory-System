@@ -26,6 +26,7 @@ public class LoginServlet extends HttpServlet {
             // Successful login
             HttpSession session = request.getSession();
             session.setAttribute("loggedInUser", user);
+            session.setAttribute("userRole", user.getRole()); // Add user role to session
             response.sendRedirect("DashboardHome.jsp");
         }
     }

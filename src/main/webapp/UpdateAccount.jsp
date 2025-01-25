@@ -221,7 +221,10 @@
 
     <!-- Main Content -->
     <div class="main-content">
+    	<div class="blurred-box">
         <h1>Update Account</h1>
+        </div>
+    
         <div class="form-container">
             <form action="UpdateAccountServlet" method="post">
                 <div class="form-group">
