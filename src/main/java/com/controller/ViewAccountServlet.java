@@ -45,12 +45,12 @@ public class ViewAccountServlet extends HttpServlet {
         } else {
             // If user retrieval fails, redirect to error page
             System.out.println("DEBUG: User object is null");
-            response.sendRedirect("Error.jsp?message=Unable to retrieve account details.");
+            response.sendRedirect("ViewAccount.jsp?message=Unable to retrieve account details.");
             return;
         }
 
         // Forward the request to viewAccount.jsp
-        RequestDispatcher dispatcher = request.getRequestDispatcher("viewAccount.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("ViewAccount.jsp");
         dispatcher.forward(request, response);
     }
 }

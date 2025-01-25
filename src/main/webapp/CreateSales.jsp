@@ -39,30 +39,36 @@
     <div class="main-content">
     
         <!-- Product List Section -->
-        <div class="product-list">
-            <div class="header">
-                <h1>Create Sales</h1>
-            </div>
-            <div id="product-grid" class="product-grid">
-                <%
-                    ProductDAO productDAO = new ProductDAO();
-                    List<Product> productList = productDAO.getAllActiveProducts();
-                    for (Product product : productList) {
-                %>
-                <div class="product-item">
-                    <img src="<%= product.getImagePath()%>" alt="<%= product.getProdName() %>">
-                    <h4><%= product.getProdName() %></h4>
-                    <p>Price: RM <%= product.getProdPrice() %></p>
-                    <button class="add-to-order" 
-                            data-prodId="<%= product.getProdId() %>" 
-                            data-prodName="<%= product.getProdName() %>" 
-                            data-prodPrice="<%= product.getProdPrice() %>">
-                        Add to Order
-                    </button>
-                </div>
-                <% } %>
-            </div>
-        </div>
+		<div class="product-list">
+		    <div class="header">
+		        <h1>Create Sales</h1>
+		    </div>
+		    <div id="product-grid" class="product-grid">
+		        <%
+		            ProductDAO productDAO = new ProductDAO();
+		            List<Product> productList = productDAO.getAllActiveProducts();
+		            for (Product product : productList) {
+		                String imagePath = product.getImagePath();
+		                if (imagePath == null || imagePath.isEmpty()) {
+		                    imagePath = "img/default-image.jpg"; // Default image path for products without an image
+		                }
+		        %>
+		            <div class="product-item">
+		                <img src="<%= imagePath %>" alt="<%= product.getProdName() %>">
+		                <h4><%= product.getProdName() %></h4>
+		                <p>Price: RM <%= product.getProdPrice() %></p>
+		                <button class="add-to-order" 
+		                        data-prodId="<%= product.getProdId() %>" 
+		                        data-prodName="<%= product.getProdName() %>" 
+		                        data-prodPrice="<%= product.getProdPrice() %>">
+		                    Add to Order
+		                </button>
+		            </div>
+		        <% 
+		            }
+		        %>
+		    </div>
+		</div>
 
         <!-- Order Calculation Section -->
         
