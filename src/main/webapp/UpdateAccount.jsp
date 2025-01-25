@@ -215,6 +215,66 @@
         .account-info button:hover {
             background-color: #218838;
         }
+        
+        #update-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .form-group label {
+        font-size: 16px;
+        font-weight: 600;
+        color: #343a40;
+    }
+
+    .form-group input {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 16px;
+        color: #333;
+        transition: all 0.3s ease;
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+
+    .form-group input:focus {
+        border-color: #007BFF;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+        background-color: rgba(255, 255, 255, 1);
+    }
+
+    .submit-btn {
+        background-color: #007BFF;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s;
+    }
+
+    .submit-btn:hover {
+        background-color: #0056b3;
+        transform: scale(1.02);
+    }
+
+    .feedback-message {
+        font-size: 14px;
+        font-style: italic;
+        color: #28a745;
+        margin-top: 10px;
+    }
+        
     </style>
 </head>
 <body data-role="<%= request.getAttribute("userRole") %>">

@@ -275,7 +275,7 @@
     </div>
     <!-- Head Bar -->
 	<div class="head-bar">
-	    <div class="title">Sales</div>
+	    <div class="title">Products</div>
 	    <div class="icons">
 	        <i class="fas fa-bell" title="Notifications"></i>
 	        <i class="fas fa-user-circle" title="Account"></i>
