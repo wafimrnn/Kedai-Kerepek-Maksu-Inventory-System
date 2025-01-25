@@ -128,6 +128,10 @@ public class UserDAO {
             stmt.setInt(1, userId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
+                System.out.println("User found: " + rs.getString("USER_NAME"));
+                System.out.println("Phone: " + rs.getString("USER_PHONE"));
+                System.out.println("Address: " + rs.getString("USER_ADDRESS"));
+
                 User user = new User();
                 user.setId(rs.getInt("USER_ID"));
                 user.setName(rs.getString("USER_NAME"));
@@ -135,6 +139,8 @@ public class UserDAO {
                 user.setAddress(rs.getString("USER_ADDRESS"));
                 user.setRole(rs.getString("USER_ROLE"));
                 return user;
+            } else {
+                System.out.println("No user found with ID: " + userId);
             }
         } catch (SQLException e) {
             e.printStackTrace();

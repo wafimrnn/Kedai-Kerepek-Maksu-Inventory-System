@@ -46,11 +46,11 @@
 
             <!-- Display Account Info -->
             <div class="account-info">
-                <p><strong>Name:</strong> ${userName}</p>
-			    <p><strong>Phone:</strong> ${userPhone}</p>
-			    <p><strong>Address:</strong> ${userAddress}</p>
-			    <p><strong>Role:</strong> ${userRole}</p>
-			    <p><strong>Status:</strong> ${accStatus}</p>
+                <p><strong>Name:</strong> ${userName != null ? userName : "No data available"}</p>
+				<p><strong>Phone:</strong> ${userPhone != null ? userPhone : "No data available"}</p>
+				<p><strong>Address:</strong> ${userAddress != null ? userAddress : "No data available"}</p>
+				<p><strong>Role:</strong> ${userRole != null ? userRole : "No data available"}</p>
+				<p><strong>Status:</strong> ${accStatus != null ? accStatus : "No data available"}</p>
             </div>
         </div>
     </div>
