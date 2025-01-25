@@ -1,6 +1,5 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.model.User" %>
-<%@ taglib prefix="c" uri="http://jakarta.apache.org/taglibs/standard" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -250,9 +249,9 @@
                 <h1>My Account</h1>
                 <a href="UpdateAccount.jsp" class="add-btn">Update Account</a>
                 <!-- Only show 'Create Staff Account' button for users with 'OWNER' role -->
-			    <c:if test="${userRole == 'OWNER'}">
-			        <button onclick="location.href='CreateStaffAccount.jsp'">Create Staff Account</button>
-			    </c:if>
+			    <% if ("OWNER".equals(session.getAttribute("userRole"))) { %>
+    <button onclick="location.href='CreateStaffAccount.jsp'">Create Staff Account</button>
+<% } %>
             </div>
 
             <!-- Display Account Info -->
