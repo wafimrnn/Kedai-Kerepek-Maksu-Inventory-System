@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.manager.DBConnection;
@@ -15,7 +14,8 @@ public class SaleDAO {
 
     // Insert a new sale and return the generated sale ID
     public int insertSale(Sale sale) throws SQLException {
-    	String sql = "INSERT INTO SALES (SALE_DATE, TOTAL_AMOUNT, PAYMENT_METHOD, USER_ID) VALUES (?, ?, ?, ?)"; 	
+        String sql = "INSERT INTO SALES (SALE_DATE, TOTAL_AMOUNT, PAYMENT_METHOD, USER_ID) VALUES (?, ?, ?, ?)";
+        
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             
@@ -35,9 +35,10 @@ public class SaleDAO {
         throw new SQLException("Failed to insert sale.");
     }
 
-    // Insert sale items
+    // Insert sale items into SALESITEMS table
     public void insertSaleItems(List<SaleItem> saleItems) throws SQLException {
-    	String sql = "INSERT INTO SALESITEMS (SALE_ID, PROD_ID, QUANTITY, SUB_TOTAL) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO SALEITEMS (SALE_ID, PROD_ID, QUANTITY, SUB_TOTAL) VALUES (?, ?, ?, ?)";
+        
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
@@ -46,12 +47,9 @@ public class SaleDAO {
                 stmt.setInt(2, item.getProductId());
                 stmt.setInt(3, item.getQuantity());
                 stmt.setDouble(4, item.getSubtotal());
-                stmt.addBatch();
+                stmt.addBatch(); // Add each insert statement to batch
             }
             stmt.executeBatch(); // Execute all insertions as a batch
         }
     }
-    
-    
-    
 }

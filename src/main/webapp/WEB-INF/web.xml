@@ -54,7 +54,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>CompleteSaleServlet</servlet-name>
-    <url-pattern>/complete-sale</url-pattern>
+    <url-pattern>/CompleteSaleServlet</url-pattern>
   </servlet-mapping>
   <servlet>
     <description></description>
@@ -118,6 +118,15 @@
 </servlet>
 <servlet-mapping>
     <servlet-name>LogoutServlet</servlet-name>
-    <url-pattern>/logout</url-pattern>
+    <url-pattern>/LogoutServlet</url-pattern>
 </servlet-mapping>
+ <servlet>
+        <servlet-name>UserController</servlet-name>
+        <servlet-class>com.controller.UserController</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>UserController</servlet-name>
+        <url-pattern>/account</url-pattern> <!-- Maps to /account URL -->
+    </servlet-mapping>
 </web-app>

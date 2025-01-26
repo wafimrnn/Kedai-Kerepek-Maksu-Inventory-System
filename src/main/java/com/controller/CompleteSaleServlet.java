@@ -19,22 +19,32 @@ import java.util.List;
 
 public class CompleteSaleServlet extends HttpServlet {
 
+    private SaleDAO saleDAO;
+
+    @Override
+    public void init() {
+        // Initialize the SaleDAO (could also be done with Dependency Injection in more advanced setups)
+        saleDAO = new SaleDAO();
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
         try {
-            // Parse JSON request body
+            // Step 1: Read the JSON request body
             StringBuilder sb = new StringBuilder();
             String line;
             BufferedReader reader = request.getReader();
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
             }
+
+            // Step 2: Parse the incoming JSON data
             JSONObject requestData = new JSONObject(sb.toString());
 
-            // Extract sale details
+            // Extracting sale details
             double totalAmount = requestData.getDouble("totalAmount");
             String paymentMethod = requestData.getString("paymentMethod");
             int userId = requestData.getInt("userId");
@@ -50,28 +60,27 @@ public class CompleteSaleServlet extends HttpServlet {
             sale.setPaymentMethod(paymentMethod);
             sale.setUserId(userId);
 
-            // Extract sale items
+            // Step 3: Extract order items
             JSONArray orderItems = requestData.getJSONArray("orderItems");
             List<SaleItem> saleItems = new ArrayList<>();
             for (int i = 0; i < orderItems.length(); i++) {
                 JSONObject item = orderItems.getJSONObject(i);
 
                 SaleItem saleItem = new SaleItem();
-                saleItem.setProductId(item.getInt("prodId"));  // Use prodId instead of productId
+                saleItem.setProductId(item.getInt("prodId"));
                 saleItem.setQuantity(item.getInt("qty"));
                 saleItem.setSubtotal(item.getDouble("subtotal"));
                 saleItems.add(saleItem);
             }
 
-            // Persist sale and sale items using DAO
-            SaleDAO saleDAO = new SaleDAO();
+            // Step 4: Persist sale and sale items using DAO
             int saleId = saleDAO.insertSale(sale); // Insert sale and get ID
             for (SaleItem item : saleItems) {
                 item.setSaleId(saleId); // Set sale ID for each item
             }
             saleDAO.insertSaleItems(saleItems);
 
-            // Respond with success
+            // Step 5: Send response back to frontend (success)
             JSONObject responseJson = new JSONObject();
             responseJson.put("status", "success");
             responseJson.put("message", "Sale completed successfully!");
@@ -93,5 +102,11 @@ public class CompleteSaleServlet extends HttpServlet {
             errorResponse.put("message", "Error: " + e.getMessage());
             response.getWriter().write(errorResponse.toString());
         }
+    }
+
+    @Override
+    public void destroy() {
+        // Clean up if necessary
+        saleDAO = null;
     }
 }

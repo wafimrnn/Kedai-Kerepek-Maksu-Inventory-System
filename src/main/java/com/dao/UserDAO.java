@@ -121,35 +121,26 @@ public class UserDAO {
         return isUpdated;
     }
     
-    public User getUserById(int userId) {
-        String query = "SELECT * FROM USERS WHERE USER_ID = ?";
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+    public User getUserById(int userId) throws SQLException {
+        String sql = "SELECT * FROM users WHERE user_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setInt(1, userId);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                System.out.println("DEBUG: Retrieved user from database:");
-                System.out.println("USER_ID: " + rs.getInt("USER_ID"));
-                System.out.println("USER_NAME: " + rs.getString("USER_NAME"));
-                System.out.println("USER_PHONE: " + rs.getString("USER_PHONE"));
-                System.out.println("USER_ADDRESS: " + rs.getString("USER_ADDRESS"));
-                System.out.println("USER_ROLE: " + rs.getString("USER_ROLE"));
 
-                User user = new User();
-                user.setId(rs.getInt("USER_ID"));
-                user.setName(rs.getString("USER_NAME"));
-                user.setPhone(rs.getString("USER_PHONE"));
-                user.setAddress(rs.getString("USER_ADDRESS"));
-                user.setRole(rs.getString("USER_ROLE"));
-                return user;
-            } else {
-                System.out.println("DEBUG: No user found with USER_ID = " + userId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    User user = new User();
+                    user.setId(rs.getInt("user_id"));
+                    user.setName(rs.getString("user_name"));
+                    user.setRole(rs.getString("user_role"));
+                    user.setPhone(rs.getString("user_phone"));
+                    user.setAddress(rs.getString("user_address"));
+                    return user;
+                }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-        return null;
+        return null; // Return null if user is not found
     }
-
 
 }

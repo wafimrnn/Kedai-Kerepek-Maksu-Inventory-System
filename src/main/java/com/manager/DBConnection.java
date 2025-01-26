@@ -5,7 +5,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBConnection {
-    private static String dbUrl = System.getenv("AZURE_SQL_CONNECTIONSTRING");
+
+    private static final String DB_URL = "jdbc:sqlserver://kerepekmaksu.database.windows.net:1433;database=KerepekMaksuDB";  // Replace with your actual DB URL
+    private static final String DB_USER = "maksuadmin";  // Replace with your actual DB username
+    private static final String DB_PASSWORD = "Larvapass@";  // Replace with your actual DB password
     
     static {
         try {
@@ -16,11 +19,8 @@ public class DBConnection {
         }
     }
 
+    // Method to get a connection to the database
     public static Connection getConnection() throws SQLException {
-        if (dbUrl == null || dbUrl.isEmpty()) {
-            throw new IllegalStateException("Database connection string is not set in environment variables.");
-        }
-        return DriverManager.getConnection(dbUrl);
+        return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
     }
-    
 }

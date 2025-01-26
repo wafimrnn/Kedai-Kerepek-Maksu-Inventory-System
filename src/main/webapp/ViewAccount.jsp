@@ -47,8 +47,7 @@
                         <button class="add-btn" onclick="location.href='CreateStaffAccount.jsp'">Create Staff Account</button>
                     <% } %>
 
-                    <!-- Logout Button -->
-                    <button class="add-btn logout-btn" onclick="location.href='LogoutServlet'">Logout</button>
+                    <button class="add-btn logout-btn" onclick="location.href='/Kedai-Kerepek-Maksu-Inventory-System/LogoutServlet'">Logout</button>
                 </div>
             </div>
 
