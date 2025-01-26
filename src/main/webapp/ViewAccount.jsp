@@ -38,27 +38,34 @@
             <!-- Account Details Section -->
             <div class="header">
                 <h1>My Account</h1>
-                <a href="UpdateAccount.jsp" class="add-btn">Update Account</a>
-                <!-- Only show 'Create Staff Account' button for users with 'OWNER' role -->
-			    <% if ("OWNER".equals(session.getAttribute("userRole"))) { %>
-				    <button onclick="location.href='CreateStaffAccount.jsp'">Create Staff Account</button>
-				<% } %>
+                <div class="button-container">
+                    <!-- Update Account Button -->
+                    <a href="UpdateAccount.jsp" class="add-btn">Update Account</a>
+
+                    <!-- Only show 'Create Staff Account' button for users with 'OWNER' role -->
+                    <% if ("OWNER".equals(session.getAttribute("userRole"))) { %>
+                        <button class="add-btn" onclick="location.href='CreateStaffAccount.jsp'">Create Staff Account</button>
+                    <% } %>
+
+                    <!-- Logout Button -->
+                    <button class="add-btn logout-btn" onclick="location.href='LogoutServlet'">Logout</button>
+                </div>
             </div>
 
             <!-- Display Account Info -->
             <div class="account-info">
                 <p><strong>Name:</strong> <%= session.getAttribute("userName") != null ? session.getAttribute("userName") : "No data available" %></p>
-				<p><strong>Phone:</strong> <%= session.getAttribute("userPhone") != null ? session.getAttribute("userPhone") : "No data available" %></p>
-				<p><strong>Address:</strong> <%= session.getAttribute("userAddress") != null ? session.getAttribute("userAddress") : "No data available" %></p>
-				<p><strong>Role:</strong> <%= session.getAttribute("userRole") != null ? session.getAttribute("userRole") : "No data available" %></p>
-				<p><strong>Status:</strong> <%= session.getAttribute("accStatus") != null ? session.getAttribute("accStatus") : "No data available" %></p>
+                <p><strong>Phone:</strong> <%= session.getAttribute("userPhone") != null ? session.getAttribute("userPhone") : "No data available" %></p>
+                <p><strong>Address:</strong> <%= session.getAttribute("userAddress") != null ? session.getAttribute("userAddress") : "No data available" %></p>
+                <p><strong>Role:</strong> <%= session.getAttribute("userRole") != null ? session.getAttribute("userRole") : "No data available" %></p>
+                <p><strong>Status:</strong> <%= session.getAttribute("accStatus") != null ? session.getAttribute("accStatus") : "No data available" %></p>
             </div>
         </div>
     </div>
     <div id="notification-popup" style="display: none;">
-	    <ul id="notification-list"></ul>
-	</div>
-<script src="js/account.js"></script>
-<script src="js/notification.js"></script>
+        <ul id="notification-list"></ul>
+    </div>
+    <script src="js/account.js"></script>
+    <script src="js/notification.js"></script>
 </body>
 </html>
