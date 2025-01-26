@@ -22,11 +22,11 @@ function addToOrder(productName, productPrice, prodId) {
     const existingRow = document.querySelector(`[data-product-name="${productName}"]`);
 
     if (existingRow) {
-        const qtyCell = existingRow.querySelector(".qty");
+        const qtyInput = existingRow.querySelector(".qty input");
         const subtotalCell = existingRow.querySelector(".subtotal");
 
-        const newQty = parseInt(qtyCell.textContent) + 1;
-        qtyCell.textContent = newQty;
+        const newQty = parseInt(qtyInput.value) + 1;
+        qtyInput.value = newQty;
         subtotalCell.textContent = `RM ${(newQty * productPrice).toFixed(2)}`;
     } else {
         const row = document.createElement("tr");
@@ -35,7 +35,9 @@ function addToOrder(productName, productPrice, prodId) {
 
         row.innerHTML = `
             <td>${productName}</td>
-            <td class="qty">1</td>
+            <td class="qty">
+                <input type="number" min="1" value="1" onchange="updateRowSubtotal(this, ${productPrice})">
+            </td>
             <td class="subtotal">RM ${productPrice.toFixed(2)}</td>
             <td><button onclick="removeItem(this)">Remove</button></td>
         `;
@@ -44,6 +46,16 @@ function addToOrder(productName, productPrice, prodId) {
     }
 
     updateTotals();
+}
+
+function updateRowSubtotal(input, productPrice) {
+    const newQty = parseInt(input.value) || 1; // Default to 1 if input is invalid
+    input.value = newQty; // Ensure the input value is valid
+    const row = input.closest("tr");
+    const subtotalCell = row.querySelector(".subtotal");
+    subtotalCell.textContent = `RM ${(newQty * productPrice).toFixed(2)}`;
+
+    updateTotals(); // Recalculate the overall totals
 }
 
 // Function to update totals
