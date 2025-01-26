@@ -15,7 +15,7 @@ public class SaleDAO {
 
     // Insert a new sale and return the generated sale ID
     public int insertSale(Sale sale) throws SQLException {
-        String sql = "INSERT INTO sales (sale_Date, total_Amount, payment_Method, user_Id) VALUES (?, ?, ?, ?)";
+    	String sql = "INSERT INTO SALES (SALE_DATE, TOTAL_AMOUNT, PAYMENT_METHOD, USER_ID) VALUES (?, ?, ?, ?)"; 	
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             
@@ -37,7 +37,7 @@ public class SaleDAO {
 
     // Insert sale items
     public void insertSaleItems(List<SaleItem> saleItems) throws SQLException {
-        String sql = "INSERT INTO salesitems (sale_Id, prod_Id, quantity, sub_total) VALUES (?, ?, ?, ?)";
+    	String sql = "INSERT INTO SALESITEMS (SALE_ID, PROD_ID, QUANTITY, SUB_TOTAL) VALUES (?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             

@@ -71,8 +71,7 @@
 		    </div>
 		</div>
 
-        <!-- Order Calculation Section -->
-        
+        <!-- Order Calculation Section --> 
         <div class="order-calculation">
             <div class="order-details">
                 <h3>Order Details</h3>

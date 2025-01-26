@@ -22,16 +22,18 @@ function addToOrder(productName, productPrice, prodId) {
     const existingRow = document.querySelector(`[data-product-name="${productName}"]`);
 
     if (existingRow) {
+        // If the product already exists, update the quantity and subtotal
         const qtyInput = existingRow.querySelector(".qty input");
         const subtotalCell = existingRow.querySelector(".subtotal");
 
-        const newQty = parseInt(qtyInput.value) + 1;
-        qtyInput.value = newQty;
-        subtotalCell.textContent = `RM ${(newQty * productPrice).toFixed(2)}`;
+        const newQty = parseInt(qtyInput.value) + 1; // Increase quantity by 1
+        qtyInput.value = newQty; // Update the quantity input field
+        subtotalCell.textContent = `RM ${(newQty * productPrice).toFixed(2)}`; // Update subtotal
     } else {
+        // If the product doesn't exist, create a new row
         const row = document.createElement("tr");
         row.setAttribute("data-product-name", productName);
-        row.setAttribute("data-product-id", prodId); // Add prodId to the row
+        row.setAttribute("data-product-id", prodId);
 
         row.innerHTML = `
             <td>${productName}</td>
@@ -42,10 +44,10 @@ function addToOrder(productName, productPrice, prodId) {
             <td><button onclick="removeItem(this)">Remove</button></td>
         `;
 
-        orderItems.appendChild(row);
+        orderItems.appendChild(row); // Append the new row to the table
     }
 
-    updateTotals();
+    updateTotals(); // Recalculate totals
 }
 
 function updateRowSubtotal(input, productPrice) {
