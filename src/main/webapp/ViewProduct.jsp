@@ -47,9 +47,7 @@
 			    <%
 				    List<Product> products = (List<Product>) request.getAttribute("products");
 				    if (products != null && !products.isEmpty()) {
-				        out.println("Number of products: " + products.size()); // Debug output
 				        for (Product product : products) {
-				            out.println("Product Name: " + product.getProdName()); // Debug output
 				            String imagePath = product.getImagePath();
 				            if (imagePath == null || imagePath.isEmpty()) {
 				                imagePath = "img/default-image.jpg"; 

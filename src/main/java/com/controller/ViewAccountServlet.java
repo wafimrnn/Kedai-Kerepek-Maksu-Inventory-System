@@ -18,6 +18,7 @@ public class ViewAccountServlet extends HttpServlet {
         // Retrieve the logged-in user's ID from the session
         HttpSession session = request.getSession();
         Integer userId = (Integer) session.getAttribute("userId");
+        System.out.println("DEBUG: userId retrieved from session: " + userId);
 
         if (userId == null) {
             // Redirect to login page if no user is logged in
@@ -45,7 +46,7 @@ public class ViewAccountServlet extends HttpServlet {
         } else {
             // If user retrieval fails, redirect to error page
             System.out.println("DEBUG: User object is null");
-            response.sendRedirect("ViewAccount.jsp?message=Unable to retrieve account details.");
+            response.sendRedirect("Login.html?message=Unable to retrieve account details.");
             return;
         }
 
