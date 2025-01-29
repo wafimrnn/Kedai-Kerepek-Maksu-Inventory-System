@@ -14,7 +14,7 @@ public class UserDAO {
 
     // Method to create an owner
     public boolean createOwner(String username, String password, String phone, String address) {
-    	String sql = "INSERT INTO USERS (USER_ID, USER_NAME, USER_ROLE, USER_PASS, USER_PHONE, USER_ADDRESS, ACC_STATUS) VALUES (USERS_SEQ.NEXTVAL, ?, 'OWNER', ?, ?, ?, 'ACTIVE')";
+        String sql = "INSERT INTO USERS (USER_NAME, USER_ROLE, USER_PASS, USER_PHONE, USER_ADDRESS, ACC_STATUS) VALUES (?, 'OWNER', ?, ?, ?, 'ACTIVE')";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -35,38 +35,36 @@ public class UserDAO {
 
     // Method to log in a user
     public User loginUser(String username, String password) {
-        // Update the query to match the database schema
-        String query = "SELECT * FROM Users WHERE USER_NAME = ? AND USER_PASS = ?";
+        String query = "SELECT * FROM USERS WHERE USER_NAME = ? AND USER_PASS = ?";
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, username); // Bind username to USER_NAME
-            statement.setString(2, password); // Bind password to USER_PASS
+            statement.setString(1, username);
+            statement.setString(2, password);
 
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
                 User user = new User();
-                user.setId(resultSet.getInt("USER_ID")); // Match USER_ID column
-                user.setName(resultSet.getString("USER_NAME")); // Match USER_NAME column
-                user.setRole(resultSet.getString("USER_ROLE")); // Match USER_ROLE column
-                return user; // Return the user object
+                user.setId(resultSet.getInt("USER_ID"));
+                user.setName(resultSet.getString("USER_NAME"));
+                user.setRole(resultSet.getString("USER_ROLE"));
+                return user;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null; // Return null if no user is found
+        return null;
     }
-
 
     // Method to create a staff account
     public boolean createStaff(String username, String password, String phone, String address, int ownerId) {
-    	String query = "INSERT INTO USERS (USER_ID, USER_NAME, USER_ROLE, USER_PASS, USER_PHONE, USER_ADDRESS, ACC_STATUS, OWNER_ID) " +
-                "VALUES (USERS_SEQ.NEXTVAL, ?, 'STAFF', ?, ?, ?, 'ACTIVE', ?)";
+        String query = "INSERT INTO USERS (USER_NAME, USER_ROLE, USER_PASS, USER_PHONE, USER_ADDRESS, ACC_STATUS, OWNER_ID) " +
+                       "VALUES (?, 'STAFF', ?, ?, ?, 'ACTIVE', ?)";
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
             stmt.setString(1, username);
-            stmt.setString(2, password);  // Hash the password before storing
+            stmt.setString(2, password);
             stmt.setString(3, phone);
             stmt.setString(4, address);
             stmt.setInt(5, ownerId);
@@ -79,7 +77,6 @@ public class UserDAO {
         return false;
     }
 
-
     // Method to check if the username is already taken
     public boolean isUsernameTaken(String username) {
         String query = "SELECT COUNT(*) FROM USERS WHERE USER_NAME = ?";
@@ -89,7 +86,7 @@ public class UserDAO {
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1) > 0; // Return true if the count is greater than 0
+                return rs.getInt(1) > 0;
             }
         } catch (SQLException e) {
             System.err.println("Error checking username: " + e.getMessage());
@@ -142,10 +139,10 @@ public class UserDAO {
             System.err.println("Error retrieving user by ID: " + e.getMessage());
             e.printStackTrace();
         }
-        return null; // Return null if user not found
+        return null;
     }
     
- // Method to get staff members by owner ID
+    // Method to get staff members by owner ID
     public List<User> getStaffByOwnerId(int ownerId) {
         String sql = "SELECT * FROM USERS WHERE OWNER_ID = ? AND USER_ROLE = 'STAFF'";
         List<User> staffList = new ArrayList<>();
@@ -170,7 +167,8 @@ public class UserDAO {
         }
         return staffList;
     }
-    
+
+    // Method to update account status
     public boolean updateAccountStatus(int staffId, String newStatus) {
         String sql = "UPDATE USERS SET ACC_STATUS = ? WHERE USER_ID = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -185,6 +183,4 @@ public class UserDAO {
             return false;
         }
     }
-
-
 }

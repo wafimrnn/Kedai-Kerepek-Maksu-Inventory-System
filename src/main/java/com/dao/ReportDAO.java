@@ -20,8 +20,8 @@ public class ReportDAO {
         List<SalesReport> salesReports = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setDate(1, startDate);  // Use startDate for range
-            stmt.setDate(2, endDate);    // Use endDate for range
+            stmt.setDate(1, startDate);
+            stmt.setDate(2, endDate);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
