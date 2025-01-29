@@ -1,10 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>KedaiKerepekMaksu</groupId>
-  <artifactId>KedaiKerepekMaksu</artifactId>
+  <groupId>Kedai-Kerepek-Maksu-Inventory-System</groupId>
+  <artifactId>Kedai-Kerepek-Maksu-Inventory-System</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
-  
+
   <!-- Repositories Section (Optional but Recommended) -->
   <repositories>
     <repository>
@@ -16,9 +17,16 @@
         <url>https://repository.apache.org/content/groups/public/</url>
     </repository>
   </repositories>
-  
+
   <dependencies>
-  <!-- Jakarta Server Pages Tag Library (JSTL) -->
+	  <!-- Microsoft SQL Server JDBC Driver -->
+	  <dependency>
+	    <groupId>com.microsoft.sqlserver</groupId>
+	    <artifactId>mssql-jdbc</artifactId>
+	    <version>11.2.1.jre17</version>
+	  </dependency>
+	
+	  <!-- Jakarta Server Pages Tag Library (JSTL) -->
 	  <dependency>
 	    <groupId>org.glassfish.web</groupId>
 	    <artifactId>jakarta.servlet.jsp.jstl</artifactId>
@@ -109,25 +117,37 @@
     <artifactId>jbcrypt</artifactId>
     <version>0.4</version>
 </dependency>
-<dependency>
-    <groupId>com.oracle.database.jdbc</groupId>
-    <artifactId>ojdbc8</artifactId>
-    <version>19.8.0.0</version>
-</dependency>
-  </dependencies>
-  
+
+	 </dependencies>
+
   <build>
     <plugins>
+      <!-- Maven Compiler Plugin -->
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.13.0</version>
+        <version>3.10.0</version>
         <configuration>
           <release>17</release>
         </configuration>
       </plugin>
+
+      <!-- WAR Plugin -->
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
         <version>3.2.3</version>
+      </plugin>
+
+      <!-- Azure Web App Plugin -->
+      <plugin>
+        <groupId>com.microsoft.azure</groupId>
+        <artifactId>azure-webapp-maven-plugin</artifactId>
+        <version>2.0.0</version>
+        <configuration>
+          <appName>KedaiKerepekMaksu</appName>
+          <resourceGroup>WebappResources</resourceGroup>
+          <region>Southeast Asia</region>
+          <deploymentMode>WAR</deploymentMode>
+        </configuration>
       </plugin>
     </plugins>
   </build>

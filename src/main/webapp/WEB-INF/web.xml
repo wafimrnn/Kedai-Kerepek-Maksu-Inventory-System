@@ -1,112 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://jakarta.ee/xml/ns/jakartaee" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd" id="WebApp_ID" version="5.0">
-  <display-name>KedaiKerepekMaksu</display-name>
-  
-  <!-- Welcome file configuration -->
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:web="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd http://xmlns.jcp.org/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="5.0">
+  <display-name>Kedai Kerepek Maksu Inventory System</display-name>
   <welcome-file-list>
-      <welcome-file>Login.html</welcome-file>
+    <welcome-file>Login.html</welcome-file>
   </welcome-file-list>
-
-  <!-- Servlet Mappings for com.controller.account -->
   <servlet>
-      <servlet-name>CreateStaffServlet</servlet-name>
-      <servlet-class>com.controller.account.CreateStaffServlet</servlet-class>
+    <description>Handles the creation of new products</description>
+    <display-name>CreateProductServlet</display-name>
+    <servlet-name>CreateProductServlet</servlet-name>
+    <servlet-class>com.controller.CreateProductServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
-      <servlet-name>CreateStaffServlet</servlet-name>
-      <url-pattern>/CreateStaffServlet</url-pattern>
+    <servlet-name>CreateProductServlet</servlet-name>
+    <url-pattern>/CreateProductServlet</url-pattern>
   </servlet-mapping>
-
   <servlet>
-      <servlet-name>LoginServlet</servlet-name>
-      <servlet-class>com.controller.account.LoginServlet</servlet-class>
+    <description>Displays a list of products</description>
+    <display-name>ViewProductServlet</display-name>
+    <servlet-name>ViewProductServlet</servlet-name>
+    <servlet-class>com.controller.ViewProductServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
-      <servlet-name>LoginServlet</servlet-name>
-      <url-pattern>/LoginServlet</url-pattern>
+    <servlet-name>ViewProductServlet</servlet-name>
+    <url-pattern>/ViewProductServlet</url-pattern>
   </servlet-mapping>
-
   <servlet>
-      <servlet-name>SignUpServlet</servlet-name>
-      <servlet-class>com.controller.account.SignUpServlet</servlet-class>
+    <description>Handles product updates</description>
+    <display-name>UpdateProductServlet</display-name>
+    <servlet-name>UpdateProductServlet</servlet-name>
+    <servlet-class>com.controller.UpdateProductServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
-      <servlet-name>SignUpServlet</servlet-name>
-      <url-pattern>/SignUpServlet</url-pattern>
+    <servlet-name>UpdateProductServlet</servlet-name>
+    <url-pattern>/UpdateProductServlet</url-pattern>
   </servlet-mapping>
-
   <servlet>
-      <servlet-name>UpdateAccountServlet</servlet-name>
-      <servlet-class>com.controller.account.UpdateAccountServlet</servlet-class>
+    <description>Handles product deletion</description>
+    <display-name>DeleteProductServlet</display-name>
+    <servlet-name>DeleteProductServlet</servlet-name>
+    <servlet-class>com.controller.DeleteProductServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
-      <servlet-name>UpdateAccountServlet</servlet-name>
-      <url-pattern>/UpdateAccountServlet</url-pattern>
+    <servlet-name>DeleteProductServlet</servlet-name>
+    <url-pattern>/DeleteProductServlet</url-pattern>
   </servlet-mapping>
-
   <servlet>
-      <servlet-name>ViewAccountServlet</servlet-name>
-      <servlet-class>com.controller.account.ViewAccountServlet</servlet-class>
+    <servlet-name>CompleteSaleServlet</servlet-name>
+    <servlet-class>com.controller.CompleteSaleServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-      <servlet-name>ViewAccountServlet</servlet-name>
-      <url-pattern>/ViewAccountServlet</url-pattern>
+    <servlet-name>CompleteSaleServlet</servlet-name>
+    <url-pattern>/CompleteSaleServlet</url-pattern>
   </servlet-mapping>
-
-  <!-- Servlet Mappings for com.controller.product -->
   <servlet>
-      <servlet-name>CreateProductServlet</servlet-name>
-      <servlet-class>com.controller.product.CreateProductServlet</servlet-class>
+    <description></description>
+    <display-name>ReportController</display-name>
+    <servlet-name>ReportController</servlet-name>
+    <servlet-class>com.controller.ReportController</servlet-class>
   </servlet>
   <servlet-mapping>
-      <servlet-name>CreateProductServlet</servlet-name>
-      <url-pattern>/CreateProductServlet</url-pattern>
+    <servlet-name>ReportController</servlet-name>
+    <url-pattern>/ReportController</url-pattern>
   </servlet-mapping>
-
   <servlet>
-      <servlet-name>DeleteProductServlet</servlet-name>
-      <servlet-class>com.controller.product.DeleteProductServlet</servlet-class>
+    <servlet-name>LoginServlet</servlet-name>
+    <servlet-class>com.controller.LoginServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-      <servlet-name>DeleteProductServlet</servlet-name>
-      <url-pattern>/DeleteProductServlet</url-pattern>
+    <servlet-name>LoginServlet</servlet-name>
+    <url-pattern>/LoginServlet</url-pattern>
   </servlet-mapping>
-
   <servlet>
-      <servlet-name>UpdateProductServlet</servlet-name>
-      <servlet-class>com.controller.product.UpdateProductServlet</servlet-class>
+    <servlet-name>SignUpServlet</servlet-name>
+    <servlet-class>com.controller.SignUpServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-      <servlet-name>UpdateProductServlet</servlet-name>
-      <url-pattern>/UpdateProductServlet</url-pattern>
+    <servlet-name>SignUpServlet</servlet-name>
+    <url-pattern>/SignUpServlet</url-pattern>
   </servlet-mapping>
-
   <servlet>
-      <servlet-name>UpdateProductStatusServlet</servlet-name>
-      <servlet-class>com.controller.product.UpdateProductStatusServlet</servlet-class>
+    <description></description>
+    <display-name>SaleItemDAO</display-name>
+    <servlet-name>SaleItemDAO</servlet-name>
+    <servlet-class>com.dao.SaleItemDAO</servlet-class>
   </servlet>
   <servlet-mapping>
-      <servlet-name>UpdateProductStatusServlet</servlet-name>
-      <url-pattern>/UpdateProductStatusServlet</url-pattern>
+    <servlet-name>SaleItemDAO</servlet-name>
+    <url-pattern>/SaleItemDAO</url-pattern>
   </servlet-mapping>
-
   <servlet>
-      <servlet-name>ViewProductServlet</servlet-name>
-      <servlet-class>com.controller.product.ViewProductServlet</servlet-class>
+    <description></description>
+    <display-name>ViewSaleServlet</display-name>
+    <servlet-name>ViewSaleServlet</servlet-name>
+    <servlet-class>com.controller.ViewSaleServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-      <servlet-name>ViewProductServlet</servlet-name>
-      <url-pattern>/ViewProductServlet</url-pattern>
+    <servlet-name>ViewSaleServlet</servlet-name>
+    <url-pattern>/ViewSaleServlet</url-pattern>
   </servlet-mapping>
-
-  <!-- Servlet Mappings for com.controller.report -->
   <servlet>
-      <servlet-name>ReportController</servlet-name>
-      <servlet-class>com.controller.report.ReportController</servlet-class>
+    <description></description>
+    <display-name>DashboardServlet</display-name>
+    <servlet-name>DashboardServlet</servlet-name>
+    <servlet-class>com.controller.DashboardServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-      <servlet-name>ReportController</servlet-name>
-      <url-pattern>/ReportController</url-pattern>
+    <servlet-name>DashboardServlet</servlet-name>
+    <url-pattern>/DashboardServlet</url-pattern>
   </servlet-mapping>
-
+  <servlet>
+    <servlet-name>LogoutServlet</servlet-name>
+    <servlet-class>com.controller.LogoutServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>LogoutServlet</servlet-name>
+    <url-pattern>/LogoutServlet</url-pattern>
+</servlet-mapping>
+ <servlet>
+        <servlet-name>UserController</servlet-name>
+        <servlet-class>com.controller.UserController</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>UserController</servlet-name>
+        <url-pattern>/account</url-pattern> <!-- Maps to /account URL -->
+    </servlet-mapping>
 </web-app>
