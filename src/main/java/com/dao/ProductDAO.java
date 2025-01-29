@@ -122,4 +122,42 @@ public class ProductDAO {
         }
     }
     
+    private static final String GET_PRODUCT_BY_ID_QUERY = "SELECT * FROM PRODUCTS WHERE PROD_ID = ?";
+    private static final String UPDATE_PRODUCT_STATUS_QUERY = "UPDATE PRODUCTS SET PROD_STATUS = ? WHERE PROD_ID = ?";
+
+    // Method to get product by ID
+    public Product getProductById(int prodId) {
+        Product product = null;
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(GET_PRODUCT_BY_ID_QUERY)) {
+            stmt.setInt(1, prodId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    product = new Product();
+                    product.setProdId(rs.getInt("PROD_ID"));
+                    product.setProdName(rs.getString("PROD_NAME"));
+                    product.setProdPrice(rs.getDouble("PROD_PRICE"));
+                    product.setQuantityStock(rs.getInt("QUANTITY_STOCK"));
+                    product.setProdStatus(rs.getString("PROD_STATUS"));
+                    product.setImagePath(rs.getString("IMAGE_PATH"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return product;
+    }
+
+    // Method to update product status
+    public void updateProductStatus(Product product) {
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(UPDATE_PRODUCT_STATUS_QUERY)) {
+            stmt.setString(1, product.getProdStatus());
+            stmt.setInt(2, product.getProdId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
 }

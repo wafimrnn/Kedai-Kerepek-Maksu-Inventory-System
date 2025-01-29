@@ -8,7 +8,7 @@ public class DBConnection {
 
     private static final String DB_URL = "jdbc:sqlserver://kerepekmaksu.database.windows.net:1433;database=KerepekMaksuDB";  // Replace with your actual DB URL
     private static final String DB_USER = "maksuadmin";  // Replace with your actual DB username
-    private static final String DB_PASSWORD = "Larvapass@";  // Replace with your actual DB password
+    private static final String DB_PASSWORD = "Larva@12";  // Replace with your actual DB password
     
     static {
         try {

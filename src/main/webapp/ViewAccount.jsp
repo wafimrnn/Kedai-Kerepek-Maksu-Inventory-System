@@ -9,6 +9,64 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="css/viewAccount.css">
     <link rel="stylesheet" type="text/css" href="css/notification.css">
+    <style>
+    .staff-list {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .staff-list h2 {
+        font-size: 1.5rem;
+        color: #333;
+        margin-bottom: 10px;
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 5px;
+    }
+
+    .staff-account {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 10px;
+        background-color: #ffffff;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+    }
+
+    .staff-account p {
+        margin: 0;
+        font-size: 1rem;
+        color: #555;
+    }
+
+    .staff-account button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .staff-account button:hover {
+        background-color: #45a049;
+    }
+
+    .staff-account span {
+        font-weight: bold;
+        color: #007BFF;
+    }
+
+    .staff-account span.inactive {
+        color: #FF0000;
+    }
+</style>
 </head>
 <body data-role="<%= session.getAttribute("userRole") %>">
     <!-- Sidebar -->
@@ -51,20 +109,56 @@
                 </div>
             </div>
 
-            <!-- Display Account Info -->
+            <!-- Display Account Info (Hardcoded for now) -->
             <div class="account-info">
-                <p><strong>Name:</strong> <%= session.getAttribute("userName") != null ? session.getAttribute("userName") : "No data available" %></p>
-                <p><strong>Phone:</strong> <%= session.getAttribute("userPhone") != null ? session.getAttribute("userPhone") : "No data available" %></p>
-                <p><strong>Address:</strong> <%= session.getAttribute("userAddress") != null ? session.getAttribute("userAddress") : "No data available" %></p>
-                <p><strong>Role:</strong> <%= session.getAttribute("userRole") != null ? session.getAttribute("userRole") : "No data available" %></p>
-                <p><strong>Status:</strong> <%= session.getAttribute("accStatus") != null ? session.getAttribute("accStatus") : "No data available" %></p>
+                <p><strong>Name:</strong> MaksuZah</p>
+                <p><strong>Phone:</strong> 01115058369</p>
+                <p><strong>Address:</strong> Merlimau, Melaka</p>
+                <p><strong>Role:</strong> OWNER</p>
+                <p><strong>Status:</strong> ACTIVE</p>
             </div>
+
+            <!-- Display Staff Accounts (for OWNER only) -->
+            <% if ("OWNER".equals(session.getAttribute("userRole"))) { %>
+                <h2>Manage Staff Accounts</h2>
+                <div class="staff-list">
+                    <!-- Hardcoded staff accounts list -->
+                    <div class="staff-account">
+                        <p><strong>Staff Name:</strong> NurSiti</p>
+                        <p><strong>Status:</strong> <span id="staffStatus1">ACTIVE</span></p>
+                        <button onclick="toggleStaffStatus('staffStatus1')">Toggle Status</button>
+                    </div>
+                    <div class="staff-account">
+                        <p><strong>Staff Name:</strong> FatinNjh</p>
+                        <p><strong>Status:</strong> <span id="staffStatus2">INACTIVE</span></p>
+                        <button onclick="toggleStaffStatus('staffStatus2')">Toggle Status</button>
+                    </div>
+                    <!-- Add more staff members as needed -->
+                </div>
+            <% } %>
         </div>
     </div>
+
     <div id="notification-popup" style="display: none;">
         <ul id="notification-list"></ul>
     </div>
+
     <script src="js/account.js"></script>
     <script src="js/notification.js"></script>
+
+    <script>
+        function toggleStaffStatus(staffStatusId) {
+            // Get the current status and toggle it for the specific staff
+            var statusElement = document.getElementById(staffStatusId);
+            var currentStatus = statusElement.innerText;
+
+            // Toggle the status between 'ACTIVE' and 'INACTIVE'
+            if (currentStatus === 'ACTIVE') {
+                statusElement.innerText = 'INACTIVE';
+            } else {
+                statusElement.innerText = 'ACTIVE';
+            }
+        }
+    </script>
 </body>
 </html>

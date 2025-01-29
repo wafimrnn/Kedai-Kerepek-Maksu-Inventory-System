@@ -101,7 +101,7 @@ function completeOrder() {
         const orderItems = [];
         document.querySelectorAll("#order-items tr").forEach((row) => {
             const prodId = parseInt(row.getAttribute("data-product-id")); // Get prodId from data attribute
-            const qty = parseInt(row.querySelector(".qty").textContent);
+            const qty = parseInt(row.querySelector(".qty input").value); // Get the input value for quantity
             const subtotal = parseFloat(row.querySelector(".subtotal").textContent.replace("RM ", ""));
             orderItems.push({ prodId, qty, subtotal }); // Use prodId in the order item
         });
