@@ -1,4 +1,4 @@
-package com.controller;
+package com.controller.report;
 
 import java.io.IOException;
 import java.sql.Date;

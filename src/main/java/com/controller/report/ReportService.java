@@ -1,4 +1,4 @@
-package com.controller;
+package com.controller.report;
 
 import java.sql.Date;
 import java.util.List;

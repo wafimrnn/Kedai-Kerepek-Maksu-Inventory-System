@@ -1,4 +1,4 @@
-package com.controller;
+package com.controller.product;
 
 import com.dao.ProductDAO;
 import com.model.Product;
@@ -21,6 +21,9 @@ public class ViewProductServlet extends HttpServlet {
 
         // Fetch products from DAO
         List<Product> products = productDAO.getAllActiveProducts();
+
+        // Debugging: Print the number of products fetched
+        System.out.println("Number of products fetched: " + (products != null ? products.size() : "0"));
 
         // Check if JSON response is required
         String responseType = request.getParameter("responseType");

@@ -1,4 +1,4 @@
-package com.controller;
+package com.controller.product;
 
 import com.manager.DBConnection;
 import com.dao.ProductDAO;

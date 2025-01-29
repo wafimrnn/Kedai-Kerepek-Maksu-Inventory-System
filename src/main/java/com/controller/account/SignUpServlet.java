@@ -1,4 +1,4 @@
-package com.controller;
+package com.controller.account;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;

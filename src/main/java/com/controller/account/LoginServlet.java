@@ -1,4 +1,4 @@
-package com.controller;
+package com.controller.account;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -24,11 +24,11 @@ public class LoginServlet extends HttpServlet {
             response.sendRedirect("Login.html?message=Invalid username or password. Please try again.");
         } else {
             // Successful login
-            HttpSession session = request.getSession();
-            session.setAttribute("loggedInUser", user);
-            session.setAttribute("userId", user.getId());
-            session.setAttribute("userRole", user.getRole());
-            response.sendRedirect("DashboardHome.jsp");
+        	HttpSession session = request.getSession();
+        	session.setAttribute("user", user); // Ensure the correct user object is stored
+        	session.setAttribute("userId", user.getId());
+        	session.setAttribute("userRole", user.getRole()); // This should be 'OWNER' or 'STAFF'
+        	response.sendRedirect("DashboardHome.jsp");
         }
     }
 }

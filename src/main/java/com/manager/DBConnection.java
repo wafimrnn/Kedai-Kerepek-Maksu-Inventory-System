@@ -6,20 +6,21 @@ import java.sql.SQLException;
 
 public class DBConnection {
 
-    private static final String DB_URL = "jdbc:sqlserver://kerepekmaksu.database.windows.net:1433;database=KerepekMaksuDB";  // Replace with your actual DB URL
-    private static final String DB_USER = "maksuadmin";  // Replace with your actual DB username
-    private static final String DB_PASSWORD = "Larva@12";  // Replace with your actual DB password
-    
+    // Replace these with your Azure SQL Database details
+    private static final String DB_URL = "jdbc:sqlserver://kerepekmaksu.windows.net:1433;database=KerepekMaksu;encrypt=true;trustServerCertificate=false;loginTimeout=30;";
+    private static final String DB_USER = "maksuadmin";  // Replace with your Azure SQL username
+    private static final String DB_PASSWORD = "Larva@12";  // Replace with your Azure SQL password
+
     static {
         try {
-            // Load the JDBC driver (example for SQL Server)
+            // Load the JDBC driver for Microsoft SQL Server
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    // Method to get a connection to the database
+    // Method to get a connection to the Azure SQL Database
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
     }
