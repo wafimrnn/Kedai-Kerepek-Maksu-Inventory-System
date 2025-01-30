@@ -120,26 +120,25 @@ function completeOrder() {
         };
 
         // Send POST request
-        fetch("/KedaiKerepekMaksu/completeSale", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(requestData),
-        })
-            .then((response) => {
-                if (response.ok) return response.json();
-                else throw new Error("Failed to complete the order.");
-            })
-            .then((data) => {
-                alert("Order Completed Successfully!");
-                // Reset UI
-                document.getElementById("order-items").innerHTML = "";
-                updateTotals();
-            })
-            .catch((error) => {
-                alert("Error: " + error.message);
-            });
+		fetch(contextPath + "/completeSale", {
+		    method: "POST",
+		    headers: {
+		        "Content-Type": "application/json",
+		    },
+		    body: JSON.stringify(requestData),
+		})
+		.then(response => {
+		    if (response.ok) return response.json();
+		    else throw new Error("Failed to complete the order.");
+		})
+		.then(data => {
+		    alert("Order Completed Successfully!");
+		    document.getElementById("order-items").innerHTML = "";
+		    updateTotals();
+		})
+		.catch(error => {
+		    alert("Error: " + error.message);
+		});
     } else {
         alert("No items in the order to complete!");
     }

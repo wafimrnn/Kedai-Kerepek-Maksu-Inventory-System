@@ -52,6 +52,16 @@
       <servlet-name>ViewAccountServlet</servlet-name>
       <url-pattern>/ViewAccountServlet</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>UpdateAccountStatusServlet</servlet-name>
+    <servlet-class>com.controller.account.UpdateAccountStatusServlet</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>UpdateAccountStatusServlet</servlet-name>
+    <url-pattern>/UpdateAccountStatusServlet</url-pattern>
+</servlet-mapping>
 
   <!-- Servlet Mappings for com.controller.product -->
   <servlet>
@@ -98,15 +108,14 @@
       <servlet-name>ViewProductServlet</servlet-name>
       <url-pattern>/ViewProductServlet</url-pattern>
   </servlet-mapping>
-
-  <!-- Servlet Mappings for com.controller.report -->
+  
   <servlet>
-      <servlet-name>ReportController</servlet-name>
-      <servlet-class>com.controller.report.ReportController</servlet-class>
-  </servlet>
-  <servlet-mapping>
-      <servlet-name>ReportController</servlet-name>
-      <url-pattern>/ReportController</url-pattern>
-  </servlet-mapping>
+    <servlet-name>CompleteSaleServlet</servlet-name>
+    <servlet-class>com.controller.sale.CompleteSaleServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>CompleteSaleServlet</servlet-name>
+    <url-pattern>/completeSale</url-pattern>
+</servlet-mapping>
 
 </web-app>

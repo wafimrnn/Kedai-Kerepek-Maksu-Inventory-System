@@ -182,13 +182,14 @@ public class UserDAO {
     // Method to update account status
     public boolean updateAccountStatus(int staffId, String newStatus) {
         String sql = "UPDATE USERS SET ACC_STATUS = ? WHERE USER_ID = ?";
-        try (Connection conn = DBConnection.getConnection();
+        try (Connection conn = DBConnection.getConnection(); 
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, newStatus);
             stmt.setInt(2, staffId);
 
-            return stmt.executeUpdate() > 0;
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;  // Returns true if the update was successful
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

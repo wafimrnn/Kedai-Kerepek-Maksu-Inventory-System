@@ -190,7 +190,7 @@
             <a href="DashboardHome.jsp">Dashboard</a>
             <a href="ViewProductServlet">Product</a>
             <a href="CreateSales.jsp">Sales</a>
-            <a href="Report.html">Report</a>
+            <a href="Report.jsp">Report</a>
             <a href="ViewAccountServlet" class="nav-link active">Account</a>
         </div>
     </div>
@@ -278,27 +278,14 @@
     <div id="notification-popup" style="display: none;">
         <ul id="notification-list"></ul>
     </div>
-    <script src="js/notification.js"></script>
-
     <script>
-        function toggleStaffStatus(staffId) {
-            // Get the current status and toggle it for the specific staff (make AJAX call to update the status in the DB)
-            var statusElement = document.getElementById(staffId);
-            var currentStatus = statusElement.innerText;
+    const contextPath = "<%= request.getContextPath() %>"; // Get context path dynamically
 
-            // Toggle the status between 'ACTIVE' and 'INACTIVE'
-            if (currentStatus === 'ACTIVE') {
-                statusElement.innerText = 'INACTIVE';
-            } else {
-                statusElement.innerText = 'ACTIVE';
-            }
-        }
-        
-        function logout() {
-            // Adjust for context path
-            window.location.href = "/Kedai-Kerepek-Maksu-Inventory-System/LogoutServlet";
-        }
+    function logout() {
+        window.location.href = contextPath + "/LogoutServlet";
+    }
     </script>
+    <script src="js/notification.js"></script>
     <script src="js/account.js"></script>
 </body>
 </html>

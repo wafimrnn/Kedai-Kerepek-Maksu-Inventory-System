@@ -13,7 +13,9 @@ public class SalesReport {
     private BigDecimal totalAmount;
     private String paymentMethod;
 
-    public SalesReport(int saleId, Date saleDate, String userName, String productName, int quantity, BigDecimal subTotal, BigDecimal totalAmount, String paymentMethod) {
+    // Constructor
+    public SalesReport(int saleId, Date saleDate, String userName, String productName, int quantity,
+                       BigDecimal subTotal, BigDecimal totalAmount, String paymentMethod) {
         this.saleId = saleId;
         this.saleDate = saleDate;
         this.userName = userName;

@@ -19,27 +19,11 @@ public class ViewProductServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("Starting ViewProductServlet...");
 
-        // Fetch products from DAO
-        List<Product> products = productDAO.getAllActiveProducts();
+        // Fetch all products (active and inactive)
+        List<Product> products = productDAO.getAllProducts();
 
         // Debugging: Print the number of products fetched
-        System.out.println("Number of products fetched: " + (products != null ? products.size() : "0"));
-
-        // Check if JSON response is required
-        String responseType = request.getParameter("responseType");
-        if ("json".equalsIgnoreCase(responseType)) {
-            // Set JSON response
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-
-            // Convert products to JSON
-            ObjectMapper mapper = new ObjectMapper();
-            String json = mapper.writeValueAsString(products);
-
-            // Write JSON to response
-            response.getWriter().write(json);
-            return;
-        }
+        System.out.println("Total products fetched: " + (products != null ? products.size() : "0"));
 
         // Set products in request scope
         request.setAttribute("products", products);
@@ -52,4 +36,5 @@ public class ViewProductServlet extends HttpServlet {
         // Forward to JSP
         request.getRequestDispatcher("ViewProduct.jsp").forward(request, response);
     }
+
 }

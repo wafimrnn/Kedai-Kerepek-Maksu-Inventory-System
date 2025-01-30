@@ -163,20 +163,35 @@
     }
 
     .product-card {
-        background: white;
-        padding: 15px;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        text-align: center;
-    }
-
-    .product-card img {
-        width: 100%;
-        height: 150px;
-        object-fit: cover;
-        border-radius: 5px;
-        margin-bottom: 10px;
-    }
+	    background: white;
+	    padding: 15px;
+	    border-radius: 8px;
+	    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	    text-align: center;
+	    width: 100%;
+	    max-width: 300px; /* Ensures uniform card size */
+	    min-height: 270px; /* Ensures consistency */
+	    display: flex;
+	    flex-direction: column;
+	    justify-content: space-between; /* Distributes content evenly */
+	}
+	
+	.product-card img {
+	    width: 100%;
+	    height: 150px;
+	    object-fit: cover;
+	    border-radius: 5px;
+	    margin-bottom: 10px;
+	}
+	
+	/* Add margin between active and inactive products */
+	.inactive-products-section {
+	    margin-top: 40px; /* Increased spacing */
+	}
+	
+	.inactive-products-section h2 {
+	    margin-bottom: 20px; /* Space before inactive cards */
+	}
 
     .product-card h3 {
         font-size: 18px;
@@ -265,7 +280,7 @@
             <a href="DashboardHome.jsp">Dashboard</a>
             <a href="ViewProductServlet" class="nav-link active">Product</a>
             <a href="CreateSales.jsp">Sales</a>
-            <a href="Report.html">Report</a>
+            <a href="Report.jsp">Report</a>
             <a href="ViewAccountServlet">Account</a>
         </div>
     </div>
@@ -290,84 +305,83 @@
 
             <!-- Product Catalog -->
             <div class="product-catalog">
-                <% 
-                    List<Product> products = (List<Product>) request.getAttribute("products");
-                    if (products != null && !products.isEmpty()) {
-                        for (Product product : products) {
-                            String imagePath = product.getImagePath();
-                            if (imagePath == null || imagePath.isEmpty()) {
-                                imagePath = "img/default-image.jpg";
-                            }
-                            if (!"inactive".equals(product.getProdStatus())) {
-                %>
-                            <div class="product-card">
-                                <img src="<%= imagePath %>" alt="<%= product.getProdName() %>">
-                                <h3><%= product.getProdName() %></h3>
-                                <p>Price: RM <%= product.getProdPrice() %></p>
-                                <p>Stock: <%= product.getQuantityStock() %></p>
-                                <div class="button-group">
-                                    <button class="update-btn" onclick="location.href='UpdateProductServlet?prodId=<%= product.getProdId() %>'">
-                                        Update
-                                    </button>
-                                    <button class="delete-btn" onclick="confirmDelete('<%= product.getProdId() %>')">
-                                        Delete
-                                    </button>
-                                </div>
-                            </div>
-                <% 
-                            }
-                        }
-                    } else { 
-                %>
-                    <p>No products available.</p>
-                <% 
-                    } 
-                %>
-            </div>
-
-            <!-- Owner-Specific Section for Inactive Products -->
-            <% 
-                String userRole = (String) session.getAttribute("userRole");
-                if ("OWNER".equals(userRole)) { 
-            %>
-                <h2>Inactive Products</h2>
-                <div class="inactive-products-section">
-                    <% 
-                        boolean hasInactiveProducts = false;
-                        if (products != null) {
-                            for (Product product : products) {
-                                if ("inactive".equals(product.getProdStatus())) {
-                                    hasInactiveProducts = true;
-                    %>
-                                    <div class="product-card inactive-product">
-                                        <img src="<%= product.getImagePath() != null ? product.getImagePath() : "img/default-image.jpg" %>" alt="<%= product.getProdName() %>">
-                                        <h3><%= product.getProdName() %></h3>
-                                        <p>Price: RM <%= product.getProdPrice() %></p>
-                                        <p>Stock: <%= product.getQuantityStock() %></p>
-                                        <p>Status: Inactive</p>
-                                        <div class="button-group">
-                                            <button class="update-status-btn" onclick="location.href='UpdateProductStatusServlet?prodId=<%= product.getProdId() %>'">
-                                                Update Status
-                                            </button>
-                                            <button class="delete-btn" onclick="confirmDelete('<%= product.getProdId() %>')">
-                                                Delete
-                                            </button>
-                                        </div>
-                                    </div>
-                    <% 
-                                }
-                            }
-                        }
-                        if (!hasInactiveProducts) { 
-                    %>
-                        <p>No inactive products available.</p>
-                    <% 
-                        } 
-                    %>
-                </div>
-            <% 
-                } 
-            %>
+			    <% 
+			        List<Product> products = (List<Product>) request.getAttribute("products");
+			        if (products != null && !products.isEmpty()) {
+			            for (Product product : products) {
+			                String imagePath = product.getImagePath();
+			                if (imagePath == null || imagePath.isEmpty()) {
+			                    imagePath = "img/default-image.jpg";
+			                }
+			                
+			                // Show only active products in the main catalog
+			                if (!"INACTIVE".equalsIgnoreCase(product.getProdStatus())) { 
+			    %>
+			                    <div class="product-card">
+			                        <img src="<%= imagePath %>" alt="<%= product.getProdName() %>">
+			                        <h3><%= product.getProdName() %></h3>
+			                        <p>Price: RM <%= product.getProdPrice() %></p>
+			                        <p>Stock: <%= product.getQuantityStock() %></p>
+			                        <div class="button-group">
+			                            <button class="update-btn" onclick="location.href='UpdateProductServlet?prodId=<%= product.getProdId() %>'">
+			                                Update
+			                            </button>
+			                            <button class="delete-btn" onclick="confirmDelete('<%= product.getProdId() %>')">
+			                                Delete
+			                            </button>
+			                        </div>
+			                    </div>
+			    <% 
+			                }
+			            }
+			        } else { 
+			    %>
+			        <p>No products available.</p>
+			    <% 
+			        } 
+			    %>
+			</div>
+			
+			<!-- Owner-Specific Section for Inactive Products -->
+			<% 
+			    String userRole = (String) session.getAttribute("userRole");
+			    if ("OWNER".equals(userRole)) { 
+			%>
+			    <div class="inactive-products-section">
+				    <h2>Inactive Products</h2>
+				    <% 
+				        boolean hasInactiveProducts = false;
+				        if (products != null) {
+				            for (Product product : products) {
+				                if ("INACTIVE".equalsIgnoreCase(product.getProdStatus())) { 
+				                    hasInactiveProducts = true;
+				    %>
+				                    <div class="product-card inactive-product">
+				                        <img src="<%= product.getImagePath() != null ? product.getImagePath() : "img/default-image.jpg" %>" alt="<%= product.getProdName() %>">
+				                        <h3><%= product.getProdName() %></h3>
+				                        <p>Price: RM <%= product.getProdPrice() %></p>
+				                        <p>Stock: <%= product.getQuantityStock() %></p>
+				                        <p>Status: Inactive</p>
+				                        <div class="button-group">
+				                            <button class="update-status-btn" onclick="location.href='UpdateProductStatusServlet?prodId=<%= product.getProdId() %>'">
+								    		Update Status
+								    		</button>
+				                        </div>
+				                    </div>
+				    <% 
+				                }
+				            }
+				        }
+				        if (!hasInactiveProducts) { 
+				    %>
+				        <p>No inactive products available.</p>
+				    <% 
+				        } 
+				    %>
+				</div>
+			<% 
+			    } 
+			%>
         </div>
     </div>
 

@@ -332,7 +332,7 @@
             <a href="DashboardHome.jsp">Dashboard</a>
             <a href="ViewProductServlet">Product</a>
             <a href="CreateSales.jsp" class="active">Sales</a>
-            <a href="Report.html">Report</a>
+            <a href="Report.jsp">Report</a>
             <a href="ViewAccountServlet">Account</a>
         </div>
     </div>
@@ -425,7 +425,9 @@
         </div>
         </div>
    
-
+	<script>
+    const contextPath = "<%= request.getContextPath() %>";
+</script>
     <script src="pos.js"></script>
 </body>
 </html>

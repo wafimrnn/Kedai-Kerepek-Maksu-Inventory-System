@@ -12,7 +12,6 @@ public class SaleDAO {
 
     public int insertSale(Sale sale) throws Exception {
         String query = "INSERT INTO SALES (sale_Date, total_Amount, payment_Method, user_Id) VALUES (?, ?, ?, ?)";
-        String getIdQuery = "SELECT SCOPE_IDENTITY()";  // Fetch the last inserted ID
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -99,5 +98,32 @@ public class SaleDAO {
                 return rs.next() && rs.getInt(1) > 0;
             }
         }
+    }
+    
+    public List<Sale> getSalesReport(String startDate, String endDate) {
+        List<Sale> sales = new ArrayList<>();
+        String sql = "SELECT * FROM SALES WHERE SALE_DATE BETWEEN ? AND ?";
+        
+        try (Connection conn = DBConnection.getConnection(); 
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, startDate);
+            stmt.setString(2, endDate);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Sale sale = new Sale(
+                    rs.getInt("SALE_ID"),
+                    rs.getString("SALE_DATE"),
+                    rs.getDouble("TOTAL_AMOUNT"),
+                    rs.getString("PAYMENT_METHOD")
+                );
+                sales.add(sale);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sales;
     }
 }

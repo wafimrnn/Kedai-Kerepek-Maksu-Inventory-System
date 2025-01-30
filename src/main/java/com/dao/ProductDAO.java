@@ -11,46 +11,21 @@ import java.util.List;
 
 public class ProductDAO {
 
-	// Get all active products
-    public List<Product> getAllActiveProducts() {
+    // Get all products (both active and inactive)
+    public List<Product> getAllProducts() {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT p.PROD_ID, p.PROD_NAME, p.PROD_PRICE, p.QUANTITY_STOCK, p.IMAGE_PATH, " +
+        String sql = "SELECT p.PROD_ID, p.PROD_NAME, p.PROD_PRICE, p.QUANTITY_STOCK, p.IMAGE_PATH, p.PROD_STATUS, " +
                      "       f.PACKAGING_TYPE, f.WEIGHT, d.VOLUME " +
                      "FROM PRODUCTS p " +
                      "LEFT JOIN FOOD f ON p.PROD_ID = f.PROD_ID " +
-                     "LEFT JOIN DRINK d ON p.PROD_ID = d.PROD_ID " +
-                     "WHERE p.PROD_STATUS = 'ACTIVE'";
+                     "LEFT JOIN DRINK d ON p.PROD_ID = d.PROD_ID";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                String imagePath = rs.getString("IMAGE_PATH");
-                if (imagePath == null || imagePath.isEmpty()) {
-                    imagePath = "img/default-image.jpg";
-                }
-
-                if (rs.getString("PACKAGING_TYPE") != null) {
-                    Food food = new Food();
-                    food.setProdId(rs.getInt("PROD_ID"));
-                    food.setProdName(rs.getString("PROD_NAME"));
-                    food.setProdPrice(rs.getDouble("PROD_PRICE"));
-                    food.setQuantityStock(rs.getInt("QUANTITY_STOCK"));
-                    food.setImagePath(imagePath);
-                    food.setPackagingType(rs.getString("PACKAGING_TYPE"));
-                    food.setWeight(rs.getDouble("WEIGHT"));
-                    products.add(food);
-                } else if (rs.getDouble("VOLUME") > 0) {
-                    Drink drink = new Drink();
-                    drink.setProdId(rs.getInt("PROD_ID"));
-                    drink.setProdName(rs.getString("PROD_NAME"));
-                    drink.setProdPrice(rs.getDouble("PROD_PRICE"));
-                    drink.setQuantityStock(rs.getInt("QUANTITY_STOCK"));
-                    drink.setImagePath(imagePath);
-                    drink.setVolume(rs.getDouble("VOLUME"));
-                    products.add(drink);
-                }
+                products.add(mapProduct(rs));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -59,7 +34,60 @@ public class ProductDAO {
         return products;
     }
 
- // Insert product (Azure SQL)
+    // Get only active products
+    public List<Product> getAllActiveProducts() {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT p.PROD_ID, p.PROD_NAME, p.PROD_PRICE, p.QUANTITY_STOCK, p.IMAGE_PATH, p.PROD_STATUS, " +
+                     "       f.PACKAGING_TYPE, f.WEIGHT, d.VOLUME " +
+                     "FROM PRODUCTS p " +
+                     "LEFT JOIN FOOD f ON p.PROD_ID = f.PROD_ID " +
+                     "LEFT JOIN DRINK d ON p.PROD_ID = d.PROD_ID " +
+                     "WHERE p.PROD_STATUS = 'ACTIVE'";  // <-- Only active products
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                products.add(mapProduct(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return products;
+    }
+
+    // Helper method to map result set to Product/Food/Drink
+    private Product mapProduct(ResultSet rs) throws SQLException {
+        String imagePath = rs.getString("IMAGE_PATH");
+        if (imagePath == null || imagePath.isEmpty()) {
+            imagePath = "img/default-image.jpg";
+        }
+
+        Product product;
+        if (rs.getString("PACKAGING_TYPE") != null) {
+            product = new Food();
+            ((Food) product).setPackagingType(rs.getString("PACKAGING_TYPE"));
+            ((Food) product).setWeight(rs.getDouble("WEIGHT"));
+        } else if (rs.getDouble("VOLUME") > 0) {
+            product = new Drink();
+            ((Drink) product).setVolume(rs.getDouble("VOLUME"));
+        } else {
+            product = new Product();
+        }
+
+        product.setProdId(rs.getInt("PROD_ID"));
+        product.setProdName(rs.getString("PROD_NAME"));
+        product.setProdPrice(rs.getDouble("PROD_PRICE"));
+        product.setQuantityStock(rs.getInt("QUANTITY_STOCK"));
+        product.setProdStatus(rs.getString("PROD_STATUS"));
+        product.setImagePath(imagePath);
+
+        return product;
+    }
+
+    // Insert product (Azure SQL)
     public int insertProduct(Product product) throws SQLException {
         int prodId = -1;
 
@@ -118,7 +146,7 @@ public class ProductDAO {
     }
 
     // Update product details
-    public static void updateProduct(Product product) throws Exception {
+    public void updateProduct(Product product) throws Exception {
         try (Connection conn = DBConnection.getConnection()) {
             String updateSQL = "UPDATE Products SET PROD_NAME = ?, PROD_PRICE = ?, QUANTITY_STOCK = ?, IMAGE_PATH = ? WHERE PROD_ID = ?";
             try (PreparedStatement ps = conn.prepareStatement(updateSQL)) {
@@ -175,16 +203,45 @@ public class ProductDAO {
     }
 
     // Update product status
-    public boolean updateProductStatus(Product product) {
-        String query = "UPDATE Products SET PROD_STATUS = ? WHERE PROD_ID = ?";
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, product.getProdStatus());
-            statement.setInt(2, product.getProdId());
-            return statement.executeUpdate() > 0;
+    public boolean updateProductStatus(int prodId, String newStatus) {
+        String sql = "UPDATE PRODUCTS SET PROD_STATUS = ? WHERE PROD_ID = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, newStatus);
+            pstmt.setInt(2, prodId);
+
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;  // Returns true if update was successful
+
+        } catch (SQLException e) {
+            System.err.println("Error updating product status for ID: " + prodId);
+            e.printStackTrace();
+            return false;  // Return false if update fails
+        }
+    }
+
+    // Get inventory report for all products (both active and inactive)
+    public List<Product> getInventoryReport() {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT p.PROD_ID, p.PROD_NAME, p.PROD_PRICE, p.QUANTITY_STOCK, p.RESTOCK_LEVEL, p.EXPIRY_DATE, p.IMAGE_PATH, p.PROD_STATUS, " +
+                     "       f.PACKAGING_TYPE, f.WEIGHT, d.VOLUME " +
+                     "FROM PRODUCTS p " +
+                     "LEFT JOIN FOOD f ON p.PROD_ID = f.PROD_ID " +
+                     "LEFT JOIN DRINK d ON p.PROD_ID = d.PROD_ID";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                products.add(mapProduct(rs));  // Map each row to a Product object
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+
+        return products;
     }
 }

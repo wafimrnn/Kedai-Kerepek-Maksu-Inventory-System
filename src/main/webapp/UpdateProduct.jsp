@@ -164,7 +164,7 @@
         <a href="dashboard.html">Dashboard</a>
         <a href="ViewProductServlet" class="active">Product</a>
         <a href="CreateSales.jsp">Sales</a>
-        <a href="Report.html">Report</a>
+        <a href="Report.jsp">Report</a>
         <a href="ViewAccountServlet">Account</a>
     </div>
     <!-- Head Bar -->

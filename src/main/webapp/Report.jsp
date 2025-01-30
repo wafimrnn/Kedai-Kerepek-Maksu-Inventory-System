@@ -168,53 +168,27 @@
             color: #343a40;
             margin-bottom: 20px;
         }
-        
-        
 
-        .report-form {
-		    width: 100%;
-		    display: flex;
-		    justify-content: center; /* Center the form in the container */
-		    margin-top: 20px; /* Add spacing above the form */
-		}
-		
-		.report-form form {
-		    display: flex;
-		    align-items: center;
-		    gap: 10px; /* Space between fields */
-		    flex-wrap: nowrap; /* Prevent wrapping */
-		}
-		
-		.report-form form label {
-		    white-space: nowrap; /* Prevent labels from breaking into multiple lines */
-		}
-		
-		.report-form form select,
-		.report-form form input,
-		.report-form form button {
-		    padding: 8px;
-		    border: 1px solid #ddd;
-		    border-radius: 5px;
-		}
-		
-		.report-form form select,
-		.report-form form input {
-		    flex: 0 1 150px; /* Allow inputs to shrink if needed */
-		    min-width: 100px; /* Ensure a minimum width for readability */
-		}
-		
-		.report-form form button {
-		    flex: 0 1 auto; /* Allow the button to size naturally */
-		    background-color:  #F6C324;
-		    color: black;
-		    border: none;
-		    cursor: pointer;
-		}
-		
-		.report-form form button:hover {
-		    background-color:  #FEECC3;
-		    color: black;
-		}
+        .report-table {
+            width: 100%;
+            margin-top: 30px;
+            border-collapse: collapse;
+        }
+
+        .report-table th, .report-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .report-table th {
+            background-color: #F6C324;
+            color: black;
+        }
+
+        .report-table td {
+            background-color: #FBE39D;
+        }
     </style>
 </head>
 <body>
@@ -230,38 +204,74 @@
         </div>
     </div>
     <!-- Head Bar -->
-	<div class="head-bar">
-	    <div class="title">Report</div>
-	    <div class="icons">
-	        <i class="fas fa-bell" title="Notifications"></i>
-	        <i class="fas fa-user-circle" title="Account"></i>
-	    </div>
-	</div>
+    <div class="head-bar">
+        <div class="title">Report</div>
+        <div class="icons">
+            <i class="fas fa-bell" title="Notifications"></i>
+            <i class="fas fa-user-circle" title="Account"></i>
+        </div>
+    </div>
 
     <!-- Main Content -->
     <div class="main-content">
-    <div class="blurred-box">
-        <h1>Generate Sales Report</h1>
+        <div class="blurred-box">
+            <h1>Generate Report</h1>
 
-        <!-- Report Table Section -->
-        <div class="report-form">
-		    <form action="generateReport" method="post">
-		        <label for="reportType">Report Type:</label>
-		        <select name="reportType" id="reportType">
-		            <option value="sales">Sales Report</option>
-		            <option value="inventory">Inventory Report</option>
-		        </select>
-		
-		        <label for="startDate">Start Date:</label>
-		        <input type="date" name="startDate" id="startDate">
-		
-		        <label for="endDate">End Date:</label>
-		        <input type="date" name="endDate" id="endDate">
-		
-		        <button type="submit">Generate Report</button>
-		    </form>
-		</div>
-		</div>
+            <!-- Report Table Section -->
+            <div class="report-form">
+                <form action="<%= request.getContextPath() %>/ReportController" method="post">
+                    <label for="reportType">Report Type:</label>
+                    <select name="reportType" id="reportType" required>
+                        <option value="sales">Sales Report</option>
+                        <option value="inventory">Inventory Report</option>
+                    </select>
+
+                    <label for="startDate">Start Date:</label>
+                    <input type="date" name="startDate" id="startDate" required>
+
+                    <label for="endDate">End Date:</label>
+                    <input type="date" name="endDate" id="endDate" required>
+
+                    <button type="submit">Generate Report</button>
+                </form>
+            </div>
+
+            <!-- Display Sales Report Data -->
+			<c:if test="${not empty salesReportData}">
+			    <h2>Sales Report</h2>
+			    <table class="report-table">
+			        <thead>
+			            <tr>
+			                <th>Sale ID</th>
+			                <th>Sale Date</th>
+			                <th>Total Amount</th>
+			                <th>Payment Method</th>
+			            </tr>
+			        </thead>
+			        <tbody>
+			            ${salesReportData}
+			        </tbody>
+			    </table>
+			</c:if>
+			
+			<!-- Display Inventory Report Data -->
+			<c:if test="${not empty inventoryReportData}">
+			    <h2>Inventory Report</h2>
+			    <table class="report-table">
+			        <thead>
+			            <tr>
+			                <th>Product Name</th>
+			                <th>Quantity in Stock</th>
+			                <th>Product Price</th>
+			                <th>Total Value</th>
+			            </tr>
+			        </thead>
+			        <tbody>
+			            ${inventoryReportData}
+			        </tbody>
+			    </table>
+			</c:if>
+        </div>
     </div>
 </body>
 </html>

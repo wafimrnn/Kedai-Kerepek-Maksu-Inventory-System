@@ -18,38 +18,46 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
-import jakarta.servlet.annotation.WebServlet;
 
-@WebServlet("/completeSale")  // URL pattern where the servlet will be accessible
 public class CompleteSaleServlet extends HttpServlet {
-
     private SaleDAO saleDAO;
 
     @Override
     public void init() {
-        // Initialize the SaleDAO
         saleDAO = new SaleDAO();
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            // Parse JSON data
-            StringBuilder sb = new StringBuilder();
-            String line;
-            BufferedReader reader = request.getReader();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        System.out.println("CompleteSaleServlet reached!");
+
+        // Read JSON input
+        StringBuilder sb = new StringBuilder();
+        String line;
+        try (BufferedReader reader = request.getReader()) {
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
             }
+        }
+
+        System.out.println("Received JSON: " + sb.toString()); // Debugging log
+
+        try {
             JSONObject requestData = new JSONObject(sb.toString());
 
-            // Extract details
+            // Extract sale details
             double totalAmount = requestData.getDouble("totalAmount");
             String paymentMethod = requestData.getString("paymentMethod");
             String saleDate = requestData.getString("saleDate");
 
             // Get userId from session
-            HttpSession session = request.getSession();
+            HttpSession session = request.getSession(false);
+            if (session == null || session.getAttribute("userId") == null) {
+                throw new Exception("User not logged in.");
+            }
             int userId = (Integer) session.getAttribute("userId");
 
             // Create Sale object
@@ -61,6 +69,10 @@ public class CompleteSaleServlet extends HttpServlet {
 
             // Extract and validate order items
             JSONArray orderItems = requestData.getJSONArray("orderItems");
+            if (orderItems.length() == 0) {
+                throw new Exception("Sale items cannot be empty.");
+            }
+
             List<SaleItem> saleItems = new ArrayList<>();
             for (int i = 0; i < orderItems.length(); i++) {
                 JSONObject item = orderItems.getJSONObject(i);
@@ -70,15 +82,12 @@ public class CompleteSaleServlet extends HttpServlet {
                 saleItem.setSubTotal(item.getDouble("subtotal"));
                 saleItems.add(saleItem);
             }
-            if (saleItems.isEmpty()) {
-                throw new IllegalArgumentException("Sale items cannot be empty.");
-            }
-            sale.setSaleItems(saleItems); // Properly set saleItems in Sale
+            sale.setSaleItems(saleItems);
 
             // Insert sale and sale items
-            int saleId = saleDAO.insertSale(sale); // Inserts sale
+            int saleId = saleDAO.insertSale(sale);
             try (Connection conn = DBConnection.getConnection()) {
-                saleDAO.insertSaleItems(conn, saleId, saleItems); // Inserts sale items
+                saleDAO.insertSaleItems(conn, saleId, saleItems);
             }
 
             // Send success response
@@ -87,14 +96,13 @@ public class CompleteSaleServlet extends HttpServlet {
             responseJson.put("message", "Sale completed successfully!");
             response.getWriter().write(responseJson.toString());
         } catch (Exception e) {
-            // Handle errors
-            e.printStackTrace();
+            e.printStackTrace(); // Log error
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+
             JSONObject errorResponse = new JSONObject();
             errorResponse.put("status", "error");
             errorResponse.put("message", e.getMessage());
             response.getWriter().write(errorResponse.toString());
         }
     }
-
 }

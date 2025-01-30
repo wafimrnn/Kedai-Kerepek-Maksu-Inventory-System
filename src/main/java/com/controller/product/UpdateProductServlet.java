@@ -95,8 +95,8 @@ public class UpdateProductServlet extends HttpServlet {
             product.setQuantityStock(quantityStock);
             product.setImagePath(imageUrl);
 
-            // Update using DAO
-            ProductDAO.updateProduct(product);
+            ProductDAO productDAO = new ProductDAO();
+            productDAO.updateProduct(product);
 
             response.sendRedirect("ViewProductServlet");
         } catch (Exception e) {
