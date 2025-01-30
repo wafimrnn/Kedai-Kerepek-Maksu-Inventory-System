@@ -191,7 +191,7 @@
             <a href="ViewProductServlet">Product</a>
             <a href="CreateSales.jsp">Sales</a>
             <a href="Report.html">Report</a>
-            <a href="ViewAccount.jsp" class="nav-link active">Account</a>
+            <a href="ViewAccountServlet" class="nav-link active">Account</a>
         </div>
     </div>
 
@@ -296,7 +296,7 @@
         
         function logout() {
             // Adjust for context path
-            window.location.href = "/KedaiKerepekMaksu/LogoutServlet";
+            window.location.href = "/Kedai-Kerepek-Maksu-Inventory-System/LogoutServlet";
         }
     </script>
     <script src="js/account.js"></script>

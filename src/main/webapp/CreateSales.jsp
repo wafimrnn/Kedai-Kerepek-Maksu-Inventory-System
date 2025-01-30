@@ -333,7 +333,7 @@
             <a href="ViewProductServlet">Product</a>
             <a href="CreateSales.jsp" class="active">Sales</a>
             <a href="Report.html">Report</a>
-            <a href="ViewAccount.jsp">Account</a>
+            <a href="ViewAccountServlet">Account</a>
         </div>
     </div>
 

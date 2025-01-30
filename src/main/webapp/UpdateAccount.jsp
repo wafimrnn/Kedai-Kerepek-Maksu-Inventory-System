@@ -255,7 +255,7 @@
             <a href="ViewProductServlet">Product</a>
             <a href="CreateSales.jsp">Sales</a>
             <a href="Report.html">Report</a>
-            <a href="ViewAccount.jsp" class="active">Account</a>
+            <a href="ViewAccountServlet" class="active">Account</a>
         </div>
     </div>
     <!-- Head Bar -->

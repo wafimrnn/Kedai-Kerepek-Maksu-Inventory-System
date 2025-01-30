@@ -5,23 +5,32 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBConnection {
-
-    // Replace these with your Azure SQL Database details
-    private static final String DB_URL = "jdbc:sqlserver://kerepekmaksu.windows.net:1433;database=KerepekMaksu;encrypt=true;trustServerCertificate=false;loginTimeout=30;";
-    private static final String DB_USER = "maksuadmin";  // Replace with your Azure SQL username
-    private static final String DB_PASSWORD = "Larva@12";  // Replace with your Azure SQL password
+    private static final String DB_URL = "jdbc:sqlserver://kerepekmaksu.database.windows.net:1433;"
+                                       + "database=KerepekMaksu;"
+                                       + "user=maksuadmin@kerepekmaksu;"
+                                       + "password=Larvapass@;"
+                                       + "encrypt=true;"
+                                       + "trustServerCertificate=false;"
+                                       + "hostNameInCertificate=*.database.windows.net;"
+                                       + "loginTimeout=30;";
 
     static {
         try {
-            // Load the JDBC driver for Microsoft SQL Server
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    // Method to get a connection to the Azure SQL Database
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+        return DriverManager.getConnection(DB_URL);
+    }
+
+    public static void main(String[] args) {
+        try (Connection conn = getConnection()) {
+            System.out.println("✅ Connection successful!");
+        } catch (SQLException e) {
+            System.out.println("❌ Connection failed: " + e.getMessage());
+        }
     }
 }

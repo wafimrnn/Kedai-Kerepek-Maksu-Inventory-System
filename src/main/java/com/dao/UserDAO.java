@@ -7,64 +7,75 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import com.manager.DBConnection;
 import com.model.User;
 
 public class UserDAO {
 
     // Method to create an owner
-    public boolean createOwner(String username, String password, String phone, String address) {
-        String sql = "INSERT INTO USERS (USER_NAME, USER_ROLE, USER_PASS, USER_PHONE, USER_ADDRESS, ACC_STATUS) VALUES (?, 'OWNER', ?, ?, ?, 'ACTIVE')";
+	public boolean createOwner(String username, String password, String phone, String address) {
+	    String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12)); // Hash password
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+	    String sql = "INSERT INTO USERS (USER_NAME, USER_ROLE, USER_PASS, USER_PHONE, USER_ADDRESS, ACC_STATUS) " +
+	                 "VALUES (?, 'OWNER', ?, ?, ?, 'ACTIVE')";
 
-            preparedStatement.setString(1, username);
-            preparedStatement.setString(2, password);  // Store plain-text password
-            preparedStatement.setString(3, phone);
-            preparedStatement.setString(4, address);
+	    try (Connection connection = DBConnection.getConnection();
+	         PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            int rowsAffected = preparedStatement.executeUpdate();
-            return rowsAffected > 0;
-        } catch (SQLException e) {
-            System.err.println("Error creating owner: " + e.getMessage());
-            e.printStackTrace();
-        }
-        return false;
-    }
+	        preparedStatement.setString(1, username);
+	        preparedStatement.setString(2, hashedPassword); // Store hashed password
+	        preparedStatement.setString(3, phone);
+	        preparedStatement.setString(4, address);
+
+	        return preparedStatement.executeUpdate() > 0;
+	    } catch (SQLException e) {
+	        System.err.println("Error creating owner: " + e.getMessage());
+	        e.printStackTrace();
+	    }
+	    return false;
+	}
 
     // Method to log in a user
-    public User loginUser(String username, String password) {
-        String query = "SELECT * FROM USERS WHERE USER_NAME = ? AND USER_PASS = ?";
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, username);
-            statement.setString(2, password);
+	public User loginUser(String username, String password) {
+	    String query = "SELECT * FROM USERS WHERE USER_NAME = ?";
+	    try (Connection connection = DBConnection.getConnection();
+	         PreparedStatement statement = connection.prepareStatement(query)) {
 
-            ResultSet resultSet = statement.executeQuery();
+	        statement.setString(1, username);
+	        ResultSet resultSet = statement.executeQuery();
 
-            if (resultSet.next()) {
-                User user = new User();
-                user.setId(resultSet.getInt("USER_ID"));
-                user.setName(resultSet.getString("USER_NAME"));
-                user.setRole(resultSet.getString("USER_ROLE"));
-                return user;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+	        if (resultSet.next()) {
+	            String storedPasswordHash = resultSet.getString("USER_PASS"); // Get hashed password
+
+	            // Compare entered password with hashed password
+	            if (BCrypt.checkpw(password, storedPasswordHash)) {
+	                User user = new User();
+	                user.setId(resultSet.getInt("USER_ID"));
+	                user.setName(resultSet.getString("USER_NAME"));
+	                user.setRole(resultSet.getString("USER_ROLE"));
+	                return user; // Return user if password matches
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return null; // Return null if authentication fails
+	}
 
     // Method to create a staff account
     public boolean createStaff(String username, String password, String phone, String address, int ownerId) {
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12)); // Hash password
+
         String query = "INSERT INTO USERS (USER_NAME, USER_ROLE, USER_PASS, USER_PHONE, USER_ADDRESS, ACC_STATUS, OWNER_ID) " +
                        "VALUES (?, 'STAFF', ?, ?, ?, 'ACTIVE', ?)";
+
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
             stmt.setString(1, username);
-            stmt.setString(2, password);
+            stmt.setString(2, hashedPassword); // Store hashed password
             stmt.setString(3, phone);
             stmt.setString(4, address);
             stmt.setInt(5, ownerId);
