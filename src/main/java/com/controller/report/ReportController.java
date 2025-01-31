@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 @WebServlet("/ReportController")
@@ -19,17 +20,24 @@ public class ReportController extends HttpServlet {
         String startDate = request.getParameter("startDate");
         String endDate = request.getParameter("endDate");
 
-        // Generate the report based on the type
-        String report = "";
+        System.out.println("Report Type: " + reportType);
+        System.out.println("Start Date: " + startDate);
+        System.out.println("End Date: " + endDate);
+
+        // Store selected report type to be used in JSP
+        request.setAttribute("selectedReportType", reportType);
+
+        // Generate the report data
+        String reportData = "";
 
         if ("sales".equals(reportType)) {
-            // Generate sales report
-            report = reportService.generateSalesReport(startDate, endDate);
-            request.setAttribute("salesReportData", report);
+            reportData = reportService.generateSalesReport(startDate, endDate);
+            request.setAttribute("salesReportData", reportData);
+            System.out.println("Sales Report Data: " + reportData);
         } else if ("inventory".equals(reportType)) {
-            // Generate inventory report
-            report = reportService.generateInventoryReport();
-            request.setAttribute("inventoryReportData", report);
+            reportData = reportService.generateInventoryReport();
+            request.setAttribute("inventoryReportData", reportData);
+            System.out.println("Inventory Report Data: " + reportData);
         }
 
         // Forward to JSP

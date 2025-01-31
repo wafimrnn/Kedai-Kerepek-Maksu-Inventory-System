@@ -384,7 +384,9 @@
 			%>
         </div>
     </div>
-
+	<div id="notification-popup" style="display: none;">
+        <ul id="notification-list"></ul>
+    </div>
     <script>
         function confirmDelete(prodId) {
             if (confirm("Are you sure you want to delete this product? This action cannot be undone.")) {
@@ -392,5 +394,6 @@
             }
         }
     </script>
+    <script src="js/notification.js"></script>
 </body>
 </html>

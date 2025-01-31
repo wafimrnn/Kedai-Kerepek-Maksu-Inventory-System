@@ -199,10 +199,11 @@
             <a href="DashboardHome.jsp">Dashboard</a>
             <a href="ViewProductServlet">Product</a>
             <a href="CreateSales.jsp">Sales</a>
-            <a href="Report.html" class="active">Report</a>
+            <a href="Report.jsp" class="active">Report</a>
             <a href="ViewAccountServlet">Account</a>
         </div>
     </div>
+
     <!-- Head Bar -->
     <div class="head-bar">
         <div class="title">Report</div>
@@ -217,13 +218,13 @@
         <div class="blurred-box">
             <h1>Generate Report</h1>
 
-            <!-- Report Table Section -->
+            <!-- Report Form -->
             <div class="report-form">
-                <form action="<%= request.getContextPath() %>/ReportController" method="post">
+                <form id="reportForm" action="ReportController" method="post">
                     <label for="reportType">Report Type:</label>
                     <select name="reportType" id="reportType" required>
-                        <option value="sales">Sales Report</option>
-                        <option value="inventory">Inventory Report</option>
+                        <option value="sales" <%= "sales".equals(request.getAttribute("selectedReportType")) ? "selected" : "" %>>Sales Report</option>
+                        <option value="inventory" <%= "inventory".equals(request.getAttribute("selectedReportType")) ? "selected" : "" %>>Inventory Report</option>
                     </select>
 
                     <label for="startDate">Start Date:</label>
@@ -236,42 +237,49 @@
                 </form>
             </div>
 
-            <!-- Display Sales Report Data -->
-			<c:if test="${not empty salesReportData}">
-			    <h2>Sales Report</h2>
-			    <table class="report-table">
-			        <thead>
-			            <tr>
-			                <th>Sale ID</th>
-			                <th>Sale Date</th>
-			                <th>Total Amount</th>
-			                <th>Payment Method</th>
-			            </tr>
-			        </thead>
-			        <tbody>
-			            ${salesReportData}
-			        </tbody>
-			    </table>
-			</c:if>
-			
-			<!-- Display Inventory Report Data -->
-			<c:if test="${not empty inventoryReportData}">
-			    <h2>Inventory Report</h2>
-			    <table class="report-table">
-			        <thead>
-			            <tr>
-			                <th>Product Name</th>
-			                <th>Quantity in Stock</th>
+            <!-- Report Results -->
+            <div id="salesReportSection" style="display: none;">
+                <h2><br>Sales Report</h2>
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>Sale ID</th>
+                            <th>Sale Date</th>
+                            <th>Total Amount</th>
+                            <th>Payment Method</th>
+                        </tr>
+                    </thead>
+                    <tbody id="salesReportBody">
+                        <%= request.getAttribute("salesReportData") != null ? request.getAttribute("salesReportData") : "" %>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="inventoryReportSection" style="display: none;">
+                <h2><br>Inventory Report</h2>
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
 			                <th>Product Price</th>
-			                <th>Total Value</th>
-			            </tr>
-			        </thead>
-			        <tbody>
-			            ${inventoryReportData}
-			        </tbody>
-			    </table>
-			</c:if>
+			                <th>Quantity in Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryReportBody">
+                        <%= request.getAttribute("inventoryReportData") != null ? request.getAttribute("inventoryReportData") : "" %>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Message when no data is available -->
+            <p id="noDataMessage" style="display: none;"><br>No report data available for the selected period.</p>
         </div>
     </div>
+    <div id="notification-popup" style="display: none;">
+        <ul id="notification-list"></ul>
+    </div>
+    <!-- Include External JavaScript -->
+    <script src="report.js"></script>
+    <script src="js/notification.js"></script>
 </body>
 </html>

@@ -324,7 +324,9 @@
         </div>
     </div>
 </div>
-
+<div id="notification-popup" style="display: none;">
+        <ul id="notification-list"></ul>
+    </div>
     <script>
         // Toggle visibility of additional fields based on category
         function toggleFields() {
@@ -333,5 +335,6 @@
             document.getElementById('drinkFields').style.display = (category === 'Drink') ? 'block' : 'none';
         }
     </script>
+    <script src="js/notification.js"></script>
 </body>
 </html>

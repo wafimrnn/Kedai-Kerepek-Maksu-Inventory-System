@@ -424,10 +424,13 @@
             </div>
         </div>
         </div>
-   
+   <div id="notification-popup" style="display: none;">
+        <ul id="notification-list"></ul>
+    </div>
 	<script>
     const contextPath = "<%= request.getContextPath() %>";
 </script>
     <script src="pos.js"></script>
+    <script src="js/notification.js"></script>
 </body>
 </html>
