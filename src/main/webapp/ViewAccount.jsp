@@ -275,9 +275,9 @@
         </div>
     </div>
 
-    <div id="notification-popup" style="display: none;">
-        <ul id="notification-list"></ul>
-    </div>
+    <div id="notification-popup">
+    <ul id="notification-list"></ul>
+</div>
     <script>
     const contextPath = "<%= request.getContextPath() %>"; // Get context path dynamically
 

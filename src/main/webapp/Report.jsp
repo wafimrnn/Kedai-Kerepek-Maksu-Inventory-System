@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Report Sales</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
     <style>
         /* General Styling */
         * {
@@ -208,7 +209,7 @@
     <div class="head-bar">
         <div class="title">Report</div>
         <div class="icons">
-            <i class="fas fa-bell" title="Notifications"></i>
+            <i id="notification-icon" class="fas fa-bell" title="Notifications"></i>
             <i class="fas fa-user-circle" title="Account"></i>
         </div>
     </div>
@@ -275,9 +276,9 @@
             <p id="noDataMessage" style="display: none;"><br>No report data available for the selected period.</p>
         </div>
     </div>
-    <div id="notification-popup" style="display: none;">
-        <ul id="notification-list"></ul>
-    </div>
+    <div id="notification-popup">
+    <ul id="notification-list"></ul>
+</div>
     <!-- Include External JavaScript -->
     <script src="report.js"></script>
     <script src="js/notification.js"></script>

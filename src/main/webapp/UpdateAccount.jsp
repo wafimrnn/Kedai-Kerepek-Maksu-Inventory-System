@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Account</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
     <style>
         * {
             margin: 0;
@@ -261,6 +262,10 @@
     <!-- Head Bar -->
     <div class="head-bar">
         <div class="title">Account Management</div>
+        <div class="icons">
+	        <i id="notification-icon" class="fas fa-bell" title="Notifications"></i>
+	        <i class="fas fa-user-circle" title="Account"></i>
+	    </div>
     </div>
 
     <!-- Main Content -->
@@ -336,9 +341,9 @@
             </div>
         </div>
     </div>
-    <div id="notification-popup" style="display: none;">
-        <ul id="notification-list"></ul>
-    </div>
+    <div id="notification-popup">
+    <ul id="notification-list"></ul>
+</div>
     <script src="js/notification.js"></script>
 </body>
 </html>
