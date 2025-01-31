@@ -195,7 +195,7 @@
     <div class="head-bar">
         <div class="title">Dashboard</div>
         <div class="icons">
-            <i class="fas fa-bell" title="Notifications"></i>
+            <i id="notification-icon" class="fas fa-bell" title="Notifications"></i>
             <i class="fas fa-user-circle" title="Account"></i>
         </div>
     </div>
@@ -293,9 +293,9 @@
             </table>
         </div>
     </div>
-    <div id="notification-popup" style="display: none;">
-        <ul id="notification-list"></ul>
-    </div>
+   <div id="notification-popup" style="display: none; position: absolute; top: 50px; right: 10px; background: white; border: 1px solid #ccc; padding: 10px;">
+    <ul id="notification-list"></ul>
+</div>
     <script src="js/notification.js"></script>
 </body>
 </html>
