@@ -15,310 +15,312 @@
     <link rel="stylesheet" type="text/css" href="css/styles.css">
     <style>
         /* General Styling */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            display: flex;
-            min-height: 100vh;
-            background-image: url('img/pisangImage.jpg'); /* Background image */
-            background-size: cover; /* Cover the entire area */
-            background-position: center; /* Center the image */
-            position: relative;
-        }
-
-        /* Sidebar Styling */
-        .sidebar {
-            width: 220px;
-            background-color: #481D01; /* Semi-transparent background color */
-            color: white;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            backdrop-filter: blur(10px); /* Apply blur effect to the background */
-        }
-
-        .sidebar h2 {
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 20px;
-            border-bottom: 1px solid #495057;
-            padding-bottom: 10px;
-        }
-
-        .nav-links {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: white; /* Default font color */
-            padding: 10px 15px;
-            margin: 5px 0;
-            border-radius: 4px;
-            transition: background 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            background-color: #FEECC3;
-            color: black;
-        }
-
-        .nav-links a.active {
-            background-color: #F6C324; /* Background color for active link */
-            color: black; /* Font color for active link */
-        }
-        
-        /* Head Bar Styling */
-        .head-bar {
-            width: calc(100% - 220px); /* Full width minus the sidebar width */
-            height: 60px;
-            background-color: #F6C324; /* Semi-transparent background color */
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            position: fixed;
-            top: 0;
-            left: 220px; /* Push the head bar right to align with the sidebar */
-            z-index: 1000; /* Ensure it stays on top */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px); /* Apply blur effect to the background */
-        }
-        
-        .head-bar .title {
-            font-size: 20px;
-            font-weight: bold;
-            color: black;
-        }
-        
-        .head-bar .icons {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            color: #ffffff;
-        }
-        
-        .head-bar .icons i {
-            font-size: 20px;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-        
-        .head-bar .icons i:hover {
-            color: #ddd;
-        }
-
-        /* Main Content Styling */
-		.main-content {
-            flex: 1;
-            padding: 20px;
-            position: relative; /* Position relative for the overlay */
-            display: flex;
-            flex-direction: column;
-            align-items: right;
-            justify-content: flex-start;
-            margin-top: 60px; /* Push content below the head bar */
-            overflow: hidden; /* Prevent overflow */
-        }
-		
-		.main-content::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('img/pisangImage.jpg'); /* Path to your image */
-            background-size: cover; /* Cover the entire area */
-            background-position: center; /* Center the image */
-            background-repeat: no-repeat; /* Prevent the image from repeating */
-            
-            filter: blur(1px); /* Adjust blur intensity */
-            z-index: -1; /* Push background below all content */
-        }
-        
-       .main-content h1 {
-            font-size: 28px;
-            color: white;
-            margin-bottom: 20px;
-        }
-		
-		/* Product List Styling */
-		.product-list {
-		    flex: 2;
-		    margin-right: 20px;
-		}
-		
-		.product-list h3 {
-		    margin-bottom: 10px;
-		}
-		
-		.product-grid {
-		    display: grid;
-		    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-		    gap: 10px;
-		}
-		
-		.product-item {
-		    background-color: #fff;
-		    padding: 10px;
-		    border-radius: 5px;
-		    text-align: center;
-		    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-		}
-		
-		.product-item img {
-		    width: 100%;
-		    height: 100px;
-		    object-fit: cover;
-		    border-radius: 5px;
-		    margin-bottom: 10px;
-		}
-		
-		.product-item button {
-		    background-color: #FAD02C;
-		    color: white;
-		    border: none;
-		    padding: 5px 10px;
-		    border-radius: 3px;
-		    cursor: pointer;
-		}
-		
-		.product-item button:hover {
-		    background-color: #F6C324;
-		    color: black;
-		}
-		
-		/* Order Calculation Section */
-		.order-calculation {
-			position: absolute;
-			top:80px;
-			right: 20px;
-		    flex: 1;
-		    background-color: #fff;
-		    padding: 20px;
-		    border-radius: 5px;
-		    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-		    max-width: 400px;
-		    height: fit-content; /* Makes sure the height fits its content */
-		}
-		
-		/* Order Details Styling */
-        .order-details table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            table-layout: fixed; /* Prevent table from overflowing */
-        }
-
-        .order-details table th, .order-details table td {
-            text-align: left;
-            padding: 8px;
-            border-bottom: 1px solid #ddd;
-            font-size: 14px; /* Smaller font size for compact layout */
-            word-wrap: break-word; /* Allow text wrapping */
-        }
-
-        .order-details table th.qty, .order-details table td.qty {
-            width: 50px; /* Adjusted smaller width for quantity */
-            text-align: center;
-        }
-
-        .order-details table th.action, .order-details table td.action {
-            width: 60px; /* Adjusted width for action buttons */
-            text-align: center;
-        }
-
-        .order-details input {
-            width: 40px; /* Smaller fixed width for quantity input */
-            text-align: center;
-            font-size: 14px;
-            padding: 2px;
-        }
-
-        .order-details button {
-            padding: 2px 6px; /* Smaller buttons for compact design */
-            font-size: 12px;
-            background-color: #FAD02C;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-
-        .order-details button:hover {
-            background-color: #F6C324;
-            color: black;
-        }
-		
-		.totals {
-		    margin-bottom: 15px;
-		    font-size: 14px; /* Smaller font for totals */
-		    display: flex;
-		    justify-content: space-between;
-		}
-		
-		.payment-method {
-		    margin-bottom: 15px;
-		}
-		
-		.payment-method button {
-		    width: 48%;
-		    padding: 10px;
-		    margin-right: 2%;
-		    background-color: #FAD02C;
-		    color: black;
-		    border: none;
-		    border-radius: 5px;
-		    cursor: pointer;
-		}
-		
-		.payment-method button:hover {
-		    background-color: #F6C324;
-		    color: black;
-		}
-		
-		.payment-method button:last-child {
-		    margin-right: 0;
-		}
-		
-		.payment-details {
-		    display: none;
-		}
-		
-		.payment-details.active {
-		    display: block;
-		}
-		
-		.payment-details input {
-		    width: 100%;
-		    padding: 10px;
-		    border: 1px solid #ddd;
-		    border-radius: 5px;
-		    margin-bottom: 10px;
-		}
-		
-		.payment-details button {
-		    width: 100%;
-		    padding: 10px;
-		    background-color: #FAD02C;
-		    color: black;
-		    border: none;
-		    border-radius: 5px;
-		    cursor: pointer;
-		}
-		
-		.payment-details button:hover {
-		    background-color: #F6C324;
-		    color: black;
-		}
+	* {
+	    margin: 0;
+	    padding: 0;
+	    box-sizing: border-box;
+	    font-family: Arial, sans-serif;
+	}
+	
+	body {
+	    display: flex;
+	    min-height: 100vh;
+	    background-image: url('img/pisangImage.jpg'); /* Background image */
+	    background-size: cover;
+	    background-position: center;
+	    position: relative;
+	}
+	
+	/* Sidebar Styling */
+	.sidebar {
+	    width: 220px;
+	    background-color: #481D01;
+	    color: white;
+	    display: flex;
+	    flex-direction: column;
+	    padding: 20px;
+	    backdrop-filter: blur(10px);
+	}
+	
+	.sidebar h2 {
+	    margin-bottom: 20px;
+	    text-align: center;
+	    font-size: 20px;
+	    border-bottom: 1px solid #495057;
+	    padding-bottom: 10px;
+	}
+	
+	.nav-links {
+	    display: flex;
+	    flex-direction: column;
+	}
+	
+	.nav-links a {
+	    text-decoration: none;
+	    color: white;
+	    padding: 10px 15px;
+	    margin: 5px 0;
+	    border-radius: 4px;
+	    transition: background 0.3s ease;
+	}
+	
+	.nav-links a:hover {
+	    background-color: #FEECC3;
+	    color: black;
+	}
+	
+	.nav-links a.active {
+	    background-color: #F6C324;
+	    color: black;
+	}
+	
+	/* Head Bar Styling */
+	.head-bar {
+	    width: calc(100% - 220px);
+	    height: 60px;
+	    background-color: #F6C324;
+	    color: white;
+	    display: flex;
+	    justify-content: space-between;
+	    align-items: center;
+	    padding: 0 20px;
+	    position: fixed;
+	    top: 0;
+	    left: 220px;
+	    z-index: 1000;
+	    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	    backdrop-filter: blur(10px);
+	}
+	
+	.head-bar .title {
+	    font-size: 20px;
+	    font-weight: bold;
+	    color: black;
+	}
+	
+	.head-bar .icons {
+	    display: flex;
+	    align-items: center;
+	    gap: 15px;
+	    color: #ffffff;
+	}
+	
+	.head-bar .icons i {
+	    font-size: 20px;
+	    cursor: pointer;
+	    transition: color 0.3s ease;
+	}
+	
+	.head-bar .icons i:hover {
+	    color: #ddd;
+	}
+	
+	/* Main Content Layout */
+	.main-content {
+	    display: flex;
+	    justify-content: space-between;
+	    align-items: flex-start;
+	    flex-wrap: wrap;
+	    margin-top: 60px;
+	    padding: 20px;
+	    width: calc(100% - 220px);
+	}
+	
+	/* Product List Styling */
+	.product-list {
+	    flex: 2;
+	    margin-right: 20px;
+	    max-width: calc(100% - 420px);
+	}
+	
+	.product-list h1 {
+	    font-size: 28px;
+	    color: white;
+	    margin-bottom: 20px;
+	}
+	
+	.product-grid {
+	    display: grid;
+	    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+	    gap: 10px;
+	}
+	
+	.product-item {
+	    background-color: #fff;
+	    padding: 10px;
+	    border-radius: 5px;
+	    text-align: center;
+	    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	}
+	
+	.product-item img {
+	    width: 100%;
+	    height: 100px;
+	    object-fit: cover;
+	    border-radius: 5px;
+	    margin-bottom: 10px;
+	}
+	
+	.product-item button {
+	    background-color: #FAD02C;
+	    color: white;
+	    border: none;
+	    padding: 5px 10px;
+	    border-radius: 3px;
+	    cursor: pointer;
+	}
+	
+	.product-item button:hover {
+	    background-color: #F6C324;
+	    color: black;
+	}
+	
+	/* Order Calculation Section */
+	.order-calculation {
+	    flex: 1;
+	    background-color: #fff;
+	    padding: 20px;
+	    border-radius: 5px;
+	    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	    width: 350px;
+	    position: relative;
+	    top: auto;
+	    right: auto;
+	}
+	
+	/* Order Details Styling */
+	.order-details table {
+	    width: 100%;
+	    border-collapse: collapse;
+	    margin-bottom: 20px;
+	    table-layout: fixed;
+	}
+	
+	.order-details table th,
+	.order-details table td {
+	    text-align: left;
+	    padding: 8px;
+	    border-bottom: 1px solid #ddd;
+	    font-size: 14px;
+	    word-wrap: break-word;
+	}
+	
+	.order-details table th.qty,
+	.order-details table td.qty {
+	    width: 50px;
+	    text-align: center;
+	}
+	
+	.order-details table th.action,
+	.order-details table td.action {
+	    width: 60px;
+	    text-align: center;
+	}
+	
+	.order-details input {
+	    width: 40px;
+	    text-align: center;
+	    font-size: 14px;
+	    padding: 2px;
+	}
+	
+	.order-details button {
+	    padding: 2px 6px;
+	    font-size: 12px;
+	    background-color: #FAD02C;
+	    color: white;
+	    border: none;
+	    border-radius: 3px;
+	    cursor: pointer;
+	}
+	
+	.order-details button:hover {
+	    background-color: #F6C324;
+	    color: black;
+	}
+	
+	/* Totals */
+	.totals {
+	    margin-bottom: 15px;
+	    font-size: 14px;
+	    display: flex;
+	    justify-content: space-between;
+	}
+	
+	/* Payment Method */
+	.payment-method {
+	    margin-bottom: 15px;
+	}
+	
+	.payment-method button {
+	    width: 48%;
+	    padding: 10px;
+	    margin-right: 2%;
+	    background-color: #FAD02C;
+	    color: black;
+	    border: none;
+	    border-radius: 5px;
+	    cursor: pointer;
+	}
+	
+	.payment-method button:hover {
+	    background-color: #F6C324;
+	    color: black;
+	}
+	
+	.payment-method button:last-child {
+	    margin-right: 0;
+	}
+	
+	/* Payment Details */
+	.payment-details {
+	    display: none;
+	}
+	
+	.payment-details.active {
+	    display: block;
+	}
+	
+	.payment-details input {
+	    width: 100%;
+	    padding: 10px;
+	    border: 1px solid #ddd;
+	    border-radius: 5px;
+	    margin-bottom: 10px;
+	}
+	
+	.payment-details button {
+	    width: 100%;
+	    padding: 10px;
+	    background-color: #FAD02C;
+	    color: black;
+	    border: none;
+	    border-radius: 5px;
+	    cursor: pointer;
+	}
+	
+	.payment-details button:hover {
+	    background-color: #F6C324;
+	    color: black;
+	}
+	
+	/* Responsive Design */
+	@media screen and (max-width: 900px) {
+	    .main-content {
+	        flex-direction: column;
+	        align-items: center;
+	    }
+	
+	    .product-list {
+	        max-width: 100%;
+	        margin-right: 0;
+	    }
+	
+	    .order-calculation {
+	        width: 100%;
+	        margin-top: 20px;
+	    }
+	}
     </style>
     <script>
         const userId = ${sessionScope.userId};
