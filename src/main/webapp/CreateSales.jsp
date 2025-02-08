@@ -378,7 +378,6 @@
         </div>
 
         <!-- Order Calculation Section -->
-        
         <div class="order-calculation">
             <div class="order-details">
                 <h3>Order Details</h3>
@@ -391,9 +390,7 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody id="order-items">
-                        <!-- Dynamically added order items will appear here -->
-                    </tbody>
+                    <tbody id="order-items"></tbody>
                 </table>
                 <div class="totals">
                     <p>Subtotal: <span id="subtotal">RM 0</span></p>
@@ -425,14 +422,20 @@
             <div id="response-message" style="display: none; margin-top: 10px; font-size: 16px;">
                 Order Completed Successfully!
             </div>
+
+            <!-- Generate Receipt Button -->
+            <button class="generate-receipt-btn" onclick="generateReceipt()">Generate Receipt</button>
         </div>
-        </div>
-   <div id="notification-popup">
-    <ul id="notification-list"></ul>
-</div>
-	<script>
-    const contextPath = "<%= request.getContextPath() %>";
-</script>
+    </div>
+
+    <!-- Notification Popup -->
+    <div id="notification-popup">
+        <ul id="notification-list"></ul>
+    </div>
+
+    <script>
+        const contextPath = "<%= request.getContextPath() %>";
+    </script>
     <script src="pos.js"></script>
     <script src="js/notification.js"></script>
 </body>

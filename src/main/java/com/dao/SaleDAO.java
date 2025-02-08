@@ -126,4 +126,50 @@ public class SaleDAO {
         }
         return sales;
     }
+    
+    public Sale getSaleWithItems(int saleId) {
+        Sale sale = null;
+        String saleQuery = "SELECT sale_Id, sale_Date, total_Amount, payment_Method, user_Id FROM Sales WHERE sale_Id = ?";
+        String itemQuery = "SELECT si.sale_Id, si.prod_Id, p.prod_Name, si.quantity, si.sub_Total " +
+                           "FROM SaleItems si " +
+                           "JOIN Products p ON si.prod_Id = p.prod_Id " +
+                           "WHERE si.sale_Id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement saleStmt = conn.prepareStatement(saleQuery);
+             PreparedStatement itemStmt = conn.prepareStatement(itemQuery)) {
+
+            // Get sale details
+            saleStmt.setInt(1, saleId);
+            ResultSet saleRs = saleStmt.executeQuery();
+            if (saleRs.next()) {
+                sale = new Sale();
+                sale.setSaleId(saleRs.getInt("sale_Id"));
+                sale.setSaleDate(saleRs.getString("sale_Date"));
+                sale.setTotalAmount(saleRs.getDouble("total_Amount"));
+                sale.setPaymentMethod(saleRs.getString("payment_Method"));
+                sale.setUserId(saleRs.getInt("user_Id"));
+            }
+
+            // Get sale items
+            if (sale != null) {
+                List<SaleItem> items = new ArrayList<>();
+                itemStmt.setInt(1, saleId);
+                ResultSet itemRs = itemStmt.executeQuery();
+                while (itemRs.next()) {
+                    SaleItem item = new SaleItem();
+                    item.setSaleId(itemRs.getInt("sale_Id"));
+                    item.setProdId(itemRs.getInt("prod_Id"));
+                    item.setProdName(itemRs.getString("prod_Name"));  // Retrieve prodName
+                    item.setQuantity(itemRs.getInt("quantity"));
+                    item.setSubTotal(itemRs.getDouble("sub_Total"));
+                    items.add(item);
+                }
+                sale.setSaleItems(items);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sale;
+    }
 }

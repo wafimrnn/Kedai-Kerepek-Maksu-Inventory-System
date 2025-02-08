@@ -120,26 +120,55 @@ function completeOrder() {
         };
 
         // Send POST request
-		fetch(contextPath + "/completeSale", {
-		    method: "POST",
-		    headers: {
-		        "Content-Type": "application/json",
-		    },
-		    body: JSON.stringify(requestData),
-		})
-		.then(response => {
-		    if (response.ok) return response.json();
-		    else throw new Error("Failed to complete the order.");
-		})
-		.then(data => {
-		    alert("Order Completed Successfully!");
-		    document.getElementById("order-items").innerHTML = "";
-		    updateTotals();
-		})
-		.catch(error => {
-		    alert("Error: " + error.message);
-		});
+        fetch(contextPath + "/completeSale", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestData),
+        })
+        .then(response => {
+            if (response.ok) return response.json();
+            else throw new Error("Failed to complete the order.");
+        })
+        .then(data => {
+            alert("Order Completed Successfully!");
+            document.getElementById("order-items").innerHTML = "";
+            updateTotals();
+        })
+        .catch(error => {
+            alert("Error: " + error.message);
+        });
     } else {
         alert("No items in the order to complete!");
     }
+}
+
+// Function to generate receipt
+function generateReceipt() {
+    const orderItems = document.querySelectorAll("#order-items tr");
+    if (orderItems.length === 0) {
+        alert("No items in the order!");
+        return;
+    }
+
+    let receiptContent = "Kedai Kerepek Maksu\n===================\n";
+    orderItems.forEach(row => {
+        const productName = row.getAttribute("data-product-name");
+        const qty = row.querySelector(".qty input").value;
+        const subtotal = row.querySelector(".subtotal").textContent;
+        receiptContent += `${productName} x${qty} - ${subtotal}\n`;
+    });
+
+    const total = document.getElementById("total").textContent;
+    receiptContent += "-------------------\n";
+    receiptContent += `Total: ${total}\n`;
+    receiptContent += `Payment: ${document.getElementById("payment-method").value}\n`;
+    receiptContent += "Thank you for your purchase!";
+
+    // Open receipt in a new window for printing
+    const receiptWindow = window.open("", "Receipt", "width=400,height=600");
+    receiptWindow.document.write(`<pre>${receiptContent}</pre>`);
+    receiptWindow.document.close();
+    receiptWindow.print();
 }
