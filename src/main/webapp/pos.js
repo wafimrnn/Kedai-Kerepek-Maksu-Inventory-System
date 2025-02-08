@@ -112,6 +112,9 @@ function completeOrder() {
             return;
         }
 
+        // Generate the receipt before clearing the order
+        generateReceipt();
+
         const requestData = {
             totalAmount: totalAmount,
             paymentMethod: paymentMethod,
@@ -133,7 +136,7 @@ function completeOrder() {
         })
         .then(data => {
             alert("Order Completed Successfully!");
-            document.getElementById("order-items").innerHTML = "";
+            document.getElementById("order-items").innerHTML = ""; // Clear items only after receipt is generated
             updateTotals();
         })
         .catch(error => {
