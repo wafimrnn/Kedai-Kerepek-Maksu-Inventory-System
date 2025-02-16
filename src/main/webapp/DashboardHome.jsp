@@ -277,7 +277,7 @@
                                     <td><%= product.getProdId() %></td>
                                     <td><%= product.getProdName() %></td>
                                     <td><%= product.getQuantityStock() %></td>
-                                    <td><%= product.getRestockLevel() %></td>
+                                
                                 </tr>
                     <% 
                             }
