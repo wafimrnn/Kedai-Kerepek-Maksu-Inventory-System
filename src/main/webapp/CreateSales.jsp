@@ -424,7 +424,7 @@
             </div>
 
             <!-- Generate Receipt Button -->
-            <button class="generate-receipt-btn" onclick="generateReceipt()">Generate Receipt</button>
+            
         </div>
     </div>
 
