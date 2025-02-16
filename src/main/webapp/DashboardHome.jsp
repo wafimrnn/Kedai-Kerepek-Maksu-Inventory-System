@@ -262,7 +262,7 @@
                         <th>Product ID</th>
                         <th>Product Name</th>
                         <th>Quantity in Stock</th>
-                        <th>Restock Level</th>
+                
                     </tr>
                 </thead>
                 <tbody>
