@@ -51,6 +51,15 @@ public class CompleteSaleServlet extends HttpServlet {
             // Extract sale details
             double totalAmount = requestData.getDouble("totalAmount");
             String paymentMethod = requestData.getString("paymentMethod");
+
+            // NEW: Read moneyReceived if it's cash
+            double moneyReceived = 0;
+            if ("CASH".equalsIgnoreCase(paymentMethod)) {
+                moneyReceived = requestData.getDouble("moneyReceived");
+                if (moneyReceived < totalAmount) {
+                    throw new Exception("Insufficient payment. Cannot complete sale.");
+                }
+            }
             String saleDate = requestData.getString("saleDate");
 
             // Get userId from session

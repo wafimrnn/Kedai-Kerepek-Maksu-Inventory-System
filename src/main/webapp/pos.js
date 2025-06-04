@@ -115,12 +115,23 @@ function completeOrder() {
         // Generate the receipt before clearing the order
         generateReceipt();
 
-        const requestData = {
-            totalAmount: totalAmount,
-            paymentMethod: paymentMethod,
-            saleDate: saleDate,
-            orderItems: orderItems,
-        };
+		let moneyReceived = 0;
+		if (paymentMethod === "CASH") {
+		    moneyReceived = parseFloat(document.getElementById("money-received").value || "0");
+		}
+
+		const requestData = {
+		    totalAmount: totalAmount,
+		    paymentMethod: paymentMethod,
+		    saleDate: saleDate,
+		    orderItems: orderItems,
+		    moneyReceived: moneyReceived  // ✅ Add this
+		};
+		
+		if (paymentMethod === "CASH" && moneyReceived < totalAmount) {
+		    alert("Insufficient money received. Please enter the correct amount.");
+		    return;
+		}
 
         // Send POST request
         fetch(contextPath + "/completeSale", {
