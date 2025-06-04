@@ -106,34 +106,28 @@ function completeOrder() {
             orderItems.push({ prodId, qty, subtotal });
         });
 
-        // Ensure orderItems is not empty
         if (orderItems.length === 0) {
             alert("No items in the order!");
             return;
         }
 
-        // Generate the receipt before clearing the order
-        generateReceipt();
+        let moneyReceived = 0;
+        if (paymentMethod === "CASH") {
+            moneyReceived = parseFloat(document.getElementById("money-received").value || "0");
+            if (moneyReceived < totalAmount) {
+                alert("Insufficient money received. Please enter the correct amount.");
+                return;
+            }
+        }
 
-		let moneyReceived = 0;
-		if (paymentMethod === "CASH") {
-		    moneyReceived = parseFloat(document.getElementById("money-received").value || "0");
-		}
+        const requestData = {
+            totalAmount: totalAmount,
+            paymentMethod: paymentMethod,
+            saleDate: saleDate,
+            orderItems: orderItems,
+            moneyReceived: moneyReceived
+        };
 
-		const requestData = {
-		    totalAmount: totalAmount,
-		    paymentMethod: paymentMethod,
-		    saleDate: saleDate,
-		    orderItems: orderItems,
-		    moneyReceived: moneyReceived  // ✅ Add this
-		};
-		
-		if (paymentMethod === "CASH" && moneyReceived < totalAmount) {
-		    alert("Insufficient money received. Please enter the correct amount.");
-		    return;
-		}
-
-        // Send POST request
         fetch(contextPath + "/completeSale", {
             method: "POST",
             headers: {
@@ -146,13 +140,18 @@ function completeOrder() {
             else throw new Error("Failed to complete the order.");
         })
         .then(data => {
+            generateReceipt(); // ✅ Only print after successful response
+
             alert("Order Completed Successfully!");
-            document.getElementById("order-items").innerHTML = ""; // Clear items only after receipt is generated
+            document.getElementById("order-items").innerHTML = ""; // Clear order items
+            document.getElementById("money-received").value = "";   // ✅ Clear cash input
+            document.getElementById("change").value = "";           // ✅ Clear change display
             updateTotals();
         })
         .catch(error => {
             alert("Error: " + error.message);
         });
+
     } else {
         alert("No items in the order to complete!");
     }
