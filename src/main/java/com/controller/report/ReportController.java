@@ -51,14 +51,16 @@ public class ReportController extends HttpServlet {
 
         // Handle report generation
         if ("sales".equals(reportType)) {
-            // Generate PDF
             List<Sale> sales = saleDAO.getSalesReport(startDateStr, endDateStr);
-            generateSalesPDF(response, sales, startDateStr, endDateStr);
-        } else if ("inventory".equals(reportType)) {
-            // For now, just show on page (PDF export can be added later)
-            String reportData = reportService.generateInventoryReport();
-            request.setAttribute("inventoryReportData", reportData);
-            request.getRequestDispatcher("Report.jsp").forward(request, response);
+            
+            if ("pdf".equals(request.getParameter("export"))) {
+                // Only generate PDF if explicitly requested
+                generateSalesPDF(response, sales, startDateStr, endDateStr);
+            } else {
+                request.setAttribute("salesReportData", sales);
+                request.getRequestDispatcher("Report.jsp").forward(request, response);
+            }
+            return; // Always return after handling response
         }
     }
 

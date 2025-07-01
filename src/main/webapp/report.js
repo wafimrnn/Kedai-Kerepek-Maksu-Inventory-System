@@ -47,3 +47,17 @@ document.getElementById('reportForm').addEventListener('submit', function (e) {
         return;
     }
 });
+
+window.addEventListener('DOMContentLoaded', () => {
+    const salesData = document.getElementById('salesReportBody').innerHTML.trim();
+    const inventoryData = document.getElementById('inventoryReportBody').innerHTML.trim();
+
+    if (salesData) {
+        document.getElementById('salesReportSection').style.display = 'block';
+    } else if (inventoryData) {
+        document.getElementById('inventoryReportSection').style.display = 'block';
+    } else {
+        document.getElementById('noDataMessage').style.display = 'block';
+    }
+});
+

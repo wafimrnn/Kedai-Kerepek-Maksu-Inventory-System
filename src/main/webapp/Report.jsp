@@ -217,7 +217,8 @@
 
             <!-- Report Form -->
             <div class="report-form">
-                <form id="reportForm" action="ReportController" method="post" target="_blank">
+                <form id="reportForm" action="ReportController" method="post" target="_self">
+    				<input type="hidden" name="export" id="exportType" value="">
                     <label for="reportType">Report Type:</label>
                     <select name="reportType" id="reportType" required>
                         <option value="sales" <%= "sales".equals(request.getAttribute("selectedReportType")) ? "selected" : "" %>>Sales Report</option>
@@ -230,7 +231,9 @@
                     <label for="endDate">End Date:</label>
                     <input type="date" name="endDate" id="endDate" required>
 
-                    <button type="submit">Generate Report</button>
+                    <!-- Buttons -->
+					<button type="submit" onclick="document.getElementById('exportType').value='html'">View Report</button>
+					<button type="submit" onclick="document.getElementById('exportType').value='pdf'">Download PDF</button>
                 </form>
             </div>
 
