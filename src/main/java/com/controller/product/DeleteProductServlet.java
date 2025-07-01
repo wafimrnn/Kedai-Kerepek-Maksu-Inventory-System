@@ -46,13 +46,6 @@ public class DeleteProductServlet extends HttpServlet {
                 return;
             }
 
-            if (!deleteChildRecord(conn, prodId)) {
-                request.setAttribute("error", "Failed to delete associated records.");
-                conn.rollback();
-                request.getRequestDispatcher("ViewProductServlet").forward(request, response);
-                return;
-            }
-
             conn.commit(); // Commit transaction
             response.sendRedirect("ViewProductServlet");
         } catch (Exception e) {
@@ -69,23 +62,5 @@ public class DeleteProductServlet extends HttpServlet {
             return ps.executeUpdate() > 0;
         }
     }
-
-    private boolean deleteChildRecord(Connection conn, int prodId) throws SQLException {
-        String table = isFoodProduct(conn, prodId) ? "Food" : "Drink";
-        String sql = "DELETE FROM " + table + " WHERE PROD_ID = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, prodId);
-            return ps.executeUpdate() > 0;
-        }
-    }
-
-    private boolean isFoodProduct(Connection conn, int prodId) throws SQLException {
-        String sql = "SELECT 1 FROM Food WHERE PROD_ID = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, prodId);
-            try (ResultSet rs = ps.executeQuery()) {
-                return rs.next();
-            }
-        }
-    }
 }
+
