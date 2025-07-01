@@ -217,24 +217,21 @@
 
             <!-- Report Form -->
             <div class="report-form">
-                <form id="reportForm" action="ReportController" method="post" target="_self">
-    				<input type="hidden" name="export" id="exportType" value="">
-                    <label for="reportType">Report Type:</label>
-                    <select name="reportType" id="reportType" required>
-                        <option value="sales" <%= "sales".equals(request.getAttribute("selectedReportType")) ? "selected" : "" %>>Sales Report</option>
-                        <option value="inventory" <%= "inventory".equals(request.getAttribute("selectedReportType")) ? "selected" : "" %>>Inventory Report</option>
-                    </select>
-
-                    <label for="startDate">Start Date:</label>
-                    <input type="date" name="startDate" id="startDate" required>
-
-                    <label for="endDate">End Date:</label>
-                    <input type="date" name="endDate" id="endDate" required>
-
-                    <!-- Buttons -->
-					<button type="submit" onclick="document.getElementById('exportType').value='html'">View Report</button>
-					<button type="submit" onclick="document.getElementById('exportType').value='pdf'">Download PDF</button>
-                </form>
+                <form id="reportForm" action="ReportController" method="post" target="_blank">
+				    <label for="reportType">Report Type:</label>
+				    <select name="reportType" id="reportType" required>
+				        <option value="sales" <%= "sales".equals(request.getAttribute("selectedReportType")) ? "selected" : "" %>>Sales Report</option>
+				        <option value="inventory" <%= "inventory".equals(request.getAttribute("selectedReportType")) ? "selected" : "" %>>Inventory Report</option>
+				    </select>
+				
+				    <label for="startDate">Start Date:</label>
+				    <input type="date" name="startDate" id="startDate" required>
+				
+				    <label for="endDate">End Date:</label>
+				    <input type="date" name="endDate" id="endDate" required>
+				
+				    <button type="submit">Download PDF</button>
+				</form>
             </div>
 
             <!-- Report Results -->

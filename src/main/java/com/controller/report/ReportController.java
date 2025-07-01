@@ -29,9 +29,6 @@ public class ReportController extends HttpServlet {
         String startDateStr = request.getParameter("startDate");
         String endDateStr = request.getParameter("endDate");
 
-        // Store selected type to retain UI selection
-        request.setAttribute("selectedReportType", reportType);
-
         // Server-side date validation
         try {
             LocalDate start = LocalDate.parse(startDateStr);
@@ -39,28 +36,24 @@ public class ReportController extends HttpServlet {
             LocalDate today = LocalDate.now();
 
             if (start.isAfter(end) || end.isAfter(today)) {
-                request.setAttribute("errorMessage", "Invalid date range selected.");
-                request.getRequestDispatcher("Report.jsp").forward(request, response);
+                response.setContentType("text/html");
+                response.getWriter().println("<script>alert('Invalid date range selected.'); window.history.back();</script>");
                 return;
             }
         } catch (Exception e) {
-            request.setAttribute("errorMessage", "Invalid date format.");
-            request.getRequestDispatcher("Report.jsp").forward(request, response);
+            response.setContentType("text/html");
+            response.getWriter().println("<script>alert('Invalid date format.'); window.history.back();</script>");
             return;
         }
 
-        // Handle report generation
+        // Generate PDF only
         if ("sales".equals(reportType)) {
             List<Sale> sales = saleDAO.getSalesReport(startDateStr, endDateStr);
-            
-            if ("pdf".equals(request.getParameter("export"))) {
-                // Only generate PDF if explicitly requested
-                generateSalesPDF(response, sales, startDateStr, endDateStr);
-            } else {
-                request.setAttribute("salesReportData", sales);
-                request.getRequestDispatcher("Report.jsp").forward(request, response);
-            }
-            return; // Always return after handling response
+            generateSalesPDF(response, sales, startDateStr, endDateStr);
+        } else if ("inventory".equals(reportType)) {
+            // Optionally implement inventory PDF later
+            response.setContentType("text/html");
+            response.getWriter().println("<script>alert('PDF download for inventory is not available yet.'); window.history.back();</script>");
         }
     }
 
