@@ -32,16 +32,24 @@ public class ReportController extends HttpServlet {
         String endDateStr = request.getParameter("endDate");
 
         // Server-side date validation
+     // Server-side date validation
         try {
             LocalDate start = LocalDate.parse(startDateStr);
             LocalDate end = LocalDate.parse(endDateStr);
-            LocalDate today = ZonedDateTime.now(ZoneId.systemDefault()).toLocalDate();
+            LocalDate today = LocalDate.now(ZoneId.of("Asia/Kuala_Lumpur")); // Your timezone
 
-            if (start.isAfter(end) || end.isAfter(today)) {
+            if (end.isAfter(today)) {
                 response.setContentType("text/html");
-                response.getWriter().println("<script>alert('Invalid date range selected.'); window.history.back();</script>");
+                response.getWriter().println("<script>alert('End date cannot be after today.'); window.history.back();</script>");
                 return;
             }
+
+            if (start.isAfter(end)) {
+                response.setContentType("text/html");
+                response.getWriter().println("<script>alert('Start date cannot be after end date.'); window.history.back();</script>");
+                return;
+            }
+
         } catch (Exception e) {
             response.setContentType("text/html");
             response.getWriter().println("<script>alert('Invalid date format.'); window.history.back();</script>");

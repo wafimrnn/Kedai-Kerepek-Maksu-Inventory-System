@@ -1,14 +1,9 @@
 window.onload = function () {
     console.log("Page loaded, checking selected report type...");
 
-    // Fetch values from JSP
-    var selectedReportType = document.getElementById("reportType").value;
-    var salesData = document.getElementById("salesReportBody").innerHTML.trim();
-    var inventoryData = document.getElementById("inventoryReportBody").innerHTML.trim();
-
-    console.log("Selected Report Type:", selectedReportType);
-    console.log("Sales Data:", salesData);
-    console.log("Inventory Data:", inventoryData);
+    const selectedReportType = document.getElementById("reportType").value;
+    const salesData = document.getElementById("salesReportBody").innerHTML.trim();
+    const inventoryData = document.getElementById("inventoryReportBody").innerHTML.trim();
 
     if (selectedReportType === "sales" && salesData !== "") {
         document.getElementById("salesReportSection").style.display = "block";
@@ -19,36 +14,37 @@ window.onload = function () {
     }
 };
 
-// Debugging form submission
+// Debug form submission
 document.getElementById("reportForm").onsubmit = function () {
     console.log("Form submitted to ReportController");
 };
 
+// ✅ Updated date validation logic
 document.getElementById('reportForm').addEventListener('submit', function (e) {
     const startInput = document.getElementById('startDate').value;
     const endInput = document.getElementById('endDate').value;
 
-    const start = new Date(startInput);
-    const end = new Date(endInput);
-    const now = new Date();
-
-    // Clear time from now so we only compare dates (not hours/min/sec)
-    now.setHours(0, 0, 0, 0);
-
-    if (!startInput || !endInput || isNaN(start.getTime()) || isNaN(end.getTime())) {
+    if (!startInput || !endInput) {
         alert("Please enter both start and end dates.");
         e.preventDefault();
         return;
     }
 
+    const start = new Date(startInput);
+    const end = new Date(endInput);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Clear time for accurate comparison
+
+    // Validation rules
     if (start > end) {
         alert("Start date cannot be after end date.");
         e.preventDefault();
         return;
     }
 
-    if (end.getTime() > now.getTime()) {
-        alert("End date cannot be in the future.");
+    if (end > today) {
+        alert("End date must be today or earlier.");
         e.preventDefault();
         return;
     }
