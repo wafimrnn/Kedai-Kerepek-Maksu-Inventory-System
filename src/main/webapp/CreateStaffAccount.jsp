@@ -40,6 +40,11 @@
             padding-bottom: 10px;
         }
 
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+        }
+
         .nav-links a {
             text-decoration: none;
             color: white;
@@ -51,6 +56,11 @@
 
         .nav-links a:hover {
             background-color: #FEECC3;
+            color: black;
+        }
+
+        .nav-links a.active {
+            background-color: #F6C324;
             color: black;
         }
 
@@ -71,7 +81,7 @@
 
         .header h1 {
             font-size: 28px;
-            color: #343a40;
+            color: #FFFFFF;
         }
 
         .form-container {
