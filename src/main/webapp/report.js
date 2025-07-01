@@ -1,14 +1,9 @@
 window.onload = function () {
     console.log("Page loaded, checking selected report type...");
 
-    // Fetch values from JSP
     var selectedReportType = document.getElementById("reportType").value;
     var salesData = document.getElementById("salesReportBody").innerHTML.trim();
     var inventoryData = document.getElementById("inventoryReportBody").innerHTML.trim();
-
-    console.log("Selected Report Type:", selectedReportType);
-    console.log("Sales Data:", salesData);
-    console.log("Inventory Data:", inventoryData);
 
     if (selectedReportType === "sales" && salesData !== "") {
         document.getElementById("salesReportSection").style.display = "block";
@@ -28,6 +23,10 @@ document.getElementById('reportForm').addEventListener('submit', function (e) {
     const start = new Date(document.getElementById('startDate').value);
     const end = new Date(document.getElementById('endDate').value);
     const today = new Date();
+
+    // Normalize time to midnight for accurate comparison
+    today.setHours(0, 0, 0, 0);
+    end.setHours(0, 0, 0, 0);
 
     if (isNaN(start) || isNaN(end)) {
         alert("Please enter both start and end dates.");
@@ -60,4 +59,3 @@ window.addEventListener('DOMContentLoaded', () => {
         document.getElementById('noDataMessage').style.display = 'block';
     }
 });
-
