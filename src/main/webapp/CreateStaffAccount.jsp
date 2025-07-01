@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Staff Account</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="css/styles.css">
     <style>
-        /* General Styling */
         * {
             margin: 0;
             padding: 0;
@@ -24,7 +22,6 @@
             position: relative;
         }
 
-        /* Sidebar Styling */
         .sidebar {
             width: 220px;
             background-color: #481D01;
@@ -43,11 +40,6 @@
             padding-bottom: 10px;
         }
 
-        .nav-links {
-            display: flex;
-            flex-direction: column;
-        }
-
         .nav-links a {
             text-decoration: none;
             color: white;
@@ -62,31 +54,16 @@
             color: black;
         }
 
-        .nav-links a.active {
-            background-color: #F6C324;
-            color: black;
-        }
-
-        /* Main Content Area */
         .main-content {
             flex: 1;
             padding: 20px;
-            position: relative;
+            margin-top: 60px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            margin-top: 60px;
-        }
-
-        .main-content h1{
-            text-align: center;
         }
 
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             margin-bottom: 20px;
             border-bottom: 2px solid #ccc;
             padding-bottom: 10px;
@@ -98,12 +75,11 @@
         }
 
         .form-container {
-            background-color: #f9f9f9;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            background-color: #FBE39D;
+            padding: 30px;
+            border-radius: 10px;
+            width: 80%;
             max-width: 500px;
-            margin: 0 auto;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
 
@@ -118,10 +94,9 @@
             color: #555;
         }
 
-        .form-group input,
-        .form-group select {
+        .form-group input {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             font-size: 14px;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -137,32 +112,28 @@
             padding: 10px 15px;
             border: none;
             border-radius: 5px;
-            cursor: pointer;
             font-size: 14px;
-            transition: background 0.3s ease;
+            cursor: pointer;
         }
 
-        .form-buttons .submit-btn {
-            background-color: #007BFF;
+        .submit-btn {
+            background-color: #28a745;
             color: white;
         }
 
-        .form-buttons .submit-btn:hover {
-            background-color: #0056b3;
-        }
-
-        .form-buttons .cancel-btn {
+        .cancel-btn {
             background-color: #dc3545;
             color: white;
         }
 
-        .form-buttons .cancel-btn:hover {
-            background-color: #c82333;
+        .error {
+            margin-top: 20px;
+            color: red;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
     <div class="sidebar">
         <h2>Kedai Kerepek Maksu</h2>
         <div class="nav-links">
@@ -174,14 +145,13 @@
         </div>
     </div>
 
-    <!-- Main Content -->
     <div class="main-content">
         <div class="header">
             <h1>Create Staff Account</h1>
         </div>
 
         <div class="form-container">
-            <form action="CreateStaffServlet" method="post">
+            <form id="createStaffForm" action="CreateStaffServlet" method="post" onsubmit="return validateForm()">
                 <div class="form-group">
                     <label for="userName">Username:</label>
                     <input type="text" id="userName" name="userName" required>
@@ -189,20 +159,19 @@
 
                 <div class="form-group">
                     <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required>
+                    <input type="password" id="password" name="password" required minlength="6">
                 </div>
 
                 <div class="form-group">
                     <label for="phone">Phone:</label>
-                    <input type="text" id="phone" name="phone">
+                    <input type="tel" id="phone" name="phone" pattern="[0-9]{10,15}" title="Enter 10 to 15 digits only" required>
                 </div>
 
                 <div class="form-group">
                     <label for="address">Address:</label>
-                    <input type="text" id="address" name="address">
+                    <input type="text" id="address" name="address" required>
                 </div>
 
-                <!-- Hidden field for owner_id -->
                 <input type="hidden" name="ownerId" value="${sessionScope.userId}">
 
                 <div class="form-buttons">
@@ -211,12 +180,25 @@
                 </div>
             </form>
         </div>
+
+        <% String errorMessage = (String) request.getAttribute("error");
+           if (errorMessage != null) { %>
+            <div class="error"><%= errorMessage %></div>
+        <% } %>
     </div>
-    <% 
-    String errorMessage = (String) request.getAttribute("error");
-    if (errorMessage != null) {
-        out.println("<div class='error'>" + errorMessage + "</div>");
-    }
-%>
+
+    <script>
+        function validateForm() {
+            const phone = document.getElementById("phone").value;
+            const phonePattern = /^[0-9]{10,15}$/;
+
+            if (!phonePattern.test(phone)) {
+                alert("Please enter a valid phone number (10 to 15 digits).");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
 </body>
 </html>
