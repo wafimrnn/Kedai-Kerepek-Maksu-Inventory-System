@@ -240,10 +240,14 @@
 		    </div>
 		
 		    <div class="form-group">
-		        <label for="image">Product Image:</label>
-		        <input type="file" id="image" name="image">
-		        <small>Upload a new image or leave blank to keep the current image.</small>
-		    </div>
+			    <label for="image">Product Image:</label>
+			    <input type="file" id="image" name="image">
+			    <input type="hidden" name="existingImageUrl" value="<%= product.getImagePath() %>">
+			    <small>Upload a new image or leave blank to keep the current image.</small><br>
+			    <% if (product.getImagePath() != null && !product.getImagePath().isEmpty()) { %>
+			        <img src="<%= product.getImagePath() %>" alt="Current Image" style="max-width:150px; margin-top:10px;">
+			    <% } %>
+			</div>
 		
 		    <button type="submit">Update Product</button>
 		    <button type="button" class="cancel-button" onclick="window.location.href='ViewProductServlet'">Cancel</button>
