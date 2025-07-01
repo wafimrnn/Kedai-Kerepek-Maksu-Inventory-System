@@ -217,7 +217,7 @@
 
             <!-- Report Form -->
             <div class="report-form">
-                <form id="reportForm" action="ReportController" method="post">
+                <form id="reportForm" action="ReportController" method="post" target="_blank">
                     <label for="reportType">Report Type:</label>
                     <select name="reportType" id="reportType" required>
                         <option value="sales" <%= "sales".equals(request.getAttribute("selectedReportType")) ? "selected" : "" %>>Sales Report</option>
