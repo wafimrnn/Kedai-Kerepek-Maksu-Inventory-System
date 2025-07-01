@@ -208,10 +208,6 @@
     <!-- Head Bar -->
     <div class="head-bar">
         <div class="title">Report</div>
-        <div class="icons">
-            <i id="notification-icon" class="fas fa-bell" title="Notifications"></i>
-            <i class="fas fa-user-circle" title="Account"></i>
-        </div>
     </div>
 
     <!-- Main Content -->
@@ -276,11 +272,7 @@
             <p id="noDataMessage" style="display: none;"><br>No report data available for the selected period.</p>
         </div>
     </div>
-    <div id="notification-popup">
-    <ul id="notification-list"></ul>
-</div>
     <!-- Include External JavaScript -->
     <script src="report.js"></script>
-    <script src="js/notification.js"></script>
 </body>
 </html>

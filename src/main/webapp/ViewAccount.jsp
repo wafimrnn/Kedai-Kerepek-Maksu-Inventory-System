@@ -198,10 +198,6 @@
     <!-- Head Bar -->
     <div class="head-bar">
         <div class="title">Account Details</div>
-        <div class="icons">
-            <i class="fas fa-bell" id="notification-icon" title="Notifications"></i>
-            <i class="fas fa-user-circle" title="Account"></i>
-        </div>
     </div>
 
     <!-- Main Content -->
@@ -275,9 +271,6 @@
         </div>
     </div>
 
-    <div id="notification-popup">
-    <ul id="notification-list"></ul>
-</div>
     <script>
     const contextPath = "<%= request.getContextPath() %>"; // Get context path dynamically
 
@@ -285,7 +278,6 @@
         window.location.href = contextPath + "/LogoutServlet";
     }
     </script>
-    <script src="js/notification.js"></script>
     <script src="js/account.js"></script>
 </body>
 </html>

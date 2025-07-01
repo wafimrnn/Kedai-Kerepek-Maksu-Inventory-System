@@ -343,10 +343,6 @@
     <!-- Head Bar Section -->
     <div class="head-bar">
         <div class="title">Sales</div>
-        <div class="icons">
-            <i id="notification-icon" class="fas fa-bell" title="Notifications"></i>
-            <i class="fas fa-user-circle" title="Account"></i>
-        </div>
     </div>
 
     <div class="main-content">
@@ -428,15 +424,9 @@
         </div>
     </div>
 
-    <!-- Notification Popup -->
-    <div id="notification-popup">
-        <ul id="notification-list"></ul>
-    </div>
-
     <script>
         const contextPath = "<%= request.getContextPath() %>";
     </script>
     <script src="pos.js"></script>
-    <script src="js/notification.js"></script>
 </body>
 </html>

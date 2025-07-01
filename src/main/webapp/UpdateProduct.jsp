@@ -171,10 +171,6 @@
     <!-- Head Bar -->
 	<div class="head-bar">
 	    <div class="title">Sales</div>
-	    <div class="icons">
-	        <i id="notification-icon" class="fas fa-bell" title="Notifications"></i>
-	        <i class="fas fa-user-circle" title="Account"></i>
-	    </div>
 	</div>
 
     <!-- Main Content -->
@@ -265,9 +261,5 @@
             <% } %>
         </div>
     </div>
-    <div id="notification-popup">
-    <ul id="notification-list"></ul>
-</div>
-    <script src="js/notification.js"></script>
 </body>
 </html>
