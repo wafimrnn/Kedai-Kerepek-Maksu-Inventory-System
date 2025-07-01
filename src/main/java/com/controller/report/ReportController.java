@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @WebServlet("/ReportController")
@@ -33,7 +35,7 @@ public class ReportController extends HttpServlet {
         try {
             LocalDate start = LocalDate.parse(startDateStr);
             LocalDate end = LocalDate.parse(endDateStr);
-            LocalDate today = LocalDate.now();
+            LocalDate today = ZonedDateTime.now(ZoneId.systemDefault()).toLocalDate();
 
             if (start.isAfter(end) || end.isAfter(today)) {
                 response.setContentType("text/html");
