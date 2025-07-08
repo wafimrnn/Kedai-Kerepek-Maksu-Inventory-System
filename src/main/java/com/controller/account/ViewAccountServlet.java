@@ -13,16 +13,10 @@ import java.util.List;
 public class ViewAccountServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    /**
-     * Default constructor.
-     */
     public ViewAccountServlet() {
         super();
     }
 
-    /**
-     * Handles GET requests to display accounts.
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -40,13 +34,14 @@ public class ViewAccountServlet extends HttpServlet {
         // Update session data with the latest user details
         if (updatedUser != null) {
             session.setAttribute("user", updatedUser);
+            session.setAttribute("userRole", updatedUser.getRole()); // ✅ Fix: update userRole in session
         }
 
         // Fetch staff list (if applicable) and set as request attribute
         List<User> staffList = userDAO.getStaffByOwnerId(sessionUser.getId());
         request.setAttribute("staffList", staffList);
 
-        // ✅ Transfer success or error message from query parameter to request attribute
+        // Transfer success or error message from query parameter to request attribute
         String success = request.getParameter("success");
         String error = request.getParameter("error");
 
