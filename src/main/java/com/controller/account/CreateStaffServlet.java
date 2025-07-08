@@ -27,13 +27,11 @@ public class CreateStaffServlet extends HttpServlet {
             boolean isCreated = userDAO.createStaff(username, password, phone, address, currentUser.getId());
 
             if (isCreated) {
-                // ✅ Set success message and forward to ViewAccount.jsp
-                request.setAttribute("success", "Staff account created successfully!");
-                request.getRequestDispatcher("ViewAccount.jsp").forward(request, response);
+                // ✅ Use redirect with query parameter for success message
+                response.sendRedirect("ViewAccount.jsp?success=Staff account created successfully!");
             } else {
-                // ❌ Creation failed — set error message and forward back to ViewAccount.jsp
-                request.setAttribute("error", "Failed to create staff account.");
-                request.getRequestDispatcher("ViewAccount.jsp").forward(request, response);
+                // ❌ Redirect with error message
+                response.sendRedirect("ViewAccount.jsp?error=Failed to create staff account.");
             }
         } else {
             // 🚫 Not logged in or not an OWNER — redirect to login
@@ -41,4 +39,5 @@ public class CreateStaffServlet extends HttpServlet {
         }
     }
 }
+
 

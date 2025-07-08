@@ -270,6 +270,20 @@
             <% } %>
         </div>
     </div>
+    <%
+    String successMessage = request.getParameter("success");
+    String errorMessage = request.getParameter("error");
+    if (successMessage != null) {
+%>
+    <div class="success" style="color: green; font-weight: bold; margin-top: 15px;"><%= successMessage %></div>
+<%
+    }
+    if (errorMessage != null) {
+%>
+    <div class="error" style="color: red; font-weight: bold; margin-top: 15px;"><%= errorMessage %></div>
+<%
+    }
+%>
 
     <script>
     const contextPath = "<%= request.getContextPath() %>"; // Get context path dynamically
