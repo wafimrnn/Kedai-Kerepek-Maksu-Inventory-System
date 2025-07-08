@@ -2,6 +2,20 @@
 <%@ page import="com.model.User" %>
 <%@ page import="com.dao.UserDAO" %>
 
+<%
+    User user = (User) session.getAttribute("user");
+    String userRole = (String) session.getAttribute("userRole");
+
+    // Safe fallback
+    if (userRole == null && user != null) {
+        userRole = user.getRole();
+        session.setAttribute("userRole", userRole);
+    }
+
+    String successMessage = (String) request.getAttribute("success");
+    String errorMessage = (String) request.getAttribute("error");
+%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -180,9 +194,31 @@
     .staff-account span.inactive {
         color: #FF0000;
     }
+    
+    .notification {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-top: 20px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
 </style>
 </head>
-<body data-role="<%= session.getAttribute("userRole") %>">
+<body data-role="<%= userRole %>">
+
     <!-- Sidebar -->
     <div class="sidebar">
         <h2>Kedai Kerepek Maksu</h2>
@@ -207,26 +243,17 @@
             <div class="header">
                 <h1>My Account</h1>
                 <div class="button-container">
-                    <!-- Update Account Button -->
                     <a href="UpdateAccount.jsp" class="add-btn">Update Account</a>
-
-                    <!-- Only show 'Create Staff Account' button for users with 'OWNER' role -->
-                    <% if ("OWNER".equals(session.getAttribute("userRole"))) { %>
+                    <% if ("OWNER".equals(userRole)) { %>
                         <button class="add-btn" onclick="location.href='CreateStaffAccount.jsp'">Create Staff Account</button>
                     <% } %>
-
                     <button class="add-btn logout-btn" onclick="logout()">Logout</button>
                 </div>
             </div>
 
             <!-- Display Account Info -->
             <div class="account-info">
-                <% 
-                    // Retrieve the user data from session
-                    User user = (User) session.getAttribute("user"); // Assuming the user is saved in session
-
-                    if (user != null) {
-                %>
+                <% if (user != null) { %>
                     <p><strong>Name:</strong> <%= user.getName() %></p>
                     <p><strong>Phone:</strong> <%= user.getPhone() %></p>
                     <p><strong>Address:</strong> <%= user.getAddress() %></p>
@@ -236,59 +263,52 @@
                 <% } %>
             </div>
 
-            <!-- Display Staff Accounts (for OWNER only) -->
-            <% if ("OWNER".equals(session.getAttribute("userRole"))) { %>
+            <!-- Display Staff Accounts (OWNER only) -->
+            <% if ("OWNER".equals(userRole)) { %>
                 <h2>Manage Staff Accounts</h2>
                 <div class="staff-list">
-                    <!-- Dynamically display staff accounts -->
-                    <% 
-					    User loggedInUser = (User) session.getAttribute("user");
-					    if (loggedInUser != null) {
-					        UserDAO userDAO = new UserDAO();
-					        List<User> staffList = userDAO.getStaffByOwnerId(loggedInUser.getId());
-					
-					        for (User staff : staffList) { 
-					            // Ensure getAccStatus is a valid method in your User class
-					            String statusClass = "ACTIVE".equals(staff.getAccStatus()) ? "" : "inactive";
-					%>
-					            <div class="staff-account">
-								    <p><strong>Staff Name:</strong> <%= staff.getName() %></p>
-								    <p><strong>Status:</strong> <span id="status-<%= staff.getId() %>"><%= staff.getAccStatus() %></span></p>
-								    <button onclick="toggleStaffStatus('<%= staff.getId() %>', '<%= staff.getAccStatus() %>')">
-								        Update Status
-								    </button>
-								</div>
-					<% 
-					        }
-					    } else { 
-					%>
-					        <p>User not logged in. Please log in again.</p>
-					<% 
-					    }
-					%>
+                    <%
+                        if (user != null) {
+                            UserDAO userDAO = new UserDAO();
+                            List<User> staffList = userDAO.getStaffByOwnerId(user.getId());
+
+                            for (User staff : staffList) {
+                                String statusClass = "ACTIVE".equals(staff.getAccStatus()) ? "" : "inactive";
+                    %>
+                        <div class="staff-account">
+                            <p><strong>Staff Name:</strong> <%= staff.getName() %></p>
+                            <p><strong>Status:</strong> 
+                                <span id="status-<%= staff.getId() %>" class="<%= statusClass %>"><%= staff.getAccStatus() %></span>
+                            </p>
+                            <button onclick="toggleStaffStatus('<%= staff.getId() %>', '<%= staff.getAccStatus() %>')">
+                                Update Status
+                            </button>
+                        </div>
+                    <%
+                            }
+                        } else {
+                    %>
+                        <p>User not logged in. Please log in again.</p>
+                    <% } %>
                 </div>
             <% } %>
+
+            <!-- Notification Messages -->
+            <% if (successMessage != null) { %>
+                <div class="notification success"><%= successMessage %></div>
+            <% } %>
+            <% if (errorMessage != null) { %>
+                <div class="notification error"><%= errorMessage %></div>
+            <% } %>
+
         </div>
     </div>
-    <%
-	String successMessage = (String) request.getAttribute("success");
-	String errorMessage = (String) request.getAttribute("error");
-	%>
-    <div class="success" style="color: green; font-weight: bold; margin-top: 15px;"><%= successMessage %></div>
-<%
-    if (errorMessage != null) {
-%>
-    <div class="error" style="color: red; font-weight: bold; margin-top: 15px;"><%= errorMessage %></div>
-<%
-    }
-%>
 
     <script>
-    const contextPath = "<%= request.getContextPath() %>"; // Get context path dynamically
-
-    function logout() {
-        window.location.href = contextPath + "/LogoutServlet";
-    }
+        const contextPath = "<%= request.getContextPath() %>";
+        function logout() {
+            window.location.href = contextPath + "/LogoutServlet";
+        }
     </script>
     <script src="js/account.js"></script>
 </body>
