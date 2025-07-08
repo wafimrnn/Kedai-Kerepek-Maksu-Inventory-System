@@ -18,7 +18,7 @@ window.onload = function () {
   if (loginForm) {
     loginForm.addEventListener("submit", function (e) {
       e.preventDefault();
-      this.submit(); // Login can proceed
+      this.submit();
     });
   }
 
@@ -26,26 +26,16 @@ window.onload = function () {
   const signupForm = document.getElementById("signup-form-data");
   if (signupForm) {
     signupForm.addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      const username = document.getElementById("signup-username").value.trim();
-      const password = document.getElementById("signup-password").value.trim();
-      const phone = document.getElementById("signup-phone").value.trim();
-      const address = document.getElementById("signup-address").value.trim();
+      const form = this;
       const signupMessageElement = document.getElementById("signup-message");
 
-      const isUsernameValid = /^[a-zA-Z0-9]+$/.test(username);        // Alphanumeric only
-      const isPasswordValid = password.length >= 6;                    // At least 6 characters
-      const isPhoneValid = /^[0-9]{10,11}$/.test(phone);               // Only digits, 10–11
-      const isAddressValid = /^[a-zA-Z0-9\s,.\-]+$/.test(address);     // Letters/numbers/spaces/.,-
-
-      if (!isUsernameValid || !isPasswordValid || !isPhoneValid || !isAddressValid) {
+      if (!form.checkValidity()) {
+        e.preventDefault();
         signupMessageElement.textContent = "Invalid input. Please enter the correct data type for each field.";
-        return; // Stop submission
+      } else {
+        signupMessageElement.textContent = "";
+        form.submit();
       }
-
-      signupMessageElement.textContent = ""; // Clear message
-      this.submit(); // ✅ Submit if all valid
     });
   }
 

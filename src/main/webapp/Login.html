@@ -128,15 +128,14 @@
 </head>
 <body>
   <div class="container">
-  <div class="left-section">
-  	<h1>Kedai Kerepek Maksu</h1>
-  </div>
-    
+    <div class="left-section">
+      <h1>Kedai Kerepek Maksu</h1>
+    </div>
+
     <div class="right-section">
       <!-- Login Form -->
       <div class="form-box" id="login-form">
         <h1>Login</h1>
-        <!-- Feedback message -->
         <p id="login-message" style="color: red;"></p>
         <form id="login-form-data" action="LoginServlet" method="POST">
           <input id="login-username" name="userName" type="text" placeholder="Username" required>
@@ -151,17 +150,24 @@
       <!-- Sign Up Form -->
       <div class="form-box" id="signup-form" style="display: none;">
         <h1>Sign Up</h1>
-        <!-- Feedback message -->
         <p id="signup-message" style="color: red;"></p>
         <form id="signup-form-data" action="SignUpServlet" method="POST">
-          <input id="signup-username" name="userName" type="text" placeholder="Username" required>
-          <input id="signup-password" name="password" type="password" placeholder="Password" required>
-          <input id="signup-phone" name="phone" type="text" placeholder="Phone Number" required>
-          
-          <!-- Hidden input for the role -->
+          <input id="signup-username" name="userName" type="text" placeholder="Username" 
+                 pattern="[a-zA-Z0-9]+" title="Only letters and numbers" required>
+
+          <input id="signup-password" name="password" type="password" placeholder="Password" 
+                 minlength="6" title="Password must be at least 6 characters" required>
+
+          <input id="signup-phone" name="phone" type="tel" placeholder="Phone Number" 
+                 pattern="[0-9]{10,11}" title="Phone number must be 10–11 digits" required>
+
+          <!-- Hidden role -->
           <input type="hidden" id="signup-role" name="role" value="OWNER">
-          
-          <textarea id="signup-address" name="address" placeholder="Address" rows="3" required></textarea>
+
+          <textarea id="signup-address" name="address" placeholder="Address" rows="3" 
+                    pattern="[a-zA-Z0-9\s,.\-]+" 
+                    title="Only letters, numbers, comma, dot, hyphen allowed" required></textarea>
+
           <button type="submit">Sign Up</button>
         </form>
         <div class="link">
@@ -170,7 +176,8 @@
       </div>
     </div>
   </div>
-    <script src="login.js"></script>
+  <script src="login.js"></script>
 </body>
+
 
 </html>
