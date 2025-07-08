@@ -240,6 +240,13 @@
     <div class="main-content">
         <div class="blurred-box">
             <!-- Account Details Section -->
+            <!-- Notification Messages -->
+            <% if (successMessage != null) { %>
+                <div class="notification success"><%= successMessage %></div>
+            <% } %>
+            <% if (errorMessage != null) { %>
+                <div class="notification error"><%= errorMessage %></div>
+            <% } %>
             <div class="header">
                 <h1>My Account</h1>
                 <div class="button-container">
@@ -291,14 +298,6 @@
                         <p>User not logged in. Please log in again.</p>
                     <% } %>
                 </div>
-            <% } %>
-
-            <!-- Notification Messages -->
-            <% if (successMessage != null) { %>
-                <div class="notification success"><%= successMessage %></div>
-            <% } %>
-            <% if (errorMessage != null) { %>
-                <div class="notification error"><%= errorMessage %></div>
             <% } %>
 
         </div>
