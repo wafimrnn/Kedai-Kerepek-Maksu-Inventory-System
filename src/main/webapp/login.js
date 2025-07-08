@@ -17,30 +17,48 @@ window.onload = function () {
     });
   }
 
-  // Custom Sign-up validation
+  // Handle sign-up with validation
   const signupForm = document.getElementById("signup-form-data");
   if (signupForm) {
     signupForm.addEventListener("submit", function (e) {
       e.preventDefault();
 
-      const username = document.getElementById("signup-username").value.trim();
-      const password = document.getElementById("signup-password").value.trim();
-      const phone = document.getElementById("signup-phone").value.trim();
-      const address = document.getElementById("signup-address").value.trim();
+      const usernameField = document.getElementById("signup-username");
+      const passwordField = document.getElementById("signup-password");
+      const phoneField = document.getElementById("signup-phone");
+      const addressField = document.getElementById("signup-address");
       const message = document.getElementById("signup-message");
 
-      const isUsernameValid = /^[a-zA-Z0-9]+$/.test(username);        // Alphanumeric only
-      const isPasswordValid = password.length >= 6;
-      const isPhoneValid = /^[0-9]{10,11}$/.test(phone);
-      const isAddressValid = /^[a-zA-Z0-9\s,.\-]+$/.test(address);
+      const username = usernameField.value.trim();
+      const password = passwordField.value.trim();
+      const phone = phoneField.value.trim();
+      const address = addressField.value.trim();
+
+      // Validation checks using regex and length
+      const isUsernameValid = /^[a-zA-Z0-9]+$/.test(username);          // Alphanumeric only
+      const isPasswordValid = password.length >= 6;                     // Min 6 characters
+      const isPhoneValid = /^[0-9]{10,11}$/.test(phone);                // 10-11 digit numbers
+      const isAddressValid = /^[a-zA-Z0-9\s,.\-]+$/.test(address);      // Letters, numbers, space, comma, dot, dash
+
+      // Reset all borders before validation
+      [usernameField, passwordField, phoneField, addressField].forEach(field => {
+        field.style.border = "";
+      });
 
       if (!isUsernameValid || !isPasswordValid || !isPhoneValid || !isAddressValid) {
         message.textContent = "Invalid input. Please enter the correct data type for each field.";
-        return;
+
+        if (!isUsernameValid) usernameField.style.border = "2px solid red";
+        if (!isPasswordValid) passwordField.style.border = "2px solid red";
+        if (!isPhoneValid) phoneField.style.border = "2px solid red";
+        if (!isAddressValid) addressField.style.border = "2px solid red";
+
+        return; // Stop form submission
       }
 
+      // If all valid, clear message and submit form
       message.textContent = "";
-      this.submit(); // ✅ Only submits if all valid
+      this.submit();
     });
   }
 
