@@ -271,9 +271,8 @@
         </div>
     </div>
     <%
-    String successMessage = request.getParameter("success");
-    String errorMessage = request.getParameter("error");
-    if (successMessage != null) {
+String successMessage = (String) request.getAttribute("success");
+String errorMessage = (String) request.getAttribute("error");
 %>
     <div class="success" style="color: green; font-weight: bold; margin-top: 15px;"><%= successMessage %></div>
 <%

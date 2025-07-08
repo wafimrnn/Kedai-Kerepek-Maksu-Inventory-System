@@ -46,6 +46,17 @@ public class ViewAccountServlet extends HttpServlet {
         List<User> staffList = userDAO.getStaffByOwnerId(sessionUser.getId());
         request.setAttribute("staffList", staffList);
 
+        // ✅ Transfer success or error message from query parameter to request attribute
+        String success = request.getParameter("success");
+        String error = request.getParameter("error");
+
+        if (success != null) {
+            request.setAttribute("success", success);
+        }
+        if (error != null) {
+            request.setAttribute("error", error);
+        }
+
         // Forward to the JSP page
         request.getRequestDispatcher("/ViewAccount.jsp").forward(request, response);
     }
